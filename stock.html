@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Genzura - Ibintu Byibikoresho</title>
     <link rel="icon" type="image/png" href="https://i.ibb.co/mFqfcpPj/cropped-circle-image.png">
+    <!-- Note: Using CDN for development only. For production, install Tailwind CSS via npm and use CLI/PostCSS: https://tailwindcss.com/docs/installation -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -251,7 +252,7 @@
     </div>
     <div class="search-container">
         <input type="text" id="search-input" class="search-input" placeholder="Shakisha...">
-        <button class="add-btn" onclick="openModal()">+ Shyiramo</button>
+        <button class="add-btn" id="add-btn">+ Shyiramo</button>
     </div>
     <div class="stock-list" id="stock-list"></div>
 
@@ -269,7 +270,7 @@
             <input type="number" id="cost" placeholder="Injiza igiciro mu RWF" min="0">
             <label for="estimated-end">Igihe Ryerekanwa Ry'iherezo</label>
             <input type="date" id="estimated-end" value="2025-01-01">
-            <button class="modal-btn" onclick="saveItem()">Bika</button>
+            <button class="modal-btn" id="save-btn">Bika</button>
         </div>
     </div>
 
@@ -358,7 +359,7 @@
                 querySnapshot.forEach((doc) => {
                     items.push({ id: doc.id, ...doc.data() });
                 });
-                items.sort((a, b) => b.added_date.seconds - a.added_date.seconds); // Sort by most recent
+                items.sort((a, b) => b.added_date.seconds - a.added_date.seconds);
                 renderStock(items);
             } catch (error) {
                 showError('Ikosa ryabaye mu kubona ibintu: ' + error.message);
@@ -410,10 +411,6 @@
             document.getElementById('estimated-end').value = '2025-01-01';
         }
 
-        function closeModal() {
-            document.getElementById('modal').style.display = 'none';
-        }
-
         async function saveItem() {
             const name = document.getElementById('name').value;
             const image = document.getElementById('image').files[0];
@@ -461,6 +458,10 @@
             }
         }
 
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+        }
+
         async function uploadImage(file) {
             const formData = new FormData();
             formData.append('image', file);
@@ -490,6 +491,9 @@
                 renderStock(filtered);
             }, 300);
         });
+
+        document.getElementById('add-btn').addEventListener('click', openModal);
+        document.getElementById('save-btn').addEventListener('click', saveItem);
 
         document.getElementById('modal').addEventListener('click', (e) => {
             if (e.target === document.getElementById('modal')) {
