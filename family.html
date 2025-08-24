@@ -8,742 +8,136 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root {
-            --linkedin-blue: #0a66c2;
-            --linkedin-light-blue: #70b5f9;
-            --linkedin-dark-blue: #004182;
-            --linkedin-background: #f3f2ef;
-            --linkedin-card: #ffffff;
-            --linkedin-text: #000000e6;
-            --linkedin-text-light: #00000099;
-        }
-        
         body {
-            background-color: var(--linkedin-background);
-            color: var(--linkedin-text);
-            font-family: -apple-system, system-ui, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            background-color: #f7fafc;
+            color: #1a202c;
+            font-family: 'Inter', Arial, sans-serif;
             margin: 0;
             padding: 0;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-        }
-        
-        /* Navigation Bar - LinkedIn Style */
-        .navbar {
-            display: flex;
-            justify-content: space-between;
             align-items: center;
-            padding: 0.5rem 2rem;
-            background-color: var(--linkedin-card);
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            overflow-x: hidden;
+        }
+        .header {
+            width: 100%;
+            padding: 1.5rem 2rem;
             position: fixed;
             top: 0;
-            width: 100%;
-            z-index: 100;
-            height: 52px;
-            box-sizing: border-box;
+            z-index: 10;
         }
-        
-        .navbar-brand {
-            display: flex;
-            align-items: center;
-            font-size: 1.8rem;
+        .header h2 {
+            margin: 0;
+            font-size: 1.5rem;
             font-weight: 600;
-            color: var(--linkedin-blue);
+            color: #1e40af;
         }
-        
-        .navbar-nav {
-            display: flex;
-            gap: 1.5rem;
-        }
-        
-        .nav-item {
+        .content {
+            margin-top: 6rem;
             display: flex;
             flex-direction: column;
             align-items: center;
-            cursor: pointer;
-            color: var(--linkedin-text-light);
-            font-size: 0.8rem;
-            transition: color 0.2s;
-        }
-        
-        .nav-item:hover {
-            color: var(--linkedin-text);
-        }
-        
-        .nav-icon {
-            font-size: 1.2rem;
-            margin-bottom: 0.2rem;
-        }
-        
-        .nav-item.active {
-            color: var(--linkedin-text);
-            border-bottom: 2px solid var(--linkedin-text);
-        }
-        
-        .navbar-user {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .user-avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background-color: var(--linkedin-blue);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-        }
-        
-        /* Main Content */
-        .main-content {
-            display: flex;
-            margin-top: 52px;
-            padding: 1.5rem;
-            gap: 1.5rem;
-            flex: 1;
-        }
-        
-        /* Left Sidebar */
-        .left-sidebar {
-            width: 22%;
-            position: sticky;
-            top: 70px;
-            height: fit-content;
-        }
-        
-        .profile-card {
-            background-color: var(--linkedin-card);
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
-            margin-bottom: 1rem;
-        }
-        
-        .profile-banner {
-            height: 60px;
-            background-color: var(--linkedin-light-blue);
-        }
-        
-        .profile-info {
-            padding: 0 1rem 1rem;
-            text-align: center;
-            margin-top: -30px;
-        }
-        
-        .profile-avatar {
-            width: 72px;
-            height: 72px;
-            border-radius: 50%;
-            background-color: var(--linkedin-blue);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.8rem;
-            font-weight: bold;
-            margin: 0 auto;
-            border: 2px solid white;
-        }
-        
-        .profile-name {
-            font-weight: 600;
-            margin: 0.5rem 0 0.2rem;
-        }
-        
-        .profile-title {
-            color: var(--linkedin-text-light);
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
-        }
-        
-        .profile-stats {
-            border-top: 1px solid rgba(0, 0, 0, 0.08);
-            padding: 0.8rem 0;
-            font-size: 0.9rem;
-            color: var(--linkedin-text-light);
-        }
-        
-        .stat-item {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 0.3rem;
-        }
-        
-        .stat-value {
-            font-weight: 600;
-            color: var(--linkedin-blue);
-        }
-        
-        /* Feed */
-        .feed {
-            width: 56%;
-        }
-        
-        .create-post {
-            background-color: var(--linkedin-card);
-            border-radius: 10px;
-            padding: 1rem;
-            box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
-            margin-bottom: 1rem;
-        }
-        
-        .post-input {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-bottom: 0.8rem;
-        }
-        
-        .post-input-avatar {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            background-color: var(--linkedin-blue);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            flex-shrink: 0;
-        }
-        
-        .post-input-field {
-            flex: 1;
-            border: 1px solid rgba(0, 0, 0, 0.2);
-            border-radius: 35px;
-            padding: 0.8rem 1rem;
-            font-size: 0.9rem;
-            cursor: pointer;
-        }
-        
-        .post-input-field:hover {
-            background-color: rgba(0, 0, 0, 0.04);
-        }
-        
-        .post-actions {
-            display: flex;
-            justify-content: space-around;
-            border-top: 1px solid rgba(0, 0, 0, 0.08);
-            padding-top: 0.5rem;
-        }
-        
-        .post-action {
-            display: flex;
-            align-items: center;
-            gap: 0.3rem;
-            padding: 0.5rem;
-            color: var(--linkedin-text-light);
-            font-size: 0.9rem;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        
-        .post-action:hover {
-            background-color: rgba(0, 0, 0, 0.04);
-        }
-        
-        .post-card {
-            background-color: var(--linkedin-card);
-            border-radius: 10px;
-            padding: 1rem;
-            box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
-            margin-bottom: 1rem;
-        }
-        
-        .post-header {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-bottom: 0.8rem;
-        }
-        
-        .post-avatar {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            background-color: var(--linkedin-blue);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            flex-shrink: 0;
-        }
-        
-        .post-author {
-            font-weight: 600;
-        }
-        
-        .post-time {
-            color: var(--linkedin-text-light);
-            font-size: 0.8rem;
-        }
-        
-        .post-content {
-            margin-bottom: 0.8rem;
-            line-height: 1.4;
-        }
-        
-        .post-stats {
-            display: flex;
-            justify-content: space-between;
-            color: var(--linkedin-text-light);
-            font-size: 0.9rem;
-            padding: 0.5rem 0;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-            margin-bottom: 0.5rem;
-        }
-        
-        .post-buttons {
-            display: flex;
-            justify-content: space-around;
-        }
-        
-        .post-button {
-            display: flex;
-            align-items: center;
-            gap: 0.3rem;
-            padding: 0.5rem;
-            color: var(--linkedin-text-light);
-            font-size: 0.9rem;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        
-        .post-button:hover {
-            background-color: rgba(0, 0, 0, 0.04);
-        }
-        
-        /* Right Sidebar */
-        .right-sidebar {
-            width: 22%;
-            position: sticky;
-            top: 70px;
-            height: fit-content;
-        }
-        
-        .sidebar-card {
-            background-color: var(--linkedin-card);
-            border-radius: 10px;
-            padding: 1rem;
-            box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
-            margin-bottom: 1rem;
-        }
-        
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 0.8rem;
-        }
-        
-        .card-title {
-            font-weight: 600;
-            color: var(--linkedin-text-light);
-        }
-        
-        .card-icon {
-            color: var(--linkedin-text-light);
-            cursor: pointer;
-        }
-        
-        .news-item {
-            padding: 0.8rem 0;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-        }
-        
-        .news-item:last-child {
-            border-bottom: none;
-        }
-        
-        .news-title {
-            font-weight: 600;
-            margin-bottom: 0.3rem;
-            font-size: 0.9rem;
-        }
-        
-        .news-source {
-            color: var(--linkedin-text-light);
-            font-size: 0.8rem;
-        }
-        
-        .ad-container {
-            background-color: #f5f5f5;
-            border-radius: 10px;
-            padding: 1rem;
-            text-align: center;
-            margin-bottom: 1rem;
-        }
-        
-        .ad-title {
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-        }
-        
-        .ad-content {
-            color: var(--linkedin-text-light);
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
-        }
-        
-        .ad-button {
-            background-color: var(--linkedin-blue);
-            color: white;
-            border: none;
-            border-radius: 20px;
-            padding: 0.5rem 1rem;
-            font-weight: 600;
-            cursor: pointer;
-        }
-        
-        /* Responsive */
-        @media (max-width: 1024px) {
-            .left-sidebar, .right-sidebar {
-                width: 25%;
-            }
-            .feed {
-                width: 50%;
-            }
-        }
-        
-        @media (max-width: 768px) {
-            .main-content {
-                flex-direction: column;
-            }
-            .left-sidebar, .feed, .right-sidebar {
-                width: 100%;
-            }
-            .navbar-nav {
-                display: none;
-            }
-        }
-        
-        /* Error and Loading */
-        #error-message {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: #fee2e2;
-            color: #b91c1c;
-            padding: 0.75rem 1.5rem;
-            border-radius: 4px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-            display: none;
-            z-index: 1000;
-            font-size: 0.9rem;
-        }
-        
-        #loading {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
             width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.8);
+            max-width: 500px;
+            padding: 1rem;
+        }
+        .animation-container {
+            height: 150px;
+            position: relative;
+            display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 1000;
+            margin-bottom: 2rem;
         }
-        
-        #loading-spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid var(--linkedin-blue);
+        .human-icon {
+            font-size: 2.5rem;
+            color: #1e40af;
+            animation: bounce 2s ease-in-out infinite;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+        .particle {
+            position: absolute;
+            background-color: #60a5fa;
             border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            animation: spin 1s linear infinite;
+            opacity: 0.5;
+            animation: particles 6s linear infinite;
         }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        @keyframes particles {
+            0% { transform: translateY(0); opacity: 0.5; }
+            100% { transform: translateY(-100vh); opacity: 0; }
         }
-        
+        .buttons-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            width: 100%;
+            max-width: 300px;
+        }
+        .button {
+            padding: 0.75rem;
+            background-color: #1e40af;
+            color: #ffffff;
+            text-align: center;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 1rem;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        .button:hover {
+            background-color: #1e3a8a;
+            transform: translateY(-2px);
+        }
+        .sign-out {
+            background-color: #ef4444;
+        }
+        .sign-out:hover {
+            background-color: #dc2626;
+        }
         footer {
             text-align: center;
             padding: 1rem;
-            color: var(--linkedin-text-light);
+            color: #4b5563;
             font-size: 0.85rem;
             width: 100%;
-            background-color: var(--linkedin-card);
+            margin-top: auto;
         }
-        
         footer a {
-            color: var(--linkedin-blue);
+            color: #1e40af;
             text-decoration: none;
         }
-        
         footer a:hover {
             text-decoration: underline;
         }
-        
-        /* Animation for flowers */
-        .flower {
-            position: absolute;
-            font-size: 1.2rem;
-            opacity: 0.7;
-            color: var(--linkedin-light-blue);
-            z-index: 1;
-        }
-        
-        .flower-1 {
-            top: 20px;
-            left: 30px;
-            animation: sway 6s ease-in-out infinite;
-        }
-        
-        .flower-2 {
-            bottom: 10px;
-            right: 40px;
-            animation: sway 7s ease-in-out infinite 1s;
-        }
-        
-        .flower-3 {
-            top: 60px;
-            right: 20px;
-            animation: sway 5s ease-in-out infinite 0.5s;
-            color: var(--linkedin-blue);
-        }
-        
-        .flower-4 {
-            bottom: 40px;
-            left: 20px;
-            animation: sway 8s ease-in-out infinite 1.5s;
-            color: var(--linkedin-blue);
-        }
-        
-        @keyframes sway {
-            0%, 100% { transform: rotate(-5deg) scale(1); }
-            50% { transform: rotate(5deg) scale(1.1); }
+        @media (max-width: 640px) {
+            .content {
+                padding: 0.5rem;
+            }
+            .buttons-container {
+                max-width: 100%;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Navigation Bar -->
-    <nav class="navbar">
-        <div class="navbar-brand">Genzura</div>
-        
-        <div class="navbar-nav">
-            <div class="nav-item active">
-                <i class="fas fa-home nav-icon"></i>
-                <span>Home</span>
-            </div>
-            <div class="nav-item">
-                <i class="fas fa-chart-pie nav-icon"></i>
-                <span>Overview</span>
-            </div>
-            <div class="nav-item">
-                <i class="fas fa-box nav-icon"></i>
-                <span>Stock</span>
-            </div>
-            <div class="nav-item">
-                <i class="fas fa-sticky-note nav-icon"></i>
-                <span>Notes</span>
-            </div>
-        </div>
-        
-        <div class="navbar-user">
-            <div class="user-avatar" id="user-avatar">U</div>
-            <div id="user-name">User</div>
-        </div>
-    </nav>
-
-    <!-- Main Content -->
-    <div class="main-content">
-        <!-- Left Sidebar -->
-        <div class="left-sidebar">
-            <div class="profile-card">
-                <div class="profile-banner"></div>
-                <div class="profile-info">
-                    <div class="profile-avatar" id="profile-avatar">U</div>
-                    <h3 class="profile-name" id="profile-name">User Name</h3>
-                    <div class="profile-title">Family Account</div>
-                </div>
-                <div class="profile-stats">
-                    <div class="stat-item">
-                        <span>Family Members</span>
-                        <span class="stat-value">5</span>
-                    </div>
-                    <div class="stat-item">
-                        <span>Items in Stock</span>
-                        <span class="stat-value">42</span>
-                    </div>
-                    <div class="stat-item">
-                        <span>Active Notes</span>
-                        <span class="stat-value">7</span>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="sidebar-card">
-                <div class="card-header">
-                    <div class="card-title">Recent Items</div>
-                    <i class="fas fa-ellipsis-h card-icon"></i>
-                </div>
-                <div class="news-item">
-                    <div class="news-title">Milk stock is running low</div>
-                    <div class="news-source">Updated 2 hours ago</div>
-                </div>
-                <div class="news-item">
-                    <div class="news-title">School meeting this weekend</div>
-                    <div class="news-source">Added yesterday</div>
-                </div>
-                <div class="news-item">
-                    <div class="news-title">Rice purchase needed</div>
-                    <div class="news-source">Updated 3 days ago</div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Feed -->
-        <div class="feed">
-            <div class="create-post">
-                <div class="post-input">
-                    <div class="post-input-avatar" id="post-avatar">U</div>
-                    <div class="post-input-field">Share an update with your family</div>
-                </div>
-                <div class="post-actions">
-                    <div class="post-action">
-                        <i class="fas fa-image" style="color: #70b5f9;"></i>
-                        <span>Photo</span>
-                    </div>
-                    <div class="post-action">
-                        <i class="fas fa-video" style="color: #7fc15e;"></i>
-                        <span>Video</span>
-                    </div>
-                    <div class="post-action">
-                        <i class="fas fa-calendar-alt" style="color: #e7a33e;"></i>
-                        <span>Event</span>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="post-card">
-                <div class="post-header">
-                    <div class="post-avatar">J</div>
-                    <div>
-                        <div class="post-author">John Doe</div>
-                        <div class="post-time">2 hours ago</div>
-                    </div>
-                </div>
-                <div class="post-content">
-                    Just updated the family stock. We need to buy more milk and bread tomorrow. Also, don't forget about the parent-teacher meeting on Friday!
-                </div>
-                <div class="post-stats">
-                    <span>12 likes</span>
-                    <span>3 comments</span>
-                </div>
-                <div class="post-buttons">
-                    <div class="post-button">
-                        <i class="far fa-thumbs-up"></i>
-                        <span>Like</span>
-                    </div>
-                    <div class="post-button">
-                        <i class="far fa-comment"></i>
-                        <span>Comment</span>
-                    </div>
-                    <div class="post-button">
-                        <i class="far fa-share-square"></i>
-                        <span>Share</span>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="post-card">
-                <div class="post-header">
-                    <div class="post-avatar">M</div>
-                    <div>
-                        <div class="post-author">Mary Smith</div>
-                        <div class="post-time">1 day ago</div>
-                    </div>
-                </div>
-                <div class="post-content">
-                    Added a new note about the family gathering next month. Please check your availability and add your preferences for food!
-                </div>
-                <div class="post-content">
-                    <img src="https://via.placeholder.com/500x300?text=Family+Gathering+Planning" style="width: 100%; border-radius: 8px;">
-                </div>
-                <div class="post-stats">
-                    <span>24 likes</span>
-                    <span>8 comments</span>
-                </div>
-                <div class="post-buttons">
-                    <div class="post-button">
-                        <i class="far fa-thumbs-up"></i>
-                        <span>Like</span>
-                    </div>
-                    <div class="post-button">
-                        <i class="far fa-comment"></i>
-                        <span>Comment</span>
-                    </div>
-                    <div class="post-button">
-                        <i class="far fa-share-square"></i>
-                        <span>Share</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Right Sidebar -->
-        <div class="right-sidebar">
-            <div class="sidebar-card">
-                <div class="card-header">
-                    <div class="card-title">Family News</div>
-                    <i class="fas fa-ellipsis-h card-icon"></i>
-                </div>
-                <div class="news-item">
-                    <div class="news-title">New feature: Budget tracking</div>
-                    <div class="news-source">Posted today</div>
-                </div>
-                <div class="news-item">
-                    <div class="news-title">Tips for better stock management</div>
-                    <div class="news-source">2 days ago</div>
-                </div>
-                <div class="news-item">
-                    <div class="news-title">Family meeting scheduled</div>
-                    <div class="news-source">3 days ago</div>
-                </div>
-            </div>
-            
-            <div class="ad-container">
-                <div class="ad-title">Genzura Premium</div>
-                <div class="ad-content">Upgrade for advanced features and unlimited storage</div>
-                <button class="ad-button">Try for Free</button>
-            </div>
-            
-            <div class="sidebar-card">
-                <div class="card-header">
-                    <div class="card-title">Recent Activities</div>
-                    <i class="fas fa-ellipsis-h card-icon"></i>
-                </div>
-                <div class="news-item">
-                    <div class="news-title">Jane updated stock list</div>
-                    <div class="news-source">5 minutes ago</div>
-                </div>
-                <div class="news-item">
-                    <div class="news-title">John added a new note</div>
-                    <div class="news-source">1 hour ago</div>
-                </div>
-                <div class="news-item">
-                    <div class="news-title">Peter completed a task</div>
-                    <div class="news-source">3 hours ago</div>
-                </div>
-            </div>
-        </div>
+    <div class="header">
+        <h2 id="user-name"></h2>
     </div>
-
-    <div id="error-message" onclick="hideError()"></div>
-
-    <div id="loading">
-        <div id="loading-spinner"></div>
+    <div class="content">
+        <div class="animation-container">
+            <i class="fas fa-user-friends human-icon"></i>
+        </div>
+        <div class="buttons-container">
+            <div class="button" onclick="window.location.href='overview.html'">Overview</div>
+            <div class="button" onclick="window.location.href='manage.html'">Manage</div>
+            <div class="button" onclick="window.location.href='stock.html'">Stock</div>
+            <div class="button" onclick="window.location.href='notes.html'">Notes</div>
+            <div class="button sign-out" onclick="signOut()">Sign out</div>
+        </div>
     </div>
 
     <footer>
@@ -752,7 +146,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signOut as firebaseSignOut } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+        import { getAuth, signOut as firebaseSignOut } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
         import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -769,154 +163,44 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // Set greeting based on time of day
-        function setGreeting() {
-            const hour = new Date().getHours();
-            let greeting = "";
-            
-            if (hour >= 5 && hour < 12) {
-                greeting = "Mwaramutse"; // Morning
-            } else if (hour >= 12 && hour < 17) {
-                greeting = "Mwiriwe"; // Afternoon
-            } else {
-                greeting = "Mwiriwe neza"; // Evening
-            }
-            
-            // Create a greeting element if it doesn't exist
-            if (!document.getElementById('greeting-text')) {
-                const greetingEl = document.createElement('div');
-                greetingEl.id = 'greeting-text';
-                greetingEl.className = 'profile-title';
-                document.querySelector('.profile-info').appendChild(greetingEl);
-            }
-            
-            document.getElementById('greeting-text').textContent = greeting;
-        }
-
-        function showLoading() {
-            document.getElementById('loading').style.display = 'flex';
-        }
-
-        function hideLoading() {
-            document.getElementById('loading').style.display = 'none';
-        }
-
-        function showError(message) {
-            const errorDiv = document.getElementById('error-message');
-            errorDiv.textContent = message;
-            errorDiv.style.display = 'block';
-            setTimeout(() => {
-                errorDiv.style.display = 'none';
-            }, 5000);
-        }
-
-        function hideError() {
-            document.getElementById('error-message').style.display = 'none';
-        }
-
         async function loadUserName() {
-            showLoading();
-            try {
-                await new Promise((resolve, reject) => {
-                    onAuthStateChanged(auth, async (user) => {
-                        if (!user) {
-                            hideLoading();
-                            showError('Nta muntu wabashije kwinjira. Ongera winjire.');
-                            setTimeout(() => { window.location.href = 'index.html'; }, 3000);
-                            reject('No user authenticated');
-                            return;
-                        }
-                        try {
-                            const userDocRef = doc(db, 'users', user.uid);
-                            const userDoc = await getDoc(userDocRef);
-                            if (userDoc.exists()) {
-                                const userData = userDoc.data();
-                                if (userData.type !== 'family') {
-                                    hideLoading();
-                                    showError('Konti si iya umuryango. Kohereza ku ipaji yihariye.');
-                                    setTimeout(() => { window.location.href = userData.type === 'business' ? 'business.html' : 'index.html'; }, 3000);
-                                    reject('Invalid user type');
-                                    return;
-                                }
-                                
-                                // Update user name in all locations
-                                const userName = userData.name;
-                                document.getElementById('user-name').textContent = userName;
-                                document.getElementById('profile-name').textContent = userName;
-                                
-                                // Set avatar initials
-                                const initials = userName.split(' ').map(n => n[0]).join('').toUpperCase();
-                                document.getElementById('user-avatar').textContent = initials;
-                                document.getElementById('profile-avatar').textContent = initials;
-                                document.getElementById('post-avatar').textContent = initials;
-                                
-                                hideLoading();
-                                resolve();
-                            } else {
-                                hideLoading();
-                                showError('Ibisobanuro bya konti ntibibashije kuboneka.');
-                                setTimeout(() => { window.location.href = 'index.html'; }, 3000);
-                                reject('User document not found');
-                            }
-                        } catch (error) {
-                            hideLoading();
-                            showError('Ikosa ryabaye mu kubona izina: ' + error.message);
-                            setTimeout(() => { window.location.href = 'index.html'; }, 3000);
-                            reject(error);
-                        }
-                    });
-                });
-            } catch (error) {
-                console.error('Authentication error:', error);
+            const user = auth.currentUser;
+            if (user) {
+                const userDocRef = doc(db, 'users', user.uid);
+                const userDoc = await getDoc(userDocRef);
+                if (userDoc.exists()) {
+                    document.getElementById('user-name').textContent = userDoc.data().name;
+                } else {
+                    console.error('User document not found');
+                }
+            } else {
+                window.location.href = 'index.html';
             }
         }
 
         function signOut() {
-            showLoading();
             firebaseSignOut(auth).then(() => {
-                hideLoading();
                 window.location.href = 'index.html';
             }).catch((error) => {
-                hideLoading();
-                showError('Ikosa ryabaye mu gusohoka: ' + error.message);
                 console.error('Error signing out:', error);
             });
         }
 
-        // Add navigation functionality
-        document.querySelectorAll('.nav-item').forEach(item => {
-            item.addEventListener('click', function() {
-                document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-                this.classList.add('active');
-                
-                // Handle navigation
-                const text = this.querySelector('span').textContent;
-                if (text === 'Overview') {
-                    window.location.href = 'overview.html';
-                } else if (text === 'Stock') {
-                    window.location.href = 'stock.html';
-                } else if (text === 'Notes') {
-                    window.location.href = 'notes.html';
-                }
-            });
-        });
-
-        // Add sign out functionality to user menu
-        document.querySelector('.navbar-user').addEventListener('click', function() {
-            if (confirm('Are you sure you want to sign out?')) {
-                signOut();
+        function createParticles() {
+            const container = document.querySelector('.animation-container');
+            for (let i = 0; i < 15; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                particle.style.width = `${Math.random() * 4 + 2}px`;
+                particle.style.height = particle.style.width;
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.animationDelay = `${Math.random() * 4}s`;
+                container.appendChild(particle);
             }
-        });
+        }
 
-        // Initialize the page
-        setGreeting();
         loadUserName();
-
-        document.addEventListener('click', function(event) {
-            if (event.target.id !== 'error-message') {
-                hideError();
-            }
-        });
+        createParticles();
     </script>
 </body>
 </html>
