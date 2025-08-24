@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Genzura - Itangantego</title>
     <link rel="icon" type="image/png" href="https://i.ibb.co/mFqfcpPj/cropped-circle-image.png">
-    <!-- Using Tailwind CSS via CLI or PostCSS would be better for production -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body {
             background-color: #ffffff;
@@ -131,6 +131,44 @@
         .hidden {
             display: none;
         }
+        .back-button {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            color: #1e40af;
+            cursor: pointer;
+            width: auto;
+            padding: 0;
+        }
+        .back-button:hover {
+            color: #1e3a8a;
+            background: none;
+        }
+        .progress-container {
+            width: 100%;
+            height: 6px;
+            background-color: #e5e7eb;
+            border-radius: 3px;
+            margin: 1rem 0;
+        }
+        .progress-bar {
+            height: 100%;
+            background-color: #1e40af;
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+        .step-indicator {
+            text-align: center;
+            font-size: 0.8rem;
+            color: #6b7280;
+            margin-bottom: 1rem;
+        }
+        .form-header {
+            position: relative;
+        }
     </style>
 </head>
 <body>
@@ -148,13 +186,22 @@
                 <p class="switch-auth">Niba utagira konti? <a href="#" onclick="showSignup(); return false;">Iyandikishe</a></p>
             </div>
             <div id="signup-form" class="hidden">
-                <h1>Iyandikishe</h1>
+                <div class="form-header">
+                    <button class="back-button hidden" id="back-button" onclick="goBack()">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <h1>Iyandikishe</h1>
+                    <div class="step-indicator" id="step-indicator"></div>
+                    <div class="progress-container">
+                        <div class="progress-bar" id="progress-bar"></div>
+                    </div>
+                </div>
                 <div id="step1">
                     <label for="user-type">Hitamo ubwoko</label>
                     <select id="user-type" class="border-blue-800">
-                        <option value="" disabled selected>Hitamo: Umuryango cyangwa Ubucuruzi</option>
+                        <option value="" disabled selected>Hitamo: Umuryango cyangwa Business</option>
                         <option value="family">Umuryango</option>
-                        <option value="business">Ubucuruzi</option>
+                        <option value="business">Business</option>
                     </select>
                     <button id="start-signup" class="bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
                     <p class="switch-auth">Ufite konti? <a href="#" onclick="showLogin(); return false;">Injira</a></p>
@@ -293,11 +340,19 @@
 
     <!-- Global functions for form switching -->
     <script>
+        // Track current step and user type
+        let currentStep = 0;
+        let userType = '';
+        let stepHistory = [];
+        const totalFamilySteps = 7;
+        const totalBusinessSteps = 9;
+        
         // Global functions for form switching
         function showSignup() {
             document.getElementById('login-form').classList.add('hidden');
             document.getElementById('signup-form').classList.remove('hidden');
             resetSignupForms();
+            updateProgressBar();
         }
 
         function showLogin() {
@@ -326,10 +381,79 @@
             document.querySelectorAll('input, select').forEach(input => {
                 input.value = '';
             });
+            
+            // Reset tracking variables
+            currentStep = 0;
+            userType = '';
+            stepHistory = [];
+            
+            // Hide back button
+            document.getElementById('back-button').classList.add('hidden');
+            updateProgressBar();
         }
 
         function hideError() {
             document.getElementById('error-message').style.display = 'none';
+        }
+        
+        function goBack() {
+            if (stepHistory.length > 0) {
+                const prevStep = stepHistory.pop();
+                
+                if (prevStep === 'step1') {
+                    // Going back to user type selection
+                    document.getElementById('step1').classList.remove('hidden');
+                    if (userType === 'family') {
+                        document.getElementById('family-signup').classList.add('hidden');
+                    } else {
+                        document.getElementById('business-signup').classList.add('hidden');
+                    }
+                    userType = '';
+                    currentStep = 0;
+                    document.getElementById('back-button').classList.add('hidden');
+                } else {
+                    // Going back to previous step in the flow
+                    if (userType === 'family') {
+                        document.querySelectorAll('#family-signup > div').forEach(div => {
+                            div.classList.add('hidden');
+                        });
+                        document.getElementById(prevStep).classList.remove('hidden');
+                        currentStep = parseInt(prevStep.replace('family-step', ''));
+                    } else {
+                        document.querySelectorAll('#business-signup > div').forEach(div => {
+                            div.classList.add('hidden');
+                        });
+                        document.getElementById(prevStep).classList.remove('hidden');
+                        currentStep = parseInt(prevStep.replace('business-step', ''));
+                    }
+                }
+                
+                updateProgressBar();
+            } else {
+                // If no history, go back to login
+                showLogin();
+            }
+        }
+        
+        function updateProgressBar() {
+            const progressBar = document.getElementById('progress-bar');
+            const stepIndicator = document.getElementById('step-indicator');
+            
+            if (currentStep === 0) {
+                // At user type selection
+                progressBar.style.width = '10%';
+                stepIndicator.textContent = '';
+            } else if (userType === 'family') {
+                // Family signup progress
+                const progress = (currentStep / totalFamilySteps) * 100;
+                progressBar.style.width = `${progress}%`;
+                stepIndicator.textContent = `${currentStep} / ${totalFamilySteps}`;
+            } else if (userType === 'business') {
+                // Business signup progress
+                const progress = (currentStep / totalBusinessSteps) * 100;
+                progressBar.style.width = `${progress}%`;
+                stepIndicator.textContent = `${currentStep} / ${totalBusinessSteps}`;
+            }
         }
     </script>
 
@@ -394,19 +518,24 @@
 
         document.getElementById('start-signup').addEventListener('click', function() {
             hideError();
-            const userType = document.getElementById('user-type').value;
+            userType = document.getElementById('user-type').value;
             if (!userType) {
-                showError('Nyamuneka hitamo ubwoko: Umuryango cyangwa Ubucuruzi');
+                showError('Nyamuneka hitamo ubwoko: Umuryango cyangwa Business');
                 return;
             }
+            stepHistory.push('step1');
             document.getElementById('step1').classList.add('hidden');
             if (userType === 'family') {
                 document.getElementById('family-signup').classList.remove('hidden');
                 document.getElementById('family-step1').classList.remove('hidden');
+                currentStep = 1;
             } else {
                 document.getElementById('business-signup').classList.remove('hidden');
                 document.getElementById('business-step1').classList.remove('hidden');
+                currentStep = 1;
             }
+            document.getElementById('back-button').classList.remove('hidden');
+            updateProgressBar();
         });
 
         // Family Signup Steps
@@ -415,8 +544,11 @@
                 showError('Nyamuneka injiza izina ryawe');
                 return;
             }
+            stepHistory.push('family-step1');
             document.getElementById('family-step1').classList.add('hidden');
             document.getElementById('family-step2').classList.remove('hidden');
+            currentStep = 2;
+            updateProgressBar();
         });
 
         document.getElementById('family-next2').addEventListener('click', function() {
@@ -424,8 +556,11 @@
                 showError('Nyamuneka hitamo igitsina');
                 return;
             }
+            stepHistory.push('family-step2');
             document.getElementById('family-step2').classList.add('hidden');
             document.getElementById('family-step3').classList.remove('hidden');
+            currentStep = 3;
+            updateProgressBar();
         });
 
         document.getElementById('family-next3').addEventListener('click', function() {
@@ -433,8 +568,11 @@
                 showError('Nyamuneka injiza numero ya terefone');
                 return;
             }
+            stepHistory.push('family-step3');
             document.getElementById('family-step3').classList.add('hidden');
             document.getElementById('family-step4').classList.remove('hidden');
+            currentStep = 4;
+            updateProgressBar();
         });
 
         document.getElementById('family-next4').addEventListener('click', function() {
@@ -442,8 +580,11 @@
                 showError('Nyamuneka injiza ijambo ryibanga');
                 return;
             }
+            stepHistory.push('family-step4');
             document.getElementById('family-step4').classList.add('hidden');
             document.getElementById('family-step5').classList.remove('hidden');
+            currentStep = 5;
+            updateProgressBar();
         });
 
         document.getElementById('family-next5').addEventListener('click', function() {
@@ -451,8 +592,11 @@
                 showError('Nyamuneka hitamo umubare w\'abagize umuryango');
                 return;
             }
+            stepHistory.push('family-step5');
             document.getElementById('family-step5').classList.add('hidden');
             document.getElementById('family-step6').classList.remove('hidden');
+            currentStep = 6;
+            updateProgressBar();
         });
 
         document.getElementById('family-next6').addEventListener('click', function() {
@@ -460,8 +604,11 @@
                 showError('Nyamuneka injiza akarere');
                 return;
             }
+            stepHistory.push('family-step6');
             document.getElementById('family-step6').classList.add('hidden');
             document.getElementById('family-step7').classList.remove('hidden');
+            currentStep = 7;
+            updateProgressBar();
         });
 
         document.getElementById('family-finish').addEventListener('click', async function() {
@@ -506,8 +653,11 @@
                 showError('Nyamuneka injiza izina ryawe');
                 return;
             }
+            stepHistory.push('business-step1');
             document.getElementById('business-step1').classList.add('hidden');
             document.getElementById('business-step2').classList.remove('hidden');
+            currentStep = 2;
+            updateProgressBar();
         });
 
         document.getElementById('business-next2').addEventListener('click', function() {
@@ -515,8 +665,11 @@
                 showError('Nyamuneka hitamo igitsina');
                 return;
             }
+            stepHistory.push('business-step2');
             document.getElementById('business-step2').classList.add('hidden');
             document.getElementById('business-step3').classList.remove('hidden');
+            currentStep = 3;
+            updateProgressBar();
         });
 
         document.getElementById('business-next3').addEventListener('click', function() {
@@ -524,8 +677,11 @@
                 showError('Nyamuneka injiza numero ya terefone');
                 return;
             }
+            stepHistory.push('business-step3');
             document.getElementById('business-step3').classList.add('hidden');
             document.getElementById('business-step4').classList.remove('hidden');
+            currentStep = 4;
+            updateProgressBar();
         });
 
         document.getElementById('business-next4').addEventListener('click', function() {
@@ -533,8 +689,11 @@
                 showError('Nyamuneka injiza ijambo ryibanga');
                 return;
             }
+            stepHistory.push('business-step4');
             document.getElementById('business-step4').classList.add('hidden');
             document.getElementById('business-step5').classList.remove('hidden');
+            currentStep = 5;
+            updateProgressBar();
         });
 
         document.getElementById('business-next5').addEventListener('click', function() {
@@ -542,8 +701,11 @@
                 showError('Nyamuneka injiza izina ry\'ubucuruzi');
                 return;
             }
+            stepHistory.push('business-step5');
             document.getElementById('business-step5').classList.add('hidden');
             document.getElementById('business-step6').classList.remove('hidden');
+            currentStep = 6;
+            updateProgressBar();
         });
 
         document.getElementById('business-next6').addEventListener('click', function() {
@@ -551,8 +713,11 @@
                 showError('Nyamuneka injiza icyiciro cy\'ubucuruzi');
                 return;
             }
+            stepHistory.push('business-step6');
             document.getElementById('business-step6').classList.add('hidden');
             document.getElementById('business-step7').classList.remove('hidden');
+            currentStep = 7;
+            updateProgressBar();
         });
 
         document.getElementById('business-next7').addEventListener('click', function() {
@@ -560,8 +725,11 @@
                 showError('Nyamuneka injiza aderesi y\'ubucuruzi');
                 return;
             }
+            stepHistory.push('business-step7');
             document.getElementById('business-step7').classList.add('hidden');
             document.getElementById('business-step8').classList.remove('hidden');
+            currentStep = 8;
+            updateProgressBar();
         });
 
         document.getElementById('business-next8').addEventListener('click', function() {
@@ -569,8 +737,11 @@
                 showError('Nyamuneka hitamo umubare w\'abakiriya');
                 return;
             }
+            stepHistory.push('business-step8');
             document.getElementById('business-step8').classList.add('hidden');
             document.getElementById('business-step9').classList.remove('hidden');
+            currentStep = 9;
+            updateProgressBar();
         });
 
         document.getElementById('business-finish').addEventListener('click', async function() {
