@@ -14,7 +14,7 @@
     }
     
     body {
-      background-color: #ffffff;
+      background-color: #fdfdfd;
       color: #333;
       line-height: 1.6;
       padding: 0;
@@ -98,6 +98,11 @@
       width: 100%;
       margin: 20px 0;
       background-color: #000;
+      border-radius: 4px;
+      overflow: hidden;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
     }
     
     .video-box video {
@@ -267,9 +272,7 @@
       }
       
       .video-container {
-        width: 80%;
-        margin-left: auto;
-        margin-right: auto;
+        width: 70%;
       }
       
       .ad-container {
@@ -291,6 +294,11 @@
       .grid-item {
         padding: 15px 10px;
         font-size: 14px;
+      }
+      
+      .video-container {
+        width: 95%;
+        max-height: 180px;
       }
     }
   </style>
@@ -420,12 +428,27 @@
       introVideo.addEventListener('error', function() {
         console.log("Video failed to load, using fallback content");
         this.parentElement.innerHTML = `
-          <div style="background: #000; color: #fff; padding: 60px 20px; text-align: center;">
+          <div style="background: #000; color: #fff; padding: 40px 20px; text-align: center;">
             <p>Welcome to GENZURA Business Management</p>
             <p>Your business solution platform</p>
           </div>
         `;
       });
+      
+      // Adjust video size for mobile
+      function adjustVideoSize() {
+        if (window.innerWidth < 768) {
+          introVideo.style.maxHeight = '180px';
+        } else {
+          introVideo.style.maxHeight = 'none';
+        }
+      }
+      
+      // Initial adjustment
+      adjustVideoSize();
+      
+      // Adjust on window resize
+      window.addEventListener('resize', adjustVideoSize);
     });
 
     // Load user data from Firestore
