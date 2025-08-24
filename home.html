@@ -155,6 +155,7 @@
                 <div id="check-auth"><i class="fas fa-circle-notch fa-spin"></i><span class="pending">Kugenzura Uko Winjiye</span></div>
                 <div id="check-user"><i class="fas fa-circle-notch fa-spin"></i><span class="pending">Kugenzura Ibisobanuro bya Konti</span></div>
                 <div id="check-session"><i class="fas fa-circle-notch fa-spin"></i><span class="pending">Kugenzura Igihembwe</span></div>
+                <div id="check-season"><i class="fas fa-circle-notch fa-spin"></i><span class="pending">Kugenzura Icyiciro cy'Igihembwe</span></div>
                 <div id="check-redirect"><i class="fas fa-circle-notch fa-spin"></i><span class="pending">Kohereza ku Ipaji Yihariye</span></div>
             </div>
             <div id="error-message" onclick="hideError()"></div>
@@ -172,7 +173,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
-        import { getFirestore, doc, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, collection, getDocs, addDoc, setDoc } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyD-8JzL7GPhGhjzQCrAZOJWmyb-hPuaA0U",
@@ -230,36 +231,31 @@
                 let progress = 0;
 
                 // Step 1: Check authentication
-                updateProgress(progress += 25);
-                await new Promise(resolve => {
+                updateProgress(progress += 20);
+                const user = await new Promise((resolve, reject) => {
                     onAuthStateChanged(auth, (user) => {
                         if (!user) {
-                            hideLoading();
-                            showError('Nta muntu wabashije kwinjira. Ongera winjire.');
-                            setTimeout(() => { window.location.href = 'index.html'; }, 3000);
-                            return;
+                            reject('Nta muntu wabashije kwinjira. Ongera winjire.');
+                        } else {
+                            markCheckComplete('check-auth');
+                            resolve(user);
                         }
-                        markCheckComplete('check-auth');
-                        resolve(user);
                     });
                 });
 
                 // Step 2: Fetch user data
-                updateProgress(progress += 25);
-                const userDocRef = doc(db, 'users', auth.currentUser.uid);
+                updateProgress(progress += 20);
+                const userDocRef = doc(db, 'users', user.uid);
                 const userDoc = await getDoc(userDocRef);
                 if (!userDoc.exists()) {
-                    hideLoading();
-                    showError('Ibisobanuro bya konti ntibibashije kuboneka.');
-                    setTimeout(() => { window.location.href = 'index.html'; }, 3000);
-                    return;
+                    throw 'Ibisobanuro bya konti ntibibashije kuboneka.';
                 }
                 const userData = userDoc.data();
                 markCheckComplete('check-user');
 
                 // Step 3: Check for session collection
-                updateProgress(progress += 25);
-                const sessionCollectionRef = collection(db, 'users', auth.currentUser.uid, 'sessions');
+                updateProgress(progress += 20);
+                const sessionCollectionRef = collection(db, 'users', user.uid, 'sessions');
                 const sessionDocs = await getDocs(sessionCollectionRef);
                 const currentDate = new Date('2025-08-24T13:49:34+02:00');
                 const thirtyDaysLater = new Date(currentDate);
@@ -271,8 +267,40 @@
                 }
                 markCheckComplete('check-session');
 
-                // Step 4: Redirect based on user type
-                updateProgress(progress += 25);
+                // Step 4: Check and create season collection if not found
+                updateProgress(progress += 20);
+                const seasonCollectionRef = collection(db, 'users', user.uid, 'season');
+                const seasonDocs = await getDocs(seasonCollectionRef);
+                if (seasonDocs.empty) {
+                    const startDate = new Date(userData.createdAt.toDate()); // Use createdAt from user data
+                    const endDate = new Date(startDate);
+                    endDate.setMonth(startDate.getMonth() + 1);
+
+                    const monthNames = ["Mutarama", "Gashyantare", "Werurwe", "Mata", "Gicurasi", "Kamena", "Nyakanga", "Kanama", "Nzeri", "Ukwakira", "Ugushyingo", "Ukuboza"];
+                    const startMonth = {
+                        number: startDate.getMonth() + 1,
+                        name: monthNames[startDate.getMonth()]
+                    };
+                    const endMonth = {
+                        number: endDate.getMonth() + 1,
+                        name: monthNames[endDate.getMonth()]
+                    };
+
+                    await addDoc(seasonCollectionRef, {
+                        start_date: startDate,
+                        end_date: endDate,
+                        start_month: startMonth,
+                        end_month: endMonth,
+                        created_at: new Date()
+                    });
+                    console.log('Default season created.');
+                } else {
+                    console.log('Season collection exists.');
+                }
+                markCheckComplete('check-season');
+
+                // Step 5: Redirect based on user type
+                updateProgress(progress += 20);
                 if (userData.type === 'family') {
                     markCheckComplete('check-redirect');
                     window.location.href = 'family.html';
@@ -280,14 +308,12 @@
                     markCheckComplete('check-redirect');
                     window.location.href = 'business.html';
                 } else {
-                    hideLoading();
-                    showError('Ubwoko bwa konti ntibwabashije kugaragara.');
-                    setTimeout(() => { window.location.href = 'index.html'; }, 3000);
+                    throw 'Ubwoko bwa konti ntibwabashije kugaragara.';
                 }
                 hideLoading();
             } catch (error) {
                 hideLoading();
-                showError('Ikosa ryabaye mu kugenzura konti: ' + error.message);
+                showError('Ikosa ryabaye mu kugenzura konti: ' + (typeof error === 'string' ? error : error.message));
                 setTimeout(() => { window.location.href = 'index.html'; }, 3000);
             }
         }
