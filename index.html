@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Genzura - Itangantego</title>
+    <link rel="icon" type="image/png" href="https://i.ibb.co/mFqfcpPj/cropped-circle-image.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
@@ -25,7 +26,8 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
         .auth-container h1 {
-            font-size: 1.5rem;
+            font-size: 2rem;
+            font-weight: bold;
             text-align: center;
             margin-bottom: 1.5rem;
             color: #000000;
@@ -120,26 +122,28 @@
     </style>
 </head>
 <body>
-    <div class="auth-container bg-white">
-        <h1 class="text-black">Murakaza neza muri Genzura</h1>
-        <div id="error-message"></div>
-        <div id="login-form">
-            <label for="username">Izina ry'ukoresha</label>
-            <input type="text" id="username" placeholder="Injiza izina ry'ukoresha ryawe" class="border-blue-800">
-            <label for="password">Ijambo ryibanga</label>
-            <input type="password" id="password" placeholder="Injiza ijambo ryibanga ryawe" class="border-blue-800">
-            <button id="login-button" class="bg-blue-800 hover:bg-blue-900 text-white">Injira</button>
-            <p class="switch-auth">Niba utagira konti? <a href="#" onclick="showSignup()">Iyandikishe</a></p>
-        </div>
-        <div id="signup-form" class="hidden">
-            <label for="new-username">Izina ry'ukoresha</label>
-            <input type="text" id="new-username" placeholder="Hitamo izina ry'ukoresha" class="border-blue-800">
-            <label for="new-password">Ijambo ryibanga</label>
-            <input type="password" id="new-password" placeholder="Hitamo ijambo ryibanga" class="border-blue-800">
-            <label for="confirm-password">Emeza Ijambo ryibanga</label>
-            <input type="password" id="confirm-password" placeholder="Emeza ijambo ryibanga ryawe" class="border-blue-800">
-            <button id="signup-button" class="bg-blue-800 hover:bg-blue-900 text-white">Iyandikishe</button>
-            <p class="switch-auth">Ufite konti? <a href="#" onclick="showLogin()">Injira</a></p>
+    <div class="flex flex-col items-center">
+        <h1 class="text-4xl font-bold text-black mb-4">GENZURA</h1>
+        <div class="auth-container bg-white">
+            <div id="error-message"></div>
+            <div id="login-form">
+                <label for="username">Izina ry'ukoresha</label>
+                <input type="text" id="username" placeholder="Injiza izina ry'ukoresha ryawe" class="border-blue-800">
+                <label for="password">Ijambo ryibanga</label>
+                <input type="password" id="password" placeholder="Injiza ijambo ryibanga ryawe" class="border-blue-800">
+                <button id="login-button" class="bg-blue-800 hover:bg-blue-900 text-white">Injira</button>
+                <p class="switch-auth">Niba utagira konti? <a href="#" onclick="showSignup()">Iyandikishe</a></p>
+            </div>
+            <div id="signup-form" class="hidden">
+                <label for="new-username">Izina ry'ukoresha</label>
+                <input type="text" id="new-username" placeholder="Hitamo izina ry'ukoresha" class="border-blue-800">
+                <label for="new-password">Ijambo ryibanga</label>
+                <input type="password" id="new-password" placeholder="Hitamo ijambo ryibanga" class="border-blue-800">
+                <label for="confirm-password">Emeza Ijambo ryibanga</label>
+                <input type="password" id="confirm-password" placeholder="Emeza ijambo ryibanga ryawe" class="border-blue-800">
+                <button id="signup-button" class="bg-blue-800 hover:bg-blue-900 text-white">Iyandikishe</button>
+                <p class="switch-auth">Ufite konti? <a href="#" onclick="showLogin()">Injira</a></p>
+            </div>
         </div>
     </div>
 
