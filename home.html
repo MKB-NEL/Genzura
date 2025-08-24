@@ -14,7 +14,7 @@
     }
     
     body {
-      background-color: #f5f5f5;
+      background-color: #ffffff;
       color: #333;
       line-height: 1.6;
       padding: 0;
@@ -39,7 +39,7 @@
       align-items: center;
       margin-bottom: 20px;
       padding-bottom: 15px;
-      border-bottom: 1px solid #ddd;
+      border-bottom: 1px solid #eee;
     }
     
     .user-info {
@@ -78,7 +78,7 @@
       width: 60px;
       height: 60px;
       border-radius: 50%;
-      background-color: #ddd;
+      background-color: #f0f0f0;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -97,9 +97,7 @@
     .video-container {
       width: 100%;
       margin: 20px 0;
-      border-radius: 8px;
-      overflow: hidden;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      background-color: #000;
     }
     
     .video-box video {
@@ -117,15 +115,14 @@
     .advertisement {
       background-color: #f0f0f0;
       padding: 15px;
-      border-radius: 8px;
+      border-radius: 4px;
       text-align: center;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     }
     
     .ad-content {
       display: block;
       width: 100%;
-      max-height: 200px;
+      max-height: 150px;
       object-fit: contain;
       margin: 0 auto;
       cursor: pointer;
@@ -141,24 +138,17 @@
     .grid-menu {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 15px;
+      gap: 12px;
       margin: 25px 0;
     }
     
     .grid-item {
-      padding: 25px 15px;
-      border-radius: 8px;
+      padding: 20px 15px;
+      border-radius: 4px;
       color: #fff;
       font-weight: bold;
       text-align: center;
       cursor: pointer;
-      transition: transform 0.2s, box-shadow 0.2s;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    }
-    
-    .grid-item:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 6px 10px rgba(0,0,0,0.15);
     }
     
     .stock { background-color: #ff6f61; }
@@ -171,7 +161,7 @@
       margin-top: 30px;
       text-align: center;
       padding: 20px 0;
-      border-top: 1px solid #ddd;
+      border-top: 1px solid #eee;
     }
     
     .notifications-btn {
@@ -183,7 +173,7 @@
       background-color: #0055cc;
       color: white;
       border: none;
-      border-radius: 6px;
+      border-radius: 4px;
       font-size: 16px;
       cursor: pointer;
       text-decoration: none;
@@ -225,7 +215,7 @@
     .modal-content {
       background-color: white;
       padding: 25px;
-      border-radius: 8px;
+      border-radius: 4px;
       width: 90%;
       max-width: 400px;
       text-align: center;
@@ -246,7 +236,7 @@
     .modal-btn {
       padding: 10px 20px;
       border: none;
-      border-radius: 6px;
+      border-radius: 4px;
       cursor: pointer;
       font-weight: bold;
     }
@@ -299,7 +289,7 @@
       }
       
       .grid-item {
-        padding: 20px 10px;
+        padding: 15px 10px;
         font-size: 14px;
       }
     }
@@ -326,7 +316,7 @@
     <!-- Video Section -->
     <div class="video-container">
       <div class="video-box">
-        <video id="introVideo" autoplay muted playsinline>
+        <video id="introVideo" autoplay muted playsinline loop>
           <source src="video.mp4" type="video/mp4">
           Your browser does not support the video tag.
         </video>
@@ -426,11 +416,16 @@
       loadUserData(user.uid);
       loadAdvertisement();
       
-      // Set up video to restart when it ends
-      introVideo.addEventListener('ended', function() {
-        this.currentTime = 0;
-        this.play();
-      }, false);
+      // Handle video errors gracefully
+      introVideo.addEventListener('error', function() {
+        console.log("Video failed to load, using fallback content");
+        this.parentElement.innerHTML = `
+          <div style="background: #000; color: #fff; padding: 60px 20px; text-align: center;">
+            <p>Welcome to GENZURA Business Management</p>
+            <p>Your business solution platform</p>
+          </div>
+        `;
+      });
     });
 
     // Load user data from Firestore
@@ -439,8 +434,8 @@
         .then((doc) => {
           if (doc.exists) {
             const userData = doc.data();
-            userNameElement.textContent = userData.fullName;
-            businessNameElement.textContent = userData.businessName;
+            userNameElement.textContent = userData.fullName || "User";
+            businessNameElement.textContent = userData.businessName || "Business";
             
             // Load items count if available
             if (userData.itemsCount !== undefined) {
@@ -452,21 +447,39 @@
               profileCircle.innerHTML = `<img src="${userData.logoUrl}" alt="Business Logo">`;
             }
           } else {
-            console.log("No user data found");
+            console.log("No user data found in Firestore");
+            // Use data from localStorage if available
+            const localUserData = JSON.parse(localStorage.getItem('genzuraUser'));
+            if (localUserData && localUserData.name) {
+              userNameElement.textContent = localUserData.name;
+            }
+            if (localUserData && localUserData.business) {
+              businessNameElement.textContent = localUserData.business;
+            }
           }
         })
         .catch((error) => {
           console.log("Error getting user data:", error);
+          // Use data from localStorage if available
+          const localUserData = JSON.parse(localStorage.getItem('genzuraUser'));
+          if (localUserData && localUserData.name) {
+            userNameElement.textContent = localUserData.name;
+          }
+          if (localUserData && localUserData.business) {
+            businessNameElement.textContent = localUserData.business;
+          }
         });
     }
 
     // Load advertisement from Firestore
     function loadAdvertisement() {
-      // This would typically come from an 'ads' collection in Firestore
-      // For now, we'll use a placeholder
+      // Create a simple text-based ad to avoid external image loading issues
       const adHtml = `
-        <img src="https://via.placeholder.com/300x100.png?text=Advertisement+Space" alt="Advertisement" class="ad-content">
-        <p class="ad-text">Special offers available now!</p>
+        <div class="ad-text" style="cursor: pointer; padding: 20px;">
+          <h3>Special Promotion</h3>
+          <p>Get 20% off on all business tools this month!</p>
+          <small>Click to learn more</small>
+        </div>
       `;
       
       adContent.innerHTML = adHtml;
@@ -493,15 +506,12 @@
       const file = event.target.files[0];
       if (!file) return;
       
-      // Here you would typically upload to imgbb.com using their API
-      // For demonstration, we'll use a placeholder
-      
       // Create a preview
       const reader = new FileReader();
       reader.onload = function(e) {
         profileCircle.innerHTML = `<img src="${e.target.result}" alt="Business Logo">`;
         
-        // Save to user data (in a real app, you would save the URL from imgbb)
+        // Save to user data (in a real app, you would upload to imgbb and save the URL)
         const userData = JSON.parse(localStorage.getItem('genzuraUser'));
         if (userData && userData.uid) {
           db.collection('users').doc(userData.uid).update({
