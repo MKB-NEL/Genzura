@@ -1,1 +1,206 @@
-Family affair
+<!DOCTYPE html>
+<html lang="rw">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Genzura - Umuryango</title>
+    <link rel="icon" type="image/png" href="https://i.ibb.co/mFqfcpPj/cropped-circle-image.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #f7fafc;
+            color: #1a202c;
+            font-family: 'Inter', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+        }
+        .header {
+            width: 100%;
+            padding: 1.5rem 2rem;
+            position: fixed;
+            top: 0;
+            z-index: 10;
+        }
+        .header h2 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1e40af;
+        }
+        .content {
+            margin-top: 6rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 500px;
+            padding: 1rem;
+        }
+        .animation-container {
+            height: 150px;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        .human-icon {
+            font-size: 2.5rem;
+            color: #1e40af;
+            animation: bounce 2s ease-in-out infinite;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+        .particle {
+            position: absolute;
+            background-color: #60a5fa;
+            border-radius: 50%;
+            opacity: 0.5;
+            animation: particles 6s linear infinite;
+        }
+        @keyframes particles {
+            0% { transform: translateY(0); opacity: 0.5; }
+            100% { transform: translateY(-100vh); opacity: 0; }
+        }
+        .buttons-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            width: 100%;
+            max-width: 300px;
+        }
+        .button {
+            padding: 0.75rem;
+            background-color: #1e40af;
+            color: #ffffff;
+            text-align: center;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 1rem;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        .button:hover {
+            background-color: #1e3a8a;
+            transform: translateY(-2px);
+        }
+        .sign-out {
+            background-color: #ef4444;
+        }
+        .sign-out:hover {
+            background-color: #dc2626;
+        }
+        footer {
+            text-align: center;
+            padding: 1rem;
+            color: #4b5563;
+            font-size: 0.85rem;
+            width: 100%;
+            margin-top: auto;
+        }
+        footer a {
+            color: #1e40af;
+            text-decoration: none;
+        }
+        footer a:hover {
+            text-decoration: underline;
+        }
+        @media (max-width: 640px) {
+            .content {
+                padding: 0.5rem;
+            }
+            .buttons-container {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h2 id="user-name"></h2>
+    </div>
+    <div class="content">
+        <div class="animation-container">
+            <i class="fas fa-user-friends human-icon"></i>
+        </div>
+        <div class="buttons-container">
+            <div class="button" onclick="window.location.href='overview.html'">Overview</div>
+            <div class="button" onclick="window.location.href='manage.html'">Manage</div>
+            <div class="button" onclick="window.location.href='stock.html'">Stock</div>
+            <div class="button" onclick="window.location.href='notes.html'">Notes</div>
+            <div class="button sign-out" onclick="signOut()">Sign out</div>
+        </div>
+    </div>
+
+    <footer>
+        Genzura © 2025 <a href="https://github.com/mkb-nel">M.K.Bertrand</a> - <a href="terms.html">Terms</a>
+    </footer>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+        import { getAuth, signOut as firebaseSignOut } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyD-8JzL7GPhGhjzQCrAZOJWmyb-hPuaA0U",
+            authDomain: "mypersonalai-22391.firebaseapp.com",
+            databaseURL: "https://mypersonalai-22391-default-rtdb.firebaseio.com",
+            projectId: "mypersonalai-22391",
+            storageBucket: "mypersonalai-22391.firebasestorage.app",
+            messagingSenderId: "527318613254",
+            appId: "1:527318613254:web:be2ede267103601f187287"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        async function loadUserName() {
+            const user = auth.currentUser;
+            if (user) {
+                const userDocRef = doc(db, 'users', user.uid);
+                const userDoc = await getDoc(userDocRef);
+                if (userDoc.exists()) {
+                    document.getElementById('user-name').textContent = userDoc.data().name;
+                } else {
+                    console.error('User document not found');
+                }
+            } else {
+                window.location.href = 'index.html';
+            }
+        }
+
+        function signOut() {
+            firebaseSignOut(auth).then(() => {
+                window.location.href = 'index.html';
+            }).catch((error) => {
+                console.error('Error signing out:', error);
+            });
+        }
+
+        function createParticles() {
+            const container = document.querySelector('.animation-container');
+            for (let i = 0; i < 15; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                particle.style.width = `${Math.random() * 4 + 2}px`;
+                particle.style.height = particle.style.width;
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.animationDelay = `${Math.random() * 4}s`;
+                container.appendChild(particle);
+            }
+        }
+
+        loadUserName();
+        createParticles();
+    </script>
+</body>
+</html>
