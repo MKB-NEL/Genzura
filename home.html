@@ -1,1 +1,540 @@
-welcome
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GENZURA - Home</title>
+  <link rel="icon" type="image/png" href="https://i.ibb.co/mFqfcpPj/cropped-circle-image.png">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+    
+    body {
+      background-color: #f5f5f5;
+      color: #333;
+      line-height: 1.6;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      flex: 1;
+    }
+    
+    /* Header Styles */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #ddd;
+    }
+    
+    .user-info {
+      display: flex;
+      align-items: center;
+    }
+    
+    .user-details {
+      margin-left: 15px;
+    }
+    
+    .user-name {
+      font-size: 22px;
+      font-weight: bold;
+      text-align: left;
+      margin: 0;
+    }
+    
+    .business-name {
+      font-size: 16px;
+      color: #666;
+      margin: 5px 0;
+    }
+    
+    .items-count {
+      font-size: 14px;
+      color: #0055cc;
+      font-weight: bold;
+    }
+    
+    .logo-upload {
+      position: relative;
+    }
+    
+    .profile-circle {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background-color: #ddd;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      overflow: hidden;
+      border: 2px solid #0055cc;
+    }
+    
+    .profile-circle img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    /* Video Section */
+    .video-container {
+      width: 100%;
+      margin: 20px 0;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    
+    .video-box video {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    
+    /* Advertisement Section */
+    .ad-container {
+      width: 100%;
+      margin: 20px 0;
+    }
+    
+    .advertisement {
+      background-color: #f0f0f0;
+      padding: 15px;
+      border-radius: 8px;
+      text-align: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    
+    .ad-content {
+      display: block;
+      width: 100%;
+      max-height: 200px;
+      object-fit: contain;
+      margin: 0 auto;
+      cursor: pointer;
+    }
+    
+    .ad-text {
+      font-size: 16px;
+      margin: 10px 0;
+      color: #333;
+    }
+    
+    /* Grid Menu */
+    .grid-menu {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+      margin: 25px 0;
+    }
+    
+    .grid-item {
+      padding: 25px 15px;
+      border-radius: 8px;
+      color: #fff;
+      font-weight: bold;
+      text-align: center;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    
+    .grid-item:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 10px rgba(0,0,0,0.15);
+    }
+    
+    .stock { background-color: #ff6f61; }
+    .overview { background-color: #4caf50; }
+    .notes { background-color: #2196f3; }
+    .transactions { background-color: #9e9e9e; }
+    
+    /* Footer */
+    .footer {
+      margin-top: 30px;
+      text-align: center;
+      padding: 20px 0;
+      border-top: 1px solid #ddd;
+    }
+    
+    .notifications-btn {
+      display: block;
+      width: 100%;
+      max-width: 300px;
+      margin: 0 auto 15px;
+      padding: 12px;
+      background-color: #0055cc;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      text-decoration: none;
+      text-align: center;
+    }
+    
+    .signout {
+      color: #f44336;
+      text-decoration: none;
+      display: block;
+      margin-bottom: 15px;
+      font-weight: bold;
+    }
+    
+    .copyright {
+      font-size: 14px;
+      color: #666;
+    }
+    
+    .copyright a {
+      color: #0055cc;
+      text-decoration: none;
+    }
+    
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    
+    .modal-content {
+      background-color: white;
+      padding: 25px;
+      border-radius: 8px;
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+    }
+    
+    .modal-title {
+      margin-bottom: 15px;
+      color: #0055cc;
+    }
+    
+    .modal-actions {
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+    
+    .modal-btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    
+    .modal-btn.primary {
+      background-color: #0055cc;
+      color: white;
+    }
+    
+    .modal-btn.secondary {
+      background-color: #f0f0f0;
+      color: #333;
+    }
+    
+    /* File Input */
+    .file-input {
+      display: none;
+    }
+    
+    /* Responsive Design */
+    @media (min-width: 768px) {
+      .grid-menu {
+        grid-template-columns: repeat(4, 1fr);
+      }
+      
+      .header {
+        flex-direction: row;
+      }
+      
+      .video-container {
+        width: 80%;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      
+      .ad-container {
+        width: 80%;
+        margin-left: auto;
+        margin-right: auto;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .user-name {
+        font-size: 18px;
+      }
+      
+      .business-name {
+        font-size: 14px;
+      }
+      
+      .grid-item {
+        padding: 20px 10px;
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header with User Info -->
+    <div class="header">
+      <div class="user-info">
+        <div class="user-details">
+          <h1 class="user-name" id="userName">Loading...</h1>
+          <p class="business-name" id="businessName">Loading business...</p>
+          <p class="items-count">Items in stock: <span id="itemsCount">0</span></p>
+        </div>
+      </div>
+      <div class="logo-upload">
+        <div class="profile-circle" id="profileCircle">
+          <span>Add Logo</span>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Video Section -->
+    <div class="video-container">
+      <div class="video-box">
+        <video id="introVideo" autoplay muted playsinline>
+          <source src="video.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+      </div>
+    </div>
+    
+    <!-- Advertisement Section -->
+    <div class="ad-container">
+      <div class="advertisement" id="adContent">
+        <p class="ad-text">Advertisement space</p>
+      </div>
+    </div>
+    
+    <!-- Grid Menu -->
+    <div class="grid-menu">
+      <div class="grid-item stock" onclick="window.location.href='stock.html'">
+        Stock
+      </div>
+      <div class="grid-item overview" onclick="window.location.href='overview.html'">
+        Overview
+      </div>
+      <div class="grid-item notes" onclick="window.location.href='notes.html'">
+        Notes
+      </div>
+      <div class="grid-item transactions" onclick="window.location.href='transactions.html'">
+        Transactions
+      </div>
+    </div>
+    
+    <!-- Footer -->
+    <div class="footer">
+      <a href="notifications.html" class="notifications-btn">Notifications</a>
+      <a href="#" class="signout" id="signOut">Sign out</a>
+      <p class="copyright">
+        Genzura © 2025 <a href="https://github.com/mkb-nel" target="_blank">M.K.Bertrand</a> - 
+        <a href="terms.html">Terms</a>
+      </p>
+    </div>
+  </div>
+  
+  <!-- Logo Upload Modal -->
+  <div class="modal" id="logoModal">
+    <div class="modal-content">
+      <h2 class="modal-title">Add Business Logo</h2>
+      <p>Upload a logo for your business. It will be displayed in a circle format.</p>
+      <input type="file" id="logoUpload" class="file-input" accept="image/*">
+      <div class="modal-actions">
+        <button class="modal-btn primary" onclick="document.getElementById('logoUpload').click()">Select Image</button>
+        <button class="modal-btn secondary" onclick="closeModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+  
+  <script>
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyD-8JzL7GPhGhjzQCrAZOJWmyb-hPuaA0U",
+      authDomain: "mypersonalai-22391.firebaseapp.com",
+      databaseURL: "https://mypersonalai-22391-default-rtdb.firebaseio.com",
+      projectId: "mypersonalai-22391",
+      storageBucket: "mypersonalai-22391.firebasestorage.app",
+      messagingSenderId: "527318613254",
+      appId: "1:527318613254:web:be2ede267103601f187287"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    // DOM elements
+    const userNameElement = document.getElementById('userName');
+    const businessNameElement = document.getElementById('businessName');
+    const itemsCountElement = document.getElementById('itemsCount');
+    const profileCircle = document.getElementById('profileCircle');
+    const logoModal = document.getElementById('logoModal');
+    const logoUpload = document.getElementById('logoUpload');
+    const signOutBtn = document.getElementById('signOut');
+    const adContent = document.getElementById('adContent');
+    const introVideo = document.getElementById('introVideo');
+
+    // Check if user is logged in
+    window.addEventListener('DOMContentLoaded', () => {
+      const userData = localStorage.getItem('genzuraUser');
+      
+      if (!userData) {
+        window.location.href = 'index.html';
+        return;
+      }
+      
+      const user = JSON.parse(userData);
+      loadUserData(user.uid);
+      loadAdvertisement();
+      
+      // Set up video to restart when it ends
+      introVideo.addEventListener('ended', function() {
+        this.currentTime = 0;
+        this.play();
+      }, false);
+    });
+
+    // Load user data from Firestore
+    function loadUserData(userId) {
+      db.collection('users').doc(userId).get()
+        .then((doc) => {
+          if (doc.exists) {
+            const userData = doc.data();
+            userNameElement.textContent = userData.fullName;
+            businessNameElement.textContent = userData.businessName;
+            
+            // Load items count if available
+            if (userData.itemsCount !== undefined) {
+              itemsCountElement.textContent = userData.itemsCount;
+            }
+            
+            // Load logo if available
+            if (userData.logoUrl) {
+              profileCircle.innerHTML = `<img src="${userData.logoUrl}" alt="Business Logo">`;
+            }
+          } else {
+            console.log("No user data found");
+          }
+        })
+        .catch((error) => {
+          console.log("Error getting user data:", error);
+        });
+    }
+
+    // Load advertisement from Firestore
+    function loadAdvertisement() {
+      // This would typically come from an 'ads' collection in Firestore
+      // For now, we'll use a placeholder
+      const adHtml = `
+        <img src="https://via.placeholder.com/300x100.png?text=Advertisement+Space" alt="Advertisement" class="ad-content">
+        <p class="ad-text">Special offers available now!</p>
+      `;
+      
+      adContent.innerHTML = adHtml;
+      
+      // Make ad clickable
+      adContent.addEventListener('click', function() {
+        // This would open a link or phone number based on ad data
+        window.open('tel:+250788123456', '_self'); // Example phone number
+      });
+    }
+
+    // Open logo modal when profile circle is clicked
+    profileCircle.addEventListener('click', function() {
+      logoModal.style.display = 'flex';
+    });
+
+    // Close modal function
+    function closeModal() {
+      logoModal.style.display = 'none';
+    }
+
+    // Handle logo upload
+    logoUpload.addEventListener('change', function(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      
+      // Here you would typically upload to imgbb.com using their API
+      // For demonstration, we'll use a placeholder
+      
+      // Create a preview
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        profileCircle.innerHTML = `<img src="${e.target.result}" alt="Business Logo">`;
+        
+        // Save to user data (in a real app, you would save the URL from imgbb)
+        const userData = JSON.parse(localStorage.getItem('genzuraUser'));
+        if (userData && userData.uid) {
+          db.collection('users').doc(userData.uid).update({
+            logoUrl: e.target.result
+          }).then(() => {
+            console.log("Logo updated successfully");
+          }).catch((error) => {
+            console.error("Error updating logo: ", error);
+          });
+        }
+        
+        closeModal();
+      };
+      reader.readAsDataURL(file);
+    });
+
+    // Sign out function
+    signOutBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      auth.signOut().then(() => {
+        localStorage.removeItem('genzuraUser');
+        window.location.href = 'index.html';
+      }).catch((error) => {
+        console.error('Sign out error:', error);
+      });
+    });
+
+    // Close modal when clicking outside
+    window.addEventListener('click', function(event) {
+      if (event.target === logoModal) {
+        closeModal();
+      }
+    });
+  </script>
+</body>
+</html>
