@@ -6,44 +6,67 @@
   <title>GENZURA - Login</title>
   <link rel="icon" type="image/png" href="https://i.ibb.co/mFqfcpPj/cropped-circle-image.png">
   <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
     body {
       font-family: Arial, sans-serif;
       background: #fff;
       margin: 0;
       padding: 0;
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
-      height: 100vh;
+      min-height: 100vh;
+      position: relative;
     }
+    
+    .container {
+      width: 100%;
+      max-width: 400px;
+      padding: 20px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    
     .login-container {
-      max-width: 350px;
       width: 100%;
       text-align: center;
     }
+    
     .logo {
       font-size: 28px;
       font-weight: bold;
       color: #0055cc;
       margin-bottom: 20px;
     }
+    
     h2 {
       font-size: 20px;
       margin-bottom: 10px;
     }
+    
     p {
       color: #555;
       font-size: 14px;
       margin-bottom: 20px;
     }
+    
     input {
       width: 100%;
-      padding: 10px;
+      padding: 12px;
       margin: 8px 0;
       border: 1px solid #ccc;
       border-radius: 6px;
-      font-size: 14px;
+      font-size: 16px; /* Larger for mobile */
     }
+    
     .forgot {
       display: block;
       text-align: right;
@@ -52,29 +75,51 @@
       color: #0055cc;
       text-decoration: none;
     }
+    
     button {
       width: 100%;
-      padding: 12px;
+      padding: 14px;
       background: black;
       color: white;
       border: none;
       border-radius: 6px;
       font-size: 16px;
       cursor: pointer;
+      margin-top: 5px;
     }
+    
     .terms {
       font-size: 12px;
       color: #555;
       margin-top: 15px;
+      line-height: 1.4;
     }
+    
     .create {
       margin-top: 15px;
       font-size: 14px;
     }
+    
     .create a {
       color: #0055cc;
       text-decoration: none;
       cursor: pointer;
+    }
+    
+    /* Footer styles */
+    footer {
+      width: 100%;
+      text-align: center;
+      padding: 15px;
+      margin-top: auto;
+      font-size: 12px;
+      color: #666;
+      border-top: 1px solid #eee;
+    }
+    
+    footer a {
+      color: #0055cc;
+      text-decoration: none;
     }
     
     /* Modal styles */
@@ -90,6 +135,7 @@
       align-items: center;
       z-index: 1000;
     }
+    
     .modal-content {
       background-color: white;
       padding: 25px;
@@ -99,69 +145,74 @@
       max-height: 80vh;
       overflow-y: auto;
     }
+    
     .close {
       float: right;
       font-size: 24px;
       font-weight: bold;
       cursor: pointer;
     }
+    
     .form-group {
       margin-bottom: 15px;
       text-align: left;
     }
+    
     .form-group label {
       display: block;
       margin-bottom: 5px;
       font-size: 14px;
       color: #333;
     }
+    
     .form-group select {
       width: 100%;
-      padding: 10px;
+      padding: 12px;
       border: 1px solid #ccc;
       border-radius: 6px;
-      font-size: 14px;
+      font-size: 16px;
     }
+    
     .form-group textarea {
       width: 100%;
-      padding: 10px;
+      padding: 12px;
       border: 1px solid #ccc;
       border-radius: 6px;
-      font-size: 14px;
+      font-size: 16px;
       resize: vertical;
       min-height: 80px;
     }
+    
     .checkbox-group {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr;
       gap: 8px;
       margin: 10px 0;
     }
+    
     .checkbox-item {
       display: flex;
       align-items: center;
     }
+    
     .checkbox-item input {
       width: auto;
       margin-right: 8px;
     }
+    
     .error {
       color: red;
       font-size: 12px;
       margin-top: 5px;
       display: none;
     }
-    .success {
-      color: green;
-      font-size: 14px;
-      margin-top: 10px;
-      display: none;
-    }
+    
     .loading {
       display: none;
       text-align: center;
       margin: 10px 0;
     }
+    
     .loading-spinner {
       border: 3px solid #f3f3f3;
       border-top: 3px solid #0055cc;
@@ -171,34 +222,85 @@
       animation: spin 1s linear infinite;
       margin: 0 auto;
     }
+    
     @keyframes spin {
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
+    
+    /* Popup notification */
+    .popup {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #333;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 6px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      z-index: 1001;
+      display: none;
+      max-width: 90%;
+      text-align: center;
+    }
+    
+    .popup.success {
+      background-color: #4CAF50;
+    }
+    
+    .popup.error {
+      background-color: #f44336;
+    }
+    
+    .popup.info {
+      background-color: #2196F3;
+    }
+    
+    /* Mobile responsiveness */
+    @media (max-width: 480px) {
+      .container {
+        padding: 15px;
+      }
+      
+      input, select, textarea {
+        font-size: 16px; /* Prevents zoom on iOS */
+      }
+      
+      .modal-content {
+        padding: 20px;
+      }
+    }
   </style>
 </head>
 <body>
-  <div class="login-container">
-    <div class="logo">GENZURA</div>
-    <h2>Sign in</h2>
-    <p>Please enter your details to continue to GENZURA</p>
-    
-    <form id="loginForm">
-      <input type="text" id="phone" placeholder="Enter your phone number" required>
-      <input type="password" id="password" placeholder="Enter your password" required>
-      <a href="#" class="forgot">Forgot password?</a>
-      <button type="submit">Sign In</button>
-    </form>
-    
-    <div class="terms">
-      By logging-in, you accept the new <a href="#">Terms of use</a> including 
-      <a href="#">Privacy Policy</a> of GenzuraAccount.
-    </div>
-    
-    <div class="create">
-      Don't have an account? <a id="showSignup">Create Account</a>
+  <div class="container">
+    <div class="login-container">
+      <div class="logo">GENZURA</div>
+      <h2>Sign in</h2>
+      <p>Please enter your details to continue to GENZURA</p>
+      
+      <form id="loginForm">
+        <input type="text" id="phone" placeholder="Enter your phone number" required>
+        <input type="password" id="password" placeholder="Enter your password" required>
+        <a href="#" class="forgot">Forgot password?</a>
+        <button type="submit">Sign In</button>
+      </form>
+      
+      <div class="terms">
+        By logging-in, you accept the new <a href="terms.html">Terms of use</a> including 
+        <a href="terms.html">Privacy Policy</a> of GenzuraAccount.
+      </div>
+      
+      <div class="create">
+        Don't have an account? <a id="showSignup">Create Account</a>
+      </div>
     </div>
   </div>
+
+  <footer>
+    Genzura © 2025 <a href="https://github.com/mkb-nel" target="_blank">M.K.Bertrand</a> - <a href="terms.html">Terms</a>
+  </footer>
 
   <!-- Signup Modal -->
   <div id="signupModal" class="modal">
@@ -340,18 +442,16 @@
           <p>Creating account...</p>
         </div>
         
-        <div class="success" id="signupSuccess">
-          Account created successfully! You can now login.
-        </div>
-        
         <button type="submit">Create Account</button>
       </form>
     </div>
   </div>
 
-  <!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
+  <!-- Popup Notification -->
+  <div id="popup" class="popup"></div>
+
+  <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <!-- Add Firebase products that you want to use -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
   
@@ -379,7 +479,18 @@
     const modal = document.getElementById('signupModal');
     const closeBtn = document.querySelector('.close');
     const loadingEl = document.querySelector('.loading');
-    const successEl = document.getElementById('signupSuccess');
+    const popup = document.getElementById('popup');
+
+    // Check if user is already logged in
+    window.addEventListener('DOMContentLoaded', () => {
+      const userData = localStorage.getItem('genzuraUser');
+      if (userData) {
+        showPopup('Welcome back! Redirecting to home...', 'success');
+        setTimeout(() => {
+          window.location.href = 'home.html';
+        }, 2000);
+      }
+    });
 
     // Show modal when Create Account is clicked
     showSignupBtn.addEventListener('click', () => {
@@ -406,17 +517,35 @@
       const phone = document.getElementById('phone').value;
       const password = document.getElementById('password').value;
       
+      if (!phone || !password) {
+        showPopup('Please enter both phone number and password', 'error');
+        return;
+      }
+      
       // Convert phone to email format for authentication
       const email = `${phone}@genzura.com`;
       
       auth.signInWithEmailAndPassword(email, password)
         .then((userCredential) => {
           // Signed in 
-          alert('Login successful!');
-          // You can redirect to another page here
+          const user = userCredential.user;
+          
+          // Store user data in localStorage
+          localStorage.setItem('genzuraUser', JSON.stringify({
+            uid: user.uid,
+            phone: phone,
+            email: email
+          }));
+          
+          showPopup('Login successful! Redirecting...', 'success');
+          
+          // Redirect to home page
+          setTimeout(() => {
+            window.location.href = 'home.html';
+          }, 2000);
         })
         .catch((error) => {
-          alert('Login error: ' + error.message);
+          showPopup('Login error: ' + error.message, 'error');
         });
     });
 
@@ -429,7 +558,6 @@
       
       // Show loading state
       loadingEl.style.display = 'block';
-      successEl.style.display = 'none';
       
       // Get form values
       const fullName = document.getElementById('fullName').value;
@@ -474,21 +602,31 @@
           });
         })
         .then(() => {
-          // Hide loading, show success
-          loadingEl.style.display = 'none';
-          successEl.style.display = 'block';
+          // Store user data in localStorage
+          localStorage.setItem('genzuraUser', JSON.stringify({
+            uid: auth.currentUser.uid,
+            phone: phone,
+            email: email
+          }));
           
-          // Reset form
+          // Hide loading
+          loadingEl.style.display = 'none';
+          
+          showPopup('Account created successfully! Redirecting...', 'success');
+          
+          // Reset form and close modal
           setTimeout(() => {
             modal.style.display = 'none';
             resetSignupForm();
-            alert('Account created successfully! You can now login with your phone number and autogenerated password.');
+            
+            // Redirect to home page
+            window.location.href = 'home.html';
           }, 2000);
         })
         .catch((error) => {
           // Handle errors
           loadingEl.style.display = 'none';
-          alert('Error creating account: ' + error.message);
+          showPopup('Error creating account: ' + error.message, 'error');
         });
     });
 
@@ -566,7 +704,19 @@
         el.style.display = 'none';
       });
       loadingEl.style.display = 'none';
-      successEl.style.display = 'none';
+    }
+
+    // Show popup notification
+    function showPopup(message, type = 'info') {
+      const popup = document.getElementById('popup');
+      popup.textContent = message;
+      popup.className = 'popup ' + type;
+      popup.style.display = 'block';
+      
+      // Hide after 3 seconds
+      setTimeout(() => {
+        popup.style.display = 'none';
+      }, 3000);
     }
   </script>
 </body>
