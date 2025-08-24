@@ -64,7 +64,7 @@
       margin: 8px 0;
       border: 1px solid #ccc;
       border-radius: 6px;
-      font-size: 16px; /* Larger for mobile */
+      font-size: 16px;
     }
     
     .forgot {
@@ -207,6 +207,13 @@
       display: none;
     }
     
+    .info-text {
+      color: #666;
+      font-size: 12px;
+      margin-top: 4px;
+      font-style: italic;
+    }
+    
     .loading {
       display: none;
       text-align: center;
@@ -264,7 +271,7 @@
       }
       
       input, select, textarea {
-        font-size: 16px; /* Prevents zoom on iOS */
+        font-size: 16px;
       }
       
       .modal-content {
@@ -281,8 +288,8 @@
       <p>Please enter your details to continue to GENZURA</p>
       
       <form id="loginForm">
-        <input type="text" id="phone" placeholder="Enter your phone number" required>
-        <input type="password" id="password" placeholder="Enter your password" required>
+        <input type="text" id="loginPhone" placeholder="Enter your phone number" required>
+        <input type="password" id="loginPassword" placeholder="Enter your password" required>
         <a href="#" class="forgot">Forgot password?</a>
         <button type="submit">Sign In</button>
       </form>
@@ -324,6 +331,22 @@
             <option value="other">Other</option>
           </select>
           <div class="error" id="genderError">Please select your gender</div>
+        </div>
+        
+        <!-- Phone Number Field -->
+        <div class="form-group">
+          <label for="phone">Phone Number</label>
+          <input type="text" id="phone" placeholder="e.g., 0781234567" required>
+          <div class="info-text">This will be used as your login ID. Make sure it's correct.</div>
+          <div class="error" id="phoneError">Please enter a valid phone number</div>
+        </div>
+        
+        <!-- Password Field -->
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" placeholder="Create a secure password" required>
+          <div class="info-text">Use at least 8 characters with a mix of letters and numbers.</div>
+          <div class="error" id="passwordError">Password must be at least 8 characters</div>
         </div>
         
         <div class="form-group">
@@ -514,8 +537,8 @@
     // Handle login form submission
     loginForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      const phone = document.getElementById('phone').value;
-      const password = document.getElementById('password').value;
+      const phone = document.getElementById('loginPhone').value;
+      const password = document.getElementById('loginPassword').value;
       
       if (!phone || !password) {
         showPopup('Please enter both phone number and password', 'error');
@@ -562,8 +585,9 @@
       // Get form values
       const fullName = document.getElementById('fullName').value;
       const gender = document.getElementById('gender').value;
-      const businessName = document.getElementById('businessName').value;
       const phone = document.getElementById('phone').value;
+      const password = document.getElementById('password').value;
+      const businessName = document.getElementById('businessName').value;
       const clients = document.getElementById('clients').value;
       const country = document.getElementById('country').value;
       const district = document.getElementById('district').value;
@@ -574,9 +598,6 @@
       document.querySelectorAll('input[name="category"]:checked').forEach((checkbox) => {
         selectedCategories.push(checkbox.value);
       });
-      
-      // Create a password (in a real app, you might ask the user for a password)
-      const password = generatePassword(phone);
       
       // Convert phone to email format for authentication
       const email = `${phone}@genzura.com`;
@@ -591,8 +612,8 @@
           return db.collection('users').doc(user.uid).set({
             fullName,
             gender,
-            businessName,
             phone,
+            businessName,
             businessCategories: selectedCategories,
             estimatedClients: clients,
             country,
@@ -653,6 +674,30 @@
         isValid = false;
       }
       
+      // Validate phone
+      const phone = document.getElementById('phone').value;
+      if (!phone) {
+        document.getElementById('phoneError').style.display = 'block';
+        document.getElementById('phoneError').textContent = 'Please enter your phone number';
+        isValid = false;
+      } else if (!isValidPhone(phone)) {
+        document.getElementById('phoneError').style.display = 'block';
+        document.getElementById('phoneError').textContent = 'Please enter a valid phone number';
+        isValid = false;
+      }
+      
+      // Validate password
+      const password = document.getElementById('password').value;
+      if (!password) {
+        document.getElementById('passwordError').style.display = 'block';
+        document.getElementById('passwordError').textContent = 'Please enter a password';
+        isValid = false;
+      } else if (password.length < 8) {
+        document.getElementById('passwordError').style.display = 'block';
+        document.getElementById('passwordError').textContent = 'Password must be at least 8 characters';
+        isValid = false;
+      }
+      
       // Validate business name
       const businessName = document.getElementById('businessName').value;
       if (!businessName) {
@@ -691,10 +736,11 @@
       return isValid;
     }
 
-    // Generate a password based on phone number
-    function generatePassword(phone) {
-      // Simple password generation - in a real app, you might want something more secure
-      return phone + "GenZura!";
+    // Validate phone number format
+    function isValidPhone(phone) {
+      // Simple validation for East African phone numbers
+      const phoneRegex = /^(\+?25)?(0|7)[2-8][0-9]{7}$/;
+      return phoneRegex.test(phone.replace(/\s/g, ''));
     }
 
     // Reset signup form
