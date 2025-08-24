@@ -49,7 +49,6 @@
             color: #000000;
         }
         .auth-container button {
-            width: 100%;
             padding: 0.5rem;
             background-color: #1e40af;
             color: #ffffff;
@@ -132,16 +131,13 @@
             display: none;
         }
         .back-button {
-            position: absolute;
-            top: 1rem;
-            left: 1rem;
             background: none;
             border: none;
             font-size: 1.2rem;
             color: #1e40af;
             cursor: pointer;
             width: auto;
-            padding: 0;
+            padding: 0.5rem;
         }
         .back-button:hover {
             color: #1e3a8a;
@@ -169,6 +165,17 @@
         .form-header {
             position: relative;
         }
+        .button-container {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        .next-button {
+            flex: 1;
+        }
+        .back-step-button {
+            width: 50px;
+        }
     </style>
 </head>
 <body>
@@ -182,14 +189,11 @@
                 <input type="tel" id="phone" placeholder="Injiza numero ya terefone" class="border-blue-800">
                 <label for="password">Ijambo ryibanga</label>
                 <input type="password" id="password" placeholder="Injiza ijambo ryibanga ryawe" class="border-blue-800">
-                <button id="login-button" class="bg-blue-800 hover:bg-blue-900 text-white">Injira</button>
+                <button id="login-button" class="bg-blue-800 hover:bg-blue-900 text-white w-full">Injira</button>
                 <p class="switch-auth">Niba utagira konti? <a href="#" onclick="showSignup(); return false;">Iyandikishe</a></p>
             </div>
             <div id="signup-form" class="hidden">
                 <div class="form-header">
-                    <button class="back-button hidden" id="back-button" onclick="goBack()">
-                        <i class="fas fa-arrow-left"></i>
-                    </button>
                     <h1>Iyandikishe</h1>
                     <div class="step-indicator" id="step-indicator"></div>
                     <div class="progress-container">
@@ -203,14 +207,22 @@
                         <option value="family">Umuryango</option>
                         <option value="business">Business</option>
                     </select>
-                    <button id="start-signup" class="bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
+                    <div class="button-container">
+                        <button class="back-step-button hidden"></button>
+                        <button id="start-signup" class="next-button bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
+                    </div>
                     <p class="switch-auth">Ufite konti? <a href="#" onclick="showLogin(); return false;">Injira</a></p>
                 </div>
                 <div id="family-signup" class="hidden">
                     <div id="family-step1" class="signup-step">
                         <label for="family-name">Izina</label>
                         <input type="text" id="family-name" placeholder="Injiza izina ryawe" class="border-blue-800">
-                        <button id="family-next1" class="bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
+                        <div class="button-container">
+                            <button class="back-step-button back-button" onclick="goBack()">
+                                <i class="fas fa-arrow-left"></i>
+                            </button>
+                            <button id="family-next1" class="next-button bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
+                        </div>
                         <p class="switch-auth">Ufite konti? <a href="#" onclick="showLogin(); return false;">Injira</a></p>
                     </div>
                     <div id="family-step2" class="signup-step hidden">
@@ -220,19 +232,34 @@
                             <option value="male">Gabo</option>
                             <option value="female">Gore</option>
                         </select>
-                        <button id="family-next2" class="bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
+                        <div class="button-container">
+                            <button class="back-step-button back-button" onclick="goBack()">
+                                <i class="fas fa-arrow-left"></i>
+                            </button>
+                            <button id="family-next2" class="next-button bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
+                        </div>
                         <p class="switch-auth">Ufite konti? <a href="#" onclick="showLogin(); return false;">Injira</a></p>
                     </div>
                     <div id="family-step3" class="signup-step hidden">
                         <label for="family-phone">Numero ya terefone</label>
                         <input type="tel" id="family-phone" placeholder="Injiza numero ya terefone" class="border-blue-800">
-                        <button id="family-next3" class="bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
+                        <div class="button-container">
+                            <button class="back-step-button back-button" onclick="goBack()">
+                                <i class="fas fa-arrow-left"></i>
+                            </button>
+                            <button id="family-next3" class="next-button bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
+                        </div>
                         <p class="switch-auth">Ufite konti? <a href="#" onclick="showLogin(); return false;">Injira</a></p>
                     </div>
                     <div id="family-step4" class="signup-step hidden">
                         <label for="family-password">Ijambo ryibanga</label>
                         <input type="password" id="family-password" placeholder="Hitamo ijambo ryibanga" class="border-blue-800">
-                        <button id="family-next4" class="bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
+                        <div class="button-container">
+                            <button class="back-step-button back-button" onclick="goBack()">
+                                <i class="fas fa-arrow-left"></i>
+                            </button>
+                            <button id="family-next4" class="next-button bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
+                        </div>
                         <p class="switch-auth">Ufite konti? <a href="#" onclick="showLogin(); return false;">Injira</a></p>
                     </div>
                     <div id="family-step5" class="signup-step hidden">
@@ -244,19 +271,34 @@
                             <option value="8-13">8-13</option>
                             <option value="13+">13+</option>
                         </select>
-                        <button id="family-next5" class="bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
+                        <div class="button-container">
+                            <button class="back-step-button back-button" onclick="goBack()">
+                                <i class="fas fa-arrow-left"></i>
+                            </button>
+                            <button id="family-next5" class="next-button bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
+                        </div>
                         <p class="switch-auth">Ufite konti? <a href="#" onclick="showLogin(); return false;">Injira</a></p>
                     </div>
                     <div id="family-step6" class="signup-step hidden">
                         <label for="family-district">Akarere</label>
                         <input type="text" id="family-district" placeholder="Injiza akarere" class="border-blue-800">
-                        <button id="family-next6" class="bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
+                        <div class="button-container">
+                            <button class="back-step-button back-button" onclick="goBack()">
+                                <i class="fas fa-arrow-left"></i>
+                            </button>
+                            <button id="family-next6" class="next-button bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
+                        </div>
                         <p class="switch-auth">Ufite konti? <a href="#" onclick="showLogin(); return false;">Injira</a></p>
                     </div>
                     <div id="family-step7" class="signup-step hidden">
                         <label for="family-description">Ibisobanuro bigufi by'umuryango</label>
                         <input type="text" id="family-description" placeholder="Injiza ibisobanuro bigufi" class="border-blue-800">
-                        <button id="family-finish" class="bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
+                        <div class="button-container">
+                            <button class="back-step-button back-button" onclick="goBack()">
+                                <i class="fas fa-arrow-left"></i>
+                            </button>
+                            <button id="family-finish" class="next-button bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
+                        </div>
                         <p class="switch-auth">Ufite konti? <a href="#" onclick="showLogin(); return false;">Injira</a></p>
                     </div>
                 </div>
@@ -264,7 +306,12 @@
                     <div id="business-step1" class="signup-step">
                         <label for="business-name">Izina</label>
                         <input type="text" id="business-name" placeholder="Injiza izina ryawe" class="border-blue-800">
-                        <button id="business-next1" class="bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
+                        <div class="button-container">
+                            <button class="back-step-button back-button" onclick="goBack()">
+                                <i class="fas fa-arrow-left"></i>
+                            </button>
+                            <button id="business-next1" class="next-button bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
+                        </div>
                         <p class="switch-auth">Ufite konti? <a href="#" onclick="showLogin(); return false;">Injira</a></p>
                     </div>
                     <div id="business-step2" class="signup-step hidden">
@@ -274,37 +321,67 @@
                             <option value="male">Gabo</option>
                             <option value="female">Gore</option>
                         </select>
-                        <button id="business-next2" class="bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
+                        <div class="button-container">
+                            <button class="back-step-button back-button" onclick="goBack()">
+                                <i class="fas fa-arrow-left"></i>
+                            </button>
+                            <button id="business-next2" class="next-button bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
+                        </div>
                         <p class="switch-auth">Ufite konti? <a href="#" onclick="showLogin(); return false;">Injira</a></p>
                     </div>
                     <div id="business-step3" class="signup-step hidden">
                         <label for="business-phone">Numero ya terefone</label>
                         <input type="tel" id="business-phone" placeholder="Injiza numero ya terefone" class="border-blue-800">
-                        <button id="business-next3" class="bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
+                        <div class="button-container">
+                            <button class="back-step-button back-button" onclick="goBack()">
+                                <i class="fas fa-arrow-left"></i>
+                            </button>
+                            <button id="business-next3" class="next-button bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
+                        </div>
                         <p class="switch-auth">Ufite konti? <a href="#" onclick="showLogin(); return false;">Injira</a></p>
                     </div>
                     <div id="business-step4" class="signup-step hidden">
                         <label for="business-password">Ijambo ryibanga</label>
                         <input type="password" id="business-password" placeholder="Hitamo ijambo ryibanga" class="border-blue-800">
-                        <button id="business-next4" class="bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
+                        <div class="button-container">
+                            <button class="back-step-button back-button" onclick="goBack()">
+                                <i class="fas fa-arrow-left"></i>
+                            </button>
+                            <button id="business-next4" class="next-button bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
+                        </div>
                         <p class="switch-auth">Ufite konti? <a href="#" onclick="showLogin(); return false;">Injira</a></p>
                     </div>
                     <div id="business-step5" class="signup-step hidden">
                         <label for="business-info-name">Izina ry'ubucuruzi</label>
                         <input type="text" id="business-info-name" placeholder="Injiza izina ry'ubucuruzi" class="border-blue-800">
-                        <button id="business-next5" class="bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
+                        <div class="button-container">
+                            <button class="back-step-button back-button" onclick="goBack()">
+                                <i class="fas fa-arrow-left"></i>
+                            </button>
+                            <button id="business-next5" class="next-button bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
+                        </div>
                         <p class="switch-auth">Ufite konti? <a href="#" onclick="showLogin(); return false;">Injira</a></p>
                     </div>
                     <div id="business-step6" class="signup-step hidden">
                         <label for="business-category">Icyiciro cy'ubucuruzi</label>
                         <input type="text" id="business-category" placeholder="Injiza icyiciro cy'ubucuruzi" class="border-blue-800">
-                        <button id="business-next6" class="bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
+                        <div class="button-container">
+                            <button class="back-step-button back-button" onclick="goBack()">
+                                <i class="fas fa-arrow-left"></i>
+                            </button>
+                            <button id="business-next6" class="next-button bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
+                        </div>
                         <p class="switch-auth">Ufite konti? <a href="#" onclick="showLogin(); return false;">Injira</a></p>
                     </div>
                     <div id="business-step7" class="signup-step hidden">
                         <label for="business-address">Aderesi y'ubucuruzi</label>
                         <input type="text" id="business-address" placeholder="Injiza aderesi y'ubucuruzi" class="border-blue-800">
-                        <button id="business-next7" class="bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
+                        <div class="button-container">
+                            <button class="back-step-button back-button" onclick="goBack()">
+                                <i class="fas fa-arrow-left"></i>
+                            </button>
+                            <button id="business-next7" class="next-button bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
+                        </div>
                         <p class="switch-auth">Ufite konti? <a href="#" onclick="showLogin(); return false;">Injira</a></p>
                     </div>
                     <div id="business-step8" class="signup-step hidden">
@@ -316,13 +393,23 @@
                             <option value="500-1000">500-1000</option>
                             <option value="1000+">1000+</option>
                         </select>
-                        <button id="business-next8" class="bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
+                        <div class="button-container">
+                            <button class="back-step-button back-button" onclick="goBack()">
+                                <i class="fas fa-arrow-left"></i>
+                            </button>
+                            <button id="business-next8" class="next-button bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
+                        </div>
                         <p class="switch-auth">Ufite konti? <a href="#" onclick="showLogin(); return false;">Injira</a></p>
                     </div>
                     <div id="business-step9" class="signup-step hidden">
                         <label for="business-description">Ibisobanuro bigufi by'ubucuruzi</label>
                         <input type="text" id="business-description" placeholder="Injiza ibisobanuro bigufi" class="border-blue-800">
-                        <button id="business-finish" class="bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
+                        <div class="button-container">
+                            <button class="back-step-button back-button" onclick="goBack()">
+                                <i class="fas fa-arrow-left"></i>
+                            </button>
+                            <button id="business-finish" class="next-button bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
+                        </div>
                         <p class="switch-auth">Ufite konti? <a href="#" onclick="showLogin(); return false;">Injira</a></p>
                     </div>
                 </div>
@@ -387,8 +474,6 @@
             userType = '';
             stepHistory = [];
             
-            // Hide back button
-            document.getElementById('back-button').classList.add('hidden');
             updateProgressBar();
         }
 
@@ -410,7 +495,6 @@
                     }
                     userType = '';
                     currentStep = 0;
-                    document.getElementById('back-button').classList.add('hidden');
                 } else {
                     // Going back to previous step in the flow
                     if (userType === 'family') {
@@ -509,6 +593,7 @@
             try {
                 await signInWithEmailAndPassword(auth, email, password);
                 hideLoading();
+                // Auto-redirect to home page
                 window.location.href = 'home.html';
             } catch (error) {
                 hideLoading();
@@ -534,7 +619,6 @@
                 document.getElementById('business-step1').classList.remove('hidden');
                 currentStep = 1;
             }
-            document.getElementById('back-button').classList.remove('hidden');
             updateProgressBar();
         });
 
@@ -640,6 +724,7 @@
                     createdAt: new Date()
                 });
                 hideLoading();
+                // Auto-redirect to home page
                 window.location.href = 'home.html';
             } catch (error) {
                 hideLoading();
@@ -779,6 +864,7 @@
                     createdAt: new Date()
                 });
                 hideLoading();
+                // Auto-redirect to home page
                 window.location.href = 'home.html';
             } catch (error) {
                 hideLoading();
