@@ -1,882 +1,573 @@
 <!DOCTYPE html>
-<html lang="rw">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Genzura - Itangantego</title>
-    <link rel="icon" type="image/png" href="https://i.ibb.co/mFqfcpPj/cropped-circle-image.png">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        body {
-            background-color: #ffffff;
-            color: #000000;
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-        }
-        .auth-container {
-            width: 100%;
-            max-width: 400px;
-            padding: 2rem;
-            border: 1px solid #1e40af;
-            border-radius: 4px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-        .auth-container h1 {
-            font-size: 2rem;
-            font-weight: bold;
-            text-align: center;
-            margin-bottom: 1.5rem;
-            color: #000000;
-        }
-        .auth-container label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: #000000;
-            font-size: 0.9rem;
-        }
-        .auth-container input, .auth-container select {
-            width: 100%;
-            padding: 0.5rem;
-            margin-bottom: 1rem;
-            border: 1px solid #1e40af;
-            border-radius: 2px;
-            font-size: 0.9rem;
-            color: #000000;
-        }
-        .auth-container button {
-            padding: 0.5rem;
-            background-color: #1e40af;
-            color: #ffffff;
-            border: none;
-            border-radius: 2px;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        .auth-container button:hover {
-            background-color: #1e3a8a;
-        }
-        .auth-container .switch-auth {
-            text-align: center;
-            margin-top: 1rem;
-            font-size: 0.85rem;
-        }
-        .auth-container .switch-auth a {
-            color: #1e40af;
-            text-decoration: none;
-        }
-        .auth-container .switch-auth a:hover {
-            text-decoration: underline;
-        }
-        #error-message {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: #fee2e2;
-            color: #b91c1c;
-            padding: 0.75rem 1.5rem;
-            border-radius: 4px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-            display: none;
-            z-index: 1000;
-            font-size: 0.9rem;
-        }
-        #loading {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.8);
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-        #loading-spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #1e40af;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        footer {
-            text-align: center;
-            padding: 1rem;
-            color: #000000;
-            font-size: 0.85rem;
-            width: 100%;
-            position: absolute;
-            bottom: 0;
-        }
-        footer a {
-            color: #1e40af;
-            text-decoration: none;
-        }
-        footer a:hover {
-            text-decoration: underline;
-        }
-        .hidden {
-            display: none;
-        }
-        .back-button {
-            background: none;
-            border: none;
-            font-size: 1.2rem;
-            color: #1e40af;
-            cursor: pointer;
-            width: auto;
-            padding: 0.5rem;
-        }
-        .back-button:hover {
-            color: #1e3a8a;
-            background: none;
-        }
-        .progress-container {
-            width: 100%;
-            height: 6px;
-            background-color: #e5e7eb;
-            border-radius: 3px;
-            margin: 1rem 0;
-        }
-        .progress-bar {
-            height: 100%;
-            background-color: #1e40af;
-            border-radius: 3px;
-            transition: width 0.3s ease;
-        }
-        .step-indicator {
-            text-align: center;
-            font-size: 0.8rem;
-            color: #6b7280;
-            margin-bottom: 1rem;
-        }
-        .form-header {
-            position: relative;
-        }
-        .button-container {
-            display: flex;
-            gap: 0.5rem;
-            margin-top: 1rem;
-        }
-        .next-button {
-            flex: 1;
-        }
-        .back-step-button {
-            width: 50px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GENZURA - Login</title>
+  <link rel="icon" type="image/png" href="https://i.ibb.co/mFqfcpPj/cropped-circle-image.png">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #fff;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .login-container {
+      max-width: 350px;
+      width: 100%;
+      text-align: center;
+    }
+    .logo {
+      font-size: 28px;
+      font-weight: bold;
+      color: #0055cc;
+      margin-bottom: 20px;
+    }
+    h2 {
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+    p {
+      color: #555;
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+    .forgot {
+      display: block;
+      text-align: right;
+      font-size: 13px;
+      margin-bottom: 15px;
+      color: #0055cc;
+      text-decoration: none;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background: black;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .terms {
+      font-size: 12px;
+      color: #555;
+      margin-top: 15px;
+    }
+    .create {
+      margin-top: 15px;
+      font-size: 14px;
+    }
+    .create a {
+      color: #0055cc;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    
+    /* Modal styles */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    .modal-content {
+      background-color: white;
+      padding: 25px;
+      border-radius: 8px;
+      width: 90%;
+      max-width: 400px;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+    .close {
+      float: right;
+      font-size: 24px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .form-group {
+      margin-bottom: 15px;
+      text-align: left;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 14px;
+      color: #333;
+    }
+    .form-group select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+    .form-group textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+      resize: vertical;
+      min-height: 80px;
+    }
+    .checkbox-group {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin: 10px 0;
+    }
+    .checkbox-item {
+      display: flex;
+      align-items: center;
+    }
+    .checkbox-item input {
+      width: auto;
+      margin-right: 8px;
+    }
+    .error {
+      color: red;
+      font-size: 12px;
+      margin-top: 5px;
+      display: none;
+    }
+    .success {
+      color: green;
+      font-size: 14px;
+      margin-top: 10px;
+      display: none;
+    }
+    .loading {
+      display: none;
+      text-align: center;
+      margin: 10px 0;
+    }
+    .loading-spinner {
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid #0055cc;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
 </head>
 <body>
-    <div class="flex flex-col items-center">
-        <h1 class="text-4xl font-bold text-black mb-4">GENZURA</h1>
-        <div class="auth-container bg-white">
-            <div id="error-message" onclick="hideError()"></div>
-            <div id="login-form">
-                <h1>Injira</h1>
-                <label for="phone">Numero ya terefone</label>
-                <input type="tel" id="phone" placeholder="Injiza numero ya terefone" class="border-blue-800">
-                <label for="password">Ijambo ryibanga</label>
-                <input type="password" id="password" placeholder="Injiza ijambo ryibanga ryawe" class="border-blue-800">
-                <button id="login-button" class="bg-blue-800 hover:bg-blue-900 text-white w-full">Injira</button>
-                <p class="switch-auth">Niba utagira konti? <a href="#" onclick="showSignup(); return false;">Iyandikishe</a></p>
-            </div>
-            <div id="signup-form" class="hidden">
-                <div class="form-header">
-                    <h1>Iyandikishe</h1>
-                    <div class="step-indicator" id="step-indicator"></div>
-                    <div class="progress-container">
-                        <div class="progress-bar" id="progress-bar"></div>
-                    </div>
-                </div>
-                <div id="step1">
-                    <label for="user-type">Hitamo ubwoko</label>
-                    <select id="user-type" class="border-blue-800">
-                        <option value="" disabled selected>Hitamo: Umuryango cyangwa Business</option>
-                        <option value="family">Umuryango</option>
-                        <option value="business">Business</option>
-                    </select>
-                    <div class="button-container">
-                        <button class="back-step-button hidden"></button>
-                        <button id="start-signup" class="next-button bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
-                    </div>
-                    <p class="switch-auth">Ufite konti? <a href="#" onclick="showLogin(); return false;">Injira</a></p>
-                </div>
-                <div id="family-signup" class="hidden">
-                    <div id="family-step1" class="signup-step">
-                        <label for="family-name">Izina</label>
-                        <input type="text" id="family-name" placeholder="Injiza izina ryawe" class="border-blue-800">
-                        <div class="button-container">
-                            <button class="back-step-button back-button" onclick="goBack()">
-                                <i class="fas fa-arrow-left"></i>
-                            </button>
-                            <button id="family-next1" class="next-button bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
-                        </div>
-                        <p class="switch-auth">Ufite konti? <a href="#" onclick="showLogin(); return false;">Injira</a></p>
-                    </div>
-                    <div id="family-step2" class="signup-step hidden">
-                        <label for="family-gender">Igitsina</label>
-                        <select id="family-gender" class="border-blue-800">
-                            <option value="" disabled selected>Hitamo igitsina</option>
-                            <option value="male">Gabo</option>
-                            <option value="female">Gore</option>
-                        </select>
-                        <div class="button-container">
-                            <button class="back-step-button back-button" onclick="goBack()">
-                                <i class="fas fa-arrow-left"></i>
-                            </button>
-                            <button id="family-next2" class="next-button bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
-                        </div>
-                        <p class="switch-auth">Ufite konti? <a href="#" onclick="showLogin(); return false;">Injira</a></p>
-                    </div>
-                    <div id="family-step3" class="signup-step hidden">
-                        <label for="family-phone">Numero ya terefone</label>
-                        <input type="tel" id="family-phone" placeholder="Injiza numero ya terefone" class="border-blue-800">
-                        <div class="button-container">
-                            <button class="back-step-button back-button" onclick="goBack()">
-                                <i class="fas fa-arrow-left"></i>
-                            </button>
-                            <button id="family-next3" class="next-button bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
-                        </div>
-                        <p class="switch-auth">Ufite konti? <a href="#" onclick="showLogin(); return false;">Injira</a></p>
-                    </div>
-                    <div id="family-step4" class="signup-step hidden">
-                        <label for="family-password">Ijambo ryibanga</label>
-                        <input type="password" id="family-password" placeholder="Hitamo ijambo ryibanga" class="border-blue-800">
-                        <div class="button-container">
-                            <button class="back-step-button back-button" onclick="goBack()">
-                                <i class="fas fa-arrow-left"></i>
-                            </button>
-                            <button id="family-next4" class="next-button bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
-                        </div>
-                        <p class="switch-auth">Ufite konti? <a href="#" onclick="showLogin(); return false;">Injira</a></p>
-                    </div>
-                    <div id="family-step5" class="signup-step hidden">
-                        <label for="family-members">Umubare w'abagize umuryango</label>
-                        <select id="family-members" class="border-blue-800">
-                            <option value="" disabled selected>Hitamo umubare</option>
-                            <option value="2-5">2-5</option>
-                            <option value="5-8">5-8</option>
-                            <option value="8-13">8-13</option>
-                            <option value="13+">13+</option>
-                        </select>
-                        <div class="button-container">
-                            <button class="back-step-button back-button" onclick="goBack()">
-                                <i class="fas fa-arrow-left"></i>
-                            </button>
-                            <button id="family-next5" class="next-button bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
-                        </div>
-                        <p class="switch-auth">Ufite konti? <a href="#" onclick="showLogin(); return false;">Injira</a></p>
-                    </div>
-                    <div id="family-step6" class="signup-step hidden">
-                        <label for="family-district">Akarere</label>
-                        <input type="text" id="family-district" placeholder="Injiza akarere" class="border-blue-800">
-                        <div class="button-container">
-                            <button class="back-step-button back-button" onclick="goBack()">
-                                <i class="fas fa-arrow-left"></i>
-                            </button>
-                            <button id="family-next6" class="next-button bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
-                        </div>
-                        <p class="switch-auth">Ufite konti? <a href="#" onclick="showLogin(); return false;">Injira</a></p>
-                    </div>
-                    <div id="family-step7" class="signup-step hidden">
-                        <label for="family-description">Ibisobanuro bigufi by'umuryango</label>
-                        <input type="text" id="family-description" placeholder="Injiza ibisobanuro bigufi" class="border-blue-800">
-                        <div class="button-container">
-                            <button class="back-step-button back-button" onclick="goBack()">
-                                <i class="fas fa-arrow-left"></i>
-                            </button>
-                            <button id="family-finish" class="next-button bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
-                        </div>
-                        <p class="switch-auth">Ufite konti? <a href="#" onclick="showLogin(); return false;">Injira</a></p>
-                    </div>
-                </div>
-                <div id="business-signup" class="hidden">
-                    <div id="business-step1" class="signup-step">
-                        <label for="business-name">Izina</label>
-                        <input type="text" id="business-name" placeholder="Injiza izina ryawe" class="border-blue-800">
-                        <div class="button-container">
-                            <button class="back-step-button back-button" onclick="goBack()">
-                                <i class="fas fa-arrow-left"></i>
-                            </button>
-                            <button id="business-next1" class="next-button bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
-                        </div>
-                        <p class="switch-auth">Ufite konti? <a href="#" onclick="showLogin(); return false;">Injira</a></p>
-                    </div>
-                    <div id="business-step2" class="signup-step hidden">
-                        <label for="business-gender">Igitsina</label>
-                        <select id="business-gender" class="border-blue-800">
-                            <option value="" disabled selected>Hitamo igitsina</option>
-                            <option value="male">Gabo</option>
-                            <option value="female">Gore</option>
-                        </select>
-                        <div class="button-container">
-                            <button class="back-step-button back-button" onclick="goBack()">
-                                <i class="fas fa-arrow-left"></i>
-                            </button>
-                            <button id="business-next2" class="next-button bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
-                        </div>
-                        <p class="switch-auth">Ufite konti? <a href="#" onclick="showLogin(); return false;">Injira</a></p>
-                    </div>
-                    <div id="business-step3" class="signup-step hidden">
-                        <label for="business-phone">Numero ya terefone</label>
-                        <input type="tel" id="business-phone" placeholder="Injiza numero ya terefone" class="border-blue-800">
-                        <div class="button-container">
-                            <button class="back-step-button back-button" onclick="goBack()">
-                                <i class="fas fa-arrow-left"></i>
-                            </button>
-                            <button id="business-next3" class="next-button bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
-                        </div>
-                        <p class="switch-auth">Ufite konti? <a href="#" onclick="showLogin(); return false;">Injira</a></p>
-                    </div>
-                    <div id="business-step4" class="signup-step hidden">
-                        <label for="business-password">Ijambo ryibanga</label>
-                        <input type="password" id="business-password" placeholder="Hitamo ijambo ryibanga" class="border-blue-800">
-                        <div class="button-container">
-                            <button class="back-step-button back-button" onclick="goBack()">
-                                <i class="fas fa-arrow-left"></i>
-                            </button>
-                            <button id="business-next4" class="next-button bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
-                        </div>
-                        <p class="switch-auth">Ufite konti? <a href="#" onclick="showLogin(); return false;">Injira</a></p>
-                    </div>
-                    <div id="business-step5" class="signup-step hidden">
-                        <label for="business-info-name">Izina ry'ubucuruzi</label>
-                        <input type="text" id="business-info-name" placeholder="Injiza izina ry'ubucuruzi" class="border-blue-800">
-                        <div class="button-container">
-                            <button class="back-step-button back-button" onclick="goBack()">
-                                <i class="fas fa-arrow-left"></i>
-                            </button>
-                            <button id="business-next5" class="next-button bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
-                        </div>
-                        <p class="switch-auth">Ufite konti? <a href="#" onclick="showLogin(); return false;">Injira</a></p>
-                    </div>
-                    <div id="business-step6" class="signup-step hidden">
-                        <label for="business-category">Icyiciro cy'ubucuruzi</label>
-                        <input type="text" id="business-category" placeholder="Injiza icyiciro cy'ubucuruzi" class="border-blue-800">
-                        <div class="button-container">
-                            <button class="back-step-button back-button" onclick="goBack()">
-                                <i class="fas fa-arrow-left"></i>
-                            </button>
-                            <button id="business-next6" class="next-button bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
-                        </div>
-                        <p class="switch-auth">Ufite konti? <a href="#" onclick="showLogin(); return false;">Injira</a></p>
-                    </div>
-                    <div id="business-step7" class="signup-step hidden">
-                        <label for="business-address">Aderesi y'ubucuruzi</label>
-                        <input type="text" id="business-address" placeholder="Injiza aderesi y'ubucuruzi" class="border-blue-800">
-                        <div class="button-container">
-                            <button class="back-step-button back-button" onclick="goBack()">
-                                <i class="fas fa-arrow-left"></i>
-                            </button>
-                            <button id="business-next7" class="next-button bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
-                        </div>
-                        <p class="switch-auth">Ufite konti? <a href="#" onclick="showLogin(); return false;">Injira</a></p>
-                    </div>
-                    <div id="business-step8" class="signup-step hidden">
-                        <label for="business-customers">Umubare w'abakiriya buri kwezi</label>
-                        <select id="business-customers" class="border-blue-800">
-                            <option value="" disabled selected>Hitamo umubare</option>
-                            <option value="10-100">10-100</option>
-                            <option value="200-500">200-500</option>
-                            <option value="500-1000">500-1000</option>
-                            <option value="1000+">1000+</option>
-                        </select>
-                        <div class="button-container">
-                            <button class="back-step-button back-button" onclick="goBack()">
-                                <i class="fas fa-arrow-left"></i>
-                            </button>
-                            <button id="business-next8" class="next-button bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
-                        </div>
-                        <p class="switch-auth">Ufite konti? <a href="#" onclick="showLogin(); return false;">Injira</a></p>
-                    </div>
-                    <div id="business-step9" class="signup-step hidden">
-                        <label for="business-description">Ibisobanuro bigufi by'ubucuruzi</label>
-                        <input type="text" id="business-description" placeholder="Injiza ibisobanuro bigufi" class="border-blue-800">
-                        <div class="button-container">
-                            <button class="back-step-button back-button" onclick="goBack()">
-                                <i class="fas fa-arrow-left"></i>
-                            </button>
-                            <button id="business-finish" class="next-button bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
-                        </div>
-                        <p class="switch-auth">Ufite konti? <a href="#" onclick="showLogin(); return false;">Injira</a></p>
-                    </div>
-                </div>
-            </div>
+  <div class="login-container">
+    <div class="logo">GENZURA</div>
+    <h2>Sign in</h2>
+    <p>Please enter your details to continue to GENZURA</p>
+    
+    <form id="loginForm">
+      <input type="text" id="phone" placeholder="Enter your phone number" required>
+      <input type="password" id="password" placeholder="Enter your password" required>
+      <a href="#" class="forgot">Forgot password?</a>
+      <button type="submit">Sign In</button>
+    </form>
+    
+    <div class="terms">
+      By logging-in, you accept the new <a href="#">Terms of use</a> including 
+      <a href="#">Privacy Policy</a> of GenzuraAccount.
+    </div>
+    
+    <div class="create">
+      Don't have an account? <a id="showSignup">Create Account</a>
+    </div>
+  </div>
+
+  <!-- Signup Modal -->
+  <div id="signupModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>Create Account</h2>
+      
+      <form id="signupForm">
+        <div class="form-group">
+          <label for="fullName">Your Name</label>
+          <input type="text" id="fullName" required>
+          <div class="error" id="nameError">Please enter your name</div>
         </div>
+        
+        <div class="form-group">
+          <label for="gender">Gender</label>
+          <select id="gender" required>
+            <option value="">Select Gender</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
+          </select>
+          <div class="error" id="genderError">Please select your gender</div>
+        </div>
+        
+        <div class="form-group">
+          <label for="businessName">Business Name</label>
+          <input type="text" id="businessName" required>
+          <div class="error" id="businessError">Please enter your business name</div>
+        </div>
+        
+        <div class="form-group">
+          <label>Business Category (Select one or more)</label>
+          <div class="checkbox-group">
+            <div class="checkbox-item">
+              <input type="checkbox" id="category1" name="category" value="Foodstuff & groceries">
+              <label for="category1">Foodstuff & groceries</label>
+            </div>
+            <div class="checkbox-item">
+              <input type="checkbox" id="category2" name="category" value="Clothing & fashion">
+              <label for="category2">Clothing & fashion</label>
+            </div>
+            <div class="checkbox-item">
+              <input type="checkbox" id="category3" name="category" value="Electronics & mobile phones">
+              <label for="category3">Electronics & mobile phones</label>
+            </div>
+            <div class="checkbox-item">
+              <input type="checkbox" id="category4" name="category" value="Household goods">
+              <label for="category4">Household goods</label>
+            </div>
+            <div class="checkbox-item">
+              <input type="checkbox" id="category5" name="category" value="Building & Construction materials">
+              <label for="category5">Building & Construction</label>
+            </div>
+            <div class="checkbox-item">
+              <input type="checkbox" id="category6" name="category" value="Cosmetics & beauty products">
+              <label for="category6">Cosmetics & beauty</label>
+            </div>
+            <div class="checkbox-item">
+              <input type="checkbox" id="category7" name="category" value="Agricultural produce">
+              <label for="category7">Agricultural produce</label>
+            </div>
+            <div class="checkbox-item">
+              <input type="checkbox" id="category8" name="category" value="Livestock & meat products">
+              <label for="category8">Livestock & meat</label>
+            </div>
+            <div class="checkbox-item">
+              <input type="checkbox" id="category9" name="category" value="Motorcycles & spare parts">
+              <label for="category9">Motorcycles & parts</label>
+            </div>
+            <div class="checkbox-item">
+              <input type="checkbox" id="category10" name="category" value="Cars & vehicle spare parts">
+              <label for="category10">Cars & vehicle parts</label>
+            </div>
+            <div class="checkbox-item">
+              <input type="checkbox" id="category11" name="category" value="Stationery & books">
+              <label for="category11">Stationery & books</label>
+            </div>
+            <div class="checkbox-item">
+              <input type="checkbox" id="category12" name="category" value="Drinks & bottled water">
+              <label for="category12">Drinks & bottled water</label>
+            </div>
+            <div class="checkbox-item">
+              <input type="checkbox" id="category13" name="category" value="Jewelry & watches">
+              <label for="category13">Jewelry & watches</label>
+            </div>
+            <div class="checkbox-item">
+              <input type="checkbox" id="category14" name="category" value="Pharmaceuticals & health products">
+              <label for="category14">Pharmaceuticals</label>
+            </div>
+            <div class="checkbox-item">
+              <input type="checkbox" id="category15" name="category" value="Baby products & toys">
+              <label for="category15">Baby products & toys</label>
+            </div>
+          </div>
+          <div class="error" id="categoryError">Please select at least one category</div>
+        </div>
+        
+        <div class="form-group">
+          <label for="clients">Estimated clients per month</label>
+          <select id="clients" required>
+            <option value="">Select range</option>
+            <option value="20-100">20 - 100</option>
+            <option value="100-300">100 - 300</option>
+            <option value="300-800">300 - 800</option>
+            <option value="800-1000">800 - 1000</option>
+            <option value="1000-2000">1000 - 2000</option>
+            <option value="2000-5000">2000 - 5000</option>
+            <option value="5000+">5000+</option>
+          </select>
+          <div class="error" id="clientsError">Please select an estimate</div>
+        </div>
+        
+        <div class="form-group">
+          <label for="country">Country</label>
+          <select id="country" required>
+            <option value="">Select Country</option>
+            <option value="Rwanda">Rwanda</option>
+            <option value="Kenya">Kenya</option>
+            <option value="Uganda">Uganda</option>
+            <option value="Tanzania">Tanzania</option>
+          </select>
+          <div class="error" id="countryError">Please select your country</div>
+        </div>
+        
+        <div class="form-group">
+          <label for="district">District</label>
+          <input type="text" id="district" required>
+          <div class="error" id="districtError">Please enter your district</div>
+        </div>
+        
+        <div class="form-group">
+          <label for="description">Business Description</label>
+          <textarea id="description" placeholder="Describe your business"></textarea>
+        </div>
+        
+        <div class="loading">
+          <div class="loading-spinner"></div>
+          <p>Creating account...</p>
+        </div>
+        
+        <div class="success" id="signupSuccess">
+          Account created successfully! You can now login.
+        </div>
+        
+        <button type="submit">Create Account</button>
+      </form>
     </div>
+  </div>
 
-    <div id="loading">
-        <div id="loading-spinner"></div>
-    </div>
+  <!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <!-- Add Firebase products that you want to use -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+  
+  <script>
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyD-8JzL7GPhGhjzQCrAZOJWmyb-hPuaA0U",
+      authDomain: "mypersonalai-22391.firebaseapp.com",
+      databaseURL: "https://mypersonalai-22391-default-rtdb.firebaseio.com",
+      projectId: "mypersonalai-22391",
+      storageBucket: "mypersonalai-22391.firebasestorage.app",
+      messagingSenderId: "527318613254",
+      appId: "1:527318613254:web:be2ede267103601f187287"
+    };
 
-    <footer>
-        Genzura © 2025 <a href="https://github.com/mkb-nel">M.K.Bertrand</a> - <a href="terms.html">Terms</a>
-    </footer>
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
 
-    <!-- Global functions for form switching -->
-    <script>
-        // Track current step and user type
-        let currentStep = 0;
-        let userType = '';
-        let stepHistory = [];
-        const totalFamilySteps = 7;
-        const totalBusinessSteps = 9;
-        
-        // Global functions for form switching
-        function showSignup() {
-            document.getElementById('login-form').classList.add('hidden');
-            document.getElementById('signup-form').classList.remove('hidden');
-            resetSignupForms();
-            updateProgressBar();
-        }
+    // DOM elements
+    const loginForm = document.getElementById('loginForm');
+    const signupForm = document.getElementById('signupForm');
+    const showSignupBtn = document.getElementById('showSignup');
+    const modal = document.getElementById('signupModal');
+    const closeBtn = document.querySelector('.close');
+    const loadingEl = document.querySelector('.loading');
+    const successEl = document.getElementById('signupSuccess');
 
-        function showLogin() {
-            document.getElementById('signup-form').classList.add('hidden');
-            document.getElementById('login-form').classList.remove('hidden');
-            resetSignupForms();
-        }
+    // Show modal when Create Account is clicked
+    showSignupBtn.addEventListener('click', () => {
+      modal.style.display = 'flex';
+    });
 
-        function resetSignupForms() {
-            // Hide all signup steps
-            document.getElementById('step1').classList.remove('hidden');
-            document.getElementById('family-signup').classList.add('hidden');
-            document.getElementById('business-signup').classList.add('hidden');
-            
-            // Hide all family steps
-            document.querySelectorAll('#family-signup > div').forEach(div => {
-                div.classList.add('hidden');
-            });
-            
-            // Hide all business steps
-            document.querySelectorAll('#business-signup > div').forEach(div => {
-                div.classList.add('hidden');
-            });
-            
-            // Reset all input fields
-            document.querySelectorAll('input, select').forEach(input => {
-                input.value = '';
-            });
-            
-            // Reset tracking variables
-            currentStep = 0;
-            userType = '';
-            stepHistory = [];
-            
-            updateProgressBar();
-        }
+    // Close modal when X is clicked
+    closeBtn.addEventListener('click', () => {
+      modal.style.display = 'none';
+      resetSignupForm();
+    });
 
-        function hideError() {
-            document.getElementById('error-message').style.display = 'none';
-        }
-        
-        function goBack() {
-            if (stepHistory.length > 0) {
-                const prevStep = stepHistory.pop();
-                
-                if (prevStep === 'step1') {
-                    // Going back to user type selection
-                    document.getElementById('step1').classList.remove('hidden');
-                    if (userType === 'family') {
-                        document.getElementById('family-signup').classList.add('hidden');
-                    } else {
-                        document.getElementById('business-signup').classList.add('hidden');
-                    }
-                    userType = '';
-                    currentStep = 0;
-                } else {
-                    // Going back to previous step in the flow
-                    if (userType === 'family') {
-                        document.querySelectorAll('#family-signup > div').forEach(div => {
-                            div.classList.add('hidden');
-                        });
-                        document.getElementById(prevStep).classList.remove('hidden');
-                        currentStep = parseInt(prevStep.replace('family-step', ''));
-                    } else {
-                        document.querySelectorAll('#business-signup > div').forEach(div => {
-                            div.classList.add('hidden');
-                        });
-                        document.getElementById(prevStep).classList.remove('hidden');
-                        currentStep = parseInt(prevStep.replace('business-step', ''));
-                    }
-                }
-                
-                updateProgressBar();
-            } else {
-                // If no history, go back to login
-                showLogin();
-            }
-        }
-        
-        function updateProgressBar() {
-            const progressBar = document.getElementById('progress-bar');
-            const stepIndicator = document.getElementById('step-indicator');
-            
-            if (currentStep === 0) {
-                // At user type selection
-                progressBar.style.width = '10%';
-                stepIndicator.textContent = '';
-            } else if (userType === 'family') {
-                // Family signup progress
-                const progress = (currentStep / totalFamilySteps) * 100;
-                progressBar.style.width = `${progress}%`;
-                stepIndicator.textContent = `${currentStep} / ${totalFamilySteps}`;
-            } else if (userType === 'business') {
-                // Business signup progress
-                const progress = (currentStep / totalBusinessSteps) * 100;
-                progressBar.style.width = `${progress}%`;
-                stepIndicator.textContent = `${currentStep} / ${totalBusinessSteps}`;
-            }
-        }
-    </script>
+    // Close modal when clicking outside
+    window.addEventListener('click', (event) => {
+      if (event.target === modal) {
+        modal.style.display = 'none';
+        resetSignupForm();
+      }
+    });
 
-    <!-- Firebase and form handling code -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
-        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyD-8JzL7GPhGhjzQCrAZOJWmyb-hPuaA0U",
-            authDomain: "mypersonalai-22391.firebaseapp.com",
-            databaseURL: "https://mypersonalai-22391-default-rtdb.firebaseio.com",
-            projectId: "mypersonalai-22391",
-            storageBucket: "mypersonalai-22391.firebasestorage.app",
-            messagingSenderId: "527318613254",
-            appId: "1:527318613254:web:be2ede267103601f187287"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-
-        function showLoading() {
-            document.getElementById('loading').style.display = 'flex';
-        }
-
-        function hideLoading() {
-            document.getElementById('loading').style.display = 'none';
-        }
-
-        function showError(message) {
-            const errorDiv = document.getElementById('error-message');
-            errorDiv.textContent = message;
-            errorDiv.style.display = 'block';
-            setTimeout(() => {
-                errorDiv.style.display = 'none';
-            }, 5000);
-        }
-
-        document.getElementById('login-button').addEventListener('click', async function() {
-            hideError();
-            const phone = document.getElementById('phone').value;
-            const password = document.getElementById('password').value;
-
-            if (!phone || !password) {
-                showError('Nyamuneka uzuze ibirimo byose');
-                return;
-            }
-
-            const email = `${phone}@gmail.com`;
-            showLoading();
-            try {
-                await signInWithEmailAndPassword(auth, email, password);
-                hideLoading();
-                // Auto-redirect to home page
-                window.location.href = 'home.html';
-            } catch (error) {
-                hideLoading();
-                showError('Numero ya terefone cyangwa ijambo ryibanga nti byemewe');
-            }
+    // Handle login form submission
+    loginForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const phone = document.getElementById('phone').value;
+      const password = document.getElementById('password').value;
+      
+      // Convert phone to email format for authentication
+      const email = `${phone}@genzura.com`;
+      
+      auth.signInWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+          // Signed in 
+          alert('Login successful!');
+          // You can redirect to another page here
+        })
+        .catch((error) => {
+          alert('Login error: ' + error.message);
         });
+    });
 
-        document.getElementById('start-signup').addEventListener('click', function() {
-            hideError();
-            userType = document.getElementById('user-type').value;
-            if (!userType) {
-                showError('Nyamuneka hitamo ubwoko: Umuryango cyangwa Business');
-                return;
-            }
-            stepHistory.push('step1');
-            document.getElementById('step1').classList.add('hidden');
-            if (userType === 'family') {
-                document.getElementById('family-signup').classList.remove('hidden');
-                document.getElementById('family-step1').classList.remove('hidden');
-                currentStep = 1;
-            } else {
-                document.getElementById('business-signup').classList.remove('hidden');
-                document.getElementById('business-step1').classList.remove('hidden');
-                currentStep = 1;
-            }
-            updateProgressBar();
+    // Handle signup form submission
+    signupForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      // Validate form
+      if (!validateSignupForm()) return;
+      
+      // Show loading state
+      loadingEl.style.display = 'block';
+      successEl.style.display = 'none';
+      
+      // Get form values
+      const fullName = document.getElementById('fullName').value;
+      const gender = document.getElementById('gender').value;
+      const businessName = document.getElementById('businessName').value;
+      const phone = document.getElementById('phone').value;
+      const clients = document.getElementById('clients').value;
+      const country = document.getElementById('country').value;
+      const district = document.getElementById('district').value;
+      const description = document.getElementById('description').value;
+      
+      // Get selected categories
+      const selectedCategories = [];
+      document.querySelectorAll('input[name="category"]:checked').forEach((checkbox) => {
+        selectedCategories.push(checkbox.value);
+      });
+      
+      // Create a password (in a real app, you might ask the user for a password)
+      const password = generatePassword(phone);
+      
+      // Convert phone to email format for authentication
+      const email = `${phone}@genzura.com`;
+      
+      // Create user with email and password
+      auth.createUserWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+          // Signed up successfully
+          const user = userCredential.user;
+          
+          // Save additional user data to Firestore
+          return db.collection('users').doc(user.uid).set({
+            fullName,
+            gender,
+            businessName,
+            phone,
+            businessCategories: selectedCategories,
+            estimatedClients: clients,
+            country,
+            district,
+            businessDescription: description,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+          });
+        })
+        .then(() => {
+          // Hide loading, show success
+          loadingEl.style.display = 'none';
+          successEl.style.display = 'block';
+          
+          // Reset form
+          setTimeout(() => {
+            modal.style.display = 'none';
+            resetSignupForm();
+            alert('Account created successfully! You can now login with your phone number and autogenerated password.');
+          }, 2000);
+        })
+        .catch((error) => {
+          // Handle errors
+          loadingEl.style.display = 'none';
+          alert('Error creating account: ' + error.message);
         });
+    });
 
-        // Family Signup Steps
-        document.getElementById('family-next1').addEventListener('click', function() {
-            if (!document.getElementById('family-name').value) {
-                showError('Nyamuneka injiza izina ryawe');
-                return;
-            }
-            stepHistory.push('family-step1');
-            document.getElementById('family-step1').classList.add('hidden');
-            document.getElementById('family-step2').classList.remove('hidden');
-            currentStep = 2;
-            updateProgressBar();
-        });
+    // Form validation function
+    function validateSignupForm() {
+      let isValid = true;
+      
+      // Reset errors
+      document.querySelectorAll('.error').forEach(el => {
+        el.style.display = 'none';
+      });
+      
+      // Validate name
+      const fullName = document.getElementById('fullName').value;
+      if (!fullName) {
+        document.getElementById('nameError').style.display = 'block';
+        isValid = false;
+      }
+      
+      // Validate gender
+      const gender = document.getElementById('gender').value;
+      if (!gender) {
+        document.getElementById('genderError').style.display = 'block';
+        isValid = false;
+      }
+      
+      // Validate business name
+      const businessName = document.getElementById('businessName').value;
+      if (!businessName) {
+        document.getElementById('businessError').style.display = 'block';
+        isValid = false;
+      }
+      
+      // Validate categories
+      const selectedCategories = document.querySelectorAll('input[name="category"]:checked');
+      if (selectedCategories.length === 0) {
+        document.getElementById('categoryError').style.display = 'block';
+        isValid = false;
+      }
+      
+      // Validate clients
+      const clients = document.getElementById('clients').value;
+      if (!clients) {
+        document.getElementById('clientsError').style.display = 'block';
+        isValid = false;
+      }
+      
+      // Validate country
+      const country = document.getElementById('country').value;
+      if (!country) {
+        document.getElementById('countryError').style.display = 'block';
+        isValid = false;
+      }
+      
+      // Validate district
+      const district = document.getElementById('district').value;
+      if (!district) {
+        document.getElementById('districtError').style.display = 'block';
+        isValid = false;
+      }
+      
+      return isValid;
+    }
 
-        document.getElementById('family-next2').addEventListener('click', function() {
-            if (!document.getElementById('family-gender').value) {
-                showError('Nyamuneka hitamo igitsina');
-                return;
-            }
-            stepHistory.push('family-step2');
-            document.getElementById('family-step2').classList.add('hidden');
-            document.getElementById('family-step3').classList.remove('hidden');
-            currentStep = 3;
-            updateProgressBar();
-        });
+    // Generate a password based on phone number
+    function generatePassword(phone) {
+      // Simple password generation - in a real app, you might want something more secure
+      return phone + "GenZura!";
+    }
 
-        document.getElementById('family-next3').addEventListener('click', function() {
-            if (!document.getElementById('family-phone').value) {
-                showError('Nyamuneka injiza numero ya terefone');
-                return;
-            }
-            stepHistory.push('family-step3');
-            document.getElementById('family-step3').classList.add('hidden');
-            document.getElementById('family-step4').classList.remove('hidden');
-            currentStep = 4;
-            updateProgressBar();
-        });
-
-        document.getElementById('family-next4').addEventListener('click', function() {
-            if (!document.getElementById('family-password').value) {
-                showError('Nyamuneka injiza ijambo ryibanga');
-                return;
-            }
-            stepHistory.push('family-step4');
-            document.getElementById('family-step4').classList.add('hidden');
-            document.getElementById('family-step5').classList.remove('hidden');
-            currentStep = 5;
-            updateProgressBar();
-        });
-
-        document.getElementById('family-next5').addEventListener('click', function() {
-            if (!document.getElementById('family-members').value) {
-                showError('Nyamuneka hitamo umubare w\'abagize umuryango');
-                return;
-            }
-            stepHistory.push('family-step5');
-            document.getElementById('family-step5').classList.add('hidden');
-            document.getElementById('family-step6').classList.remove('hidden');
-            currentStep = 6;
-            updateProgressBar();
-        });
-
-        document.getElementById('family-next6').addEventListener('click', function() {
-            if (!document.getElementById('family-district').value) {
-                showError('Nyamuneka injiza akarere');
-                return;
-            }
-            stepHistory.push('family-step6');
-            document.getElementById('family-step6').classList.add('hidden');
-            document.getElementById('family-step7').classList.remove('hidden');
-            currentStep = 7;
-            updateProgressBar();
-        });
-
-        document.getElementById('family-finish').addEventListener('click', async function() {
-            if (!document.getElementById('family-description').value) {
-                showError('Nyamuneka injiza ibisobanuro bigufi by\'umuryango');
-                return;
-            }
-            showLoading();
-            const name = document.getElementById('family-name').value;
-            const gender = document.getElementById('family-gender').value;
-            const phone = document.getElementById('family-phone').value;
-            const password = document.getElementById('family-password').value;
-            const members = document.getElementById('family-members').value;
-            const district = document.getElementById('family-district').value;
-            const description = document.getElementById('family-description').value;
-            const email = `${phone}@gmail.com`;
-
-            try {
-                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-                const user = userCredential.user;
-                await setDoc(doc(db, 'users', user.uid), {
-                    type: 'family',
-                    name: name,
-                    gender: gender,
-                    phone: phone,
-                    members: members,
-                    district: district,
-                    description: description,
-                    createdAt: new Date()
-                });
-                hideLoading();
-                // Auto-redirect to home page
-                window.location.href = 'home.html';
-            } catch (error) {
-                hideLoading();
-                showError('Ikosa ryabaye mu kwandikisha: ' + error.message);
-            }
-        });
-
-        // Business Signup Steps
-        document.getElementById('business-next1').addEventListener('click', function() {
-            if (!document.getElementById('business-name').value) {
-                showError('Nyamuneka injiza izina ryawe');
-                return;
-            }
-            stepHistory.push('business-step1');
-            document.getElementById('business-step1').classList.add('hidden');
-            document.getElementById('business-step2').classList.remove('hidden');
-            currentStep = 2;
-            updateProgressBar();
-        });
-
-        document.getElementById('business-next2').addEventListener('click', function() {
-            if (!document.getElementById('business-gender').value) {
-                showError('Nyamuneka hitamo igitsina');
-                return;
-            }
-            stepHistory.push('business-step2');
-            document.getElementById('business-step2').classList.add('hidden');
-            document.getElementById('business-step3').classList.remove('hidden');
-            currentStep = 3;
-            updateProgressBar();
-        });
-
-        document.getElementById('business-next3').addEventListener('click', function() {
-            if (!document.getElementById('business-phone').value) {
-                showError('Nyamuneka injiza numero ya terefone');
-                return;
-            }
-            stepHistory.push('business-step3');
-            document.getElementById('business-step3').classList.add('hidden');
-            document.getElementById('business-step4').classList.remove('hidden');
-            currentStep = 4;
-            updateProgressBar();
-        });
-
-        document.getElementById('business-next4').addEventListener('click', function() {
-            if (!document.getElementById('business-password').value) {
-                showError('Nyamuneka injiza ijambo ryibanga');
-                return;
-            }
-            stepHistory.push('business-step4');
-            document.getElementById('business-step4').classList.add('hidden');
-            document.getElementById('business-step5').classList.remove('hidden');
-            currentStep = 5;
-            updateProgressBar();
-        });
-
-        document.getElementById('business-next5').addEventListener('click', function() {
-            if (!document.getElementById('business-info-name').value) {
-                showError('Nyamuneka injiza izina ry\'ubucuruzi');
-                return;
-            }
-            stepHistory.push('business-step5');
-            document.getElementById('business-step5').classList.add('hidden');
-            document.getElementById('business-step6').classList.remove('hidden');
-            currentStep = 6;
-            updateProgressBar();
-        });
-
-        document.getElementById('business-next6').addEventListener('click', function() {
-            if (!document.getElementById('business-category').value) {
-                showError('Nyamuneka injiza icyiciro cy\'ubucuruzi');
-                return;
-            }
-            stepHistory.push('business-step6');
-            document.getElementById('business-step6').classList.add('hidden');
-            document.getElementById('business-step7').classList.remove('hidden');
-            currentStep = 7;
-            updateProgressBar();
-        });
-
-        document.getElementById('business-next7').addEventListener('click', function() {
-            if (!document.getElementById('business-address').value) {
-                showError('Nyamuneka injiza aderesi y\'ubucuruzi');
-                return;
-            }
-            stepHistory.push('business-step7');
-            document.getElementById('business-step7').classList.add('hidden');
-            document.getElementById('business-step8').classList.remove('hidden');
-            currentStep = 8;
-            updateProgressBar();
-        });
-
-        document.getElementById('business-next8').addEventListener('click', function() {
-            if (!document.getElementById('business-customers').value) {
-                showError('Nyamuneka hitamo umubare w\'abakiriya');
-                return;
-            }
-            stepHistory.push('business-step8');
-            document.getElementById('business-step8').classList.add('hidden');
-            document.getElementById('business-step9').classList.remove('hidden');
-            currentStep = 9;
-            updateProgressBar();
-        });
-
-        document.getElementById('business-finish').addEventListener('click', async function() {
-            if (!document.getElementById('business-description').value) {
-                showError('Nyamuneka injiza ibisobanuro bigufi by\'ubucuruzi');
-                return;
-            }
-            showLoading();
-            const name = document.getElementById('business-name').value;
-            const gender = document.getElementById('business-gender').value;
-            const phone = document.getElementById('business-phone').value;
-            const password = document.getElementById('business-password').value;
-            const businessName = document.getElementById('business-info-name').value;
-            const category = document.getElementById('business-category').value;
-            const address = document.getElementById('business-address').value;
-            const customers = document.getElementById('business-customers').value;
-            const description = document.getElementById('business-description').value;
-            const email = `${phone}@gmail.com`;
-
-            try {
-                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-                const user = userCredential.user;
-                await setDoc(doc(db, 'users', user.uid), {
-                    type: 'business',
-                    name: name,
-                    gender: gender,
-                    phone: phone,
-                    businessInfo: {
-                        name: businessName,
-                        category: category,
-                        address: address
-                    },
-                    customers: customers,
-                    description: description,
-                    createdAt: new Date()
-                });
-                hideLoading();
-                // Auto-redirect to home page
-                window.location.href = 'home.html';
-            } catch (error) {
-                hideLoading();
-                showError('Ikosa ryabaye mu kwandikisha: ' + error.message);
-            }
-        });
-
-        document.addEventListener('click', function(event) {
-            if (event.target.id !== 'error-message') {
-                hideError();
-            }
-        });
-    </script>
+    // Reset signup form
+    function resetSignupForm() {
+      document.getElementById('signupForm').reset();
+      document.querySelectorAll('.error').forEach(el => {
+        el.style.display = 'none';
+      });
+      loadingEl.style.display = 'none';
+      successEl.style.display = 'none';
+    }
+  </script>
 </body>
 </html>
