@@ -336,8 +336,8 @@
         <!-- Phone Number Field -->
         <div class="form-group">
           <label for="phone">Phone Number</label>
-          <input type="text" id="phone" placeholder="e.g., 781234567" required>
-          <div class="info-text">Tangirira kuri 7xxx, Don't start with 0.</div>
+          <input type="text" id="phone" placeholder="e.g., 0781234567" required>
+          <div class="info-text">It will be used in Login, Make sure that is correct.</div>
           <div class="error" id="phoneError">Please enter a valid phone number</div>
         </div>
         
@@ -739,7 +739,7 @@
     // Validate phone number format
     function isValidPhone(phone) {
       // Simple validation for East African phone numbers
-      const phoneRegex = /^(\+?25)?(0|7)[2-8][0-9]{7}$/;
+      const phoneRegex = /^(\+?25)?(0|7)[2-8][0-9]{8}$/;
       return phoneRegex.test(phone.replace(/\s/g, ''));
     }
 
