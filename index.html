@@ -138,6 +138,7 @@
         <div class="auth-container bg-white">
             <div id="error-message" onclick="hideError()"></div>
             <div id="login-form">
+                <h1>Injira</h1>
                 <label for="phone">Numero ya terefone</label>
                 <input type="tel" id="phone" placeholder="Injiza numero ya terefone" class="border-blue-800">
                 <label for="password">Ijambo ryibanga</label>
@@ -146,6 +147,7 @@
                 <p class="switch-auth">Niba utagira konti? <a href="#" onclick="showSignup()">Iyandikishe</a></p>
             </div>
             <div id="signup-form" class="hidden">
+                <h1>Iyandikishe</h1>
                 <div id="step1">
                     <label for="user-type">Hitamo ubwoko</label>
                     <select id="user-type" class="border-blue-800">
@@ -154,12 +156,14 @@
                         <option value="business">Ubucuruzi</option>
                     </select>
                     <button id="start-signup" class="bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
+                    <p class="switch-auth">Ufite konti? <a href="#" onclick="showLogin()">Injira</a></p>
                 </div>
                 <div id="family-signup" class="hidden">
                     <div id="family-step1" class="signup-step">
                         <label for="family-name">Izina</label>
                         <input type="text" id="family-name" placeholder="Injiza izina ryawe" class="border-blue-800">
                         <button id="family-next1" class="bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
+                        <p class="switch-auth">Ufite konti? <a href="#" onclick="showLogin()">Injira</a></p>
                     </div>
                     <div id="family-step2" class="signup-step hidden">
                         <label for="family-gender">Igitsina</label>
@@ -169,16 +173,19 @@
                             <option value="female">Gore</option>
                         </select>
                         <button id="family-next2" class="bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
+                        <p class="switch-auth">Ufite konti? <a href="#" onclick="showLogin()">Injira</a></p>
                     </div>
                     <div id="family-step3" class="signup-step hidden">
                         <label for="family-phone">Numero ya terefone</label>
                         <input type="tel" id="family-phone" placeholder="Injiza numero ya terefone" class="border-blue-800">
                         <button id="family-next3" class="bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
+                        <p class="switch-auth">Ufite konti? <a href="#" onclick="showLogin()">Injira</a></p>
                     </div>
                     <div id="family-step4" class="signup-step hidden">
                         <label for="family-password">Ijambo ryibanga</label>
                         <input type="password" id="family-password" placeholder="Hitamo ijambo ryibanga" class="border-blue-800">
                         <button id="family-next4" class="bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
+                        <p class="switch-auth">Ufite konti? <a href="#" onclick="showLogin()">Injira</a></p>
                     </div>
                     <div id="family-step5" class="signup-step hidden">
                         <label for="family-members">Umubare w'abagize umuryango</label>
@@ -190,16 +197,19 @@
                             <option value="13+">13+</option>
                         </select>
                         <button id="family-next5" class="bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
+                        <p class="switch-auth">Ufite konti? <a href="#" onclick="showLogin()">Injira</a></p>
                     </div>
                     <div id="family-step6" class="signup-step hidden">
                         <label for="family-district">Akarere</label>
                         <input type="text" id="family-district" placeholder="Injiza akarere" class="border-blue-800">
                         <button id="family-next6" class="bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
+                        <p class="switch-auth">Ufite konti? <a href="#" onclick="showLogin()">Injira</a></p>
                     </div>
                     <div id="family-step7" class="signup-step hidden">
                         <label for="family-description">Ibisobanuro bigufi by'umuryango</label>
                         <input type="text" id="family-description" placeholder="Injiza ibisobanuro bigufi" class="border-blue-800">
                         <button id="family-finish" class="bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
+                        <p class="switch-auth">Ufite konti? <a href="#" onclick="showLogin()">Injira</a></p>
                     </div>
                 </div>
                 <div id="business-signup" class="hidden">
@@ -207,6 +217,7 @@
                         <label for="business-name">Izina</label>
                         <input type="text" id="business-name" placeholder="Injiza izina ryawe" class="border-blue-800">
                         <button id="business-next1" class="bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
+                        <p class="switch-auth">Ufite konti? <a href="#" onclick="showLogin()">Injira</a></p>
                     </div>
                     <div id="business-step2" class="signup-step hidden">
                         <label for="business-gender">Igitsina</label>
@@ -216,31 +227,37 @@
                             <option value="female">Gore</option>
                         </select>
                         <button id="business-next2" class="bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
+                        <p class="switch-auth">Ufite konti? <a href="#" onclick="showLogin()">Injira</a></p>
                     </div>
                     <div id="business-step3" class="signup-step hidden">
                         <label for="business-phone">Numero ya terefone</label>
                         <input type="tel" id="business-phone" placeholder="Injiza numero ya terefone" class="border-blue-800">
                         <button id="business-next3" class="bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
+                        <p class="switch-auth">Ufite konti? <a href="#" onclick="showLogin()">Injira</a></p>
                     </div>
                     <div id="business-step4" class="signup-step hidden">
                         <label for="business-password">Ijambo ryibanga</label>
                         <input type="password" id="business-password" placeholder="Hitamo ijambo ryibanga" class="border-blue-800">
                         <button id="business-next4" class="bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
+                        <p class="switch-auth">Ufite konti? <a href="#" onclick="showLogin()">Injira</a></p>
                     </div>
                     <div id="business-step5" class="signup-step hidden">
                         <label for="business-info-name">Izina ry'ubucuruzi</label>
                         <input type="text" id="business-info-name" placeholder="Injiza izina ry'ubucuruzi" class="border-blue-800">
                         <button id="business-next5" class="bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
+                        <p class="switch-auth">Ufite konti? <a href="#" onclick="showLogin()">Injira</a></p>
                     </div>
                     <div id="business-step6" class="signup-step hidden">
                         <label for="business-category">Icyiciro cy'ubucuruzi</label>
                         <input type="text" id="business-category" placeholder="Injiza icyiciro cy'ubucuruzi" class="border-blue-800">
                         <button id="business-next6" class="bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
+                        <p class="switch-auth">Ufite konti? <a href="#" onclick="showLogin()">Injira</a></p>
                     </div>
                     <div id="business-step7" class="signup-step hidden">
                         <label for="business-address">Aderesi y'ubucuruzi</label>
                         <input type="text" id="business-address" placeholder="Injiza aderesi y'ubucuruzi" class="border-blue-800">
                         <button id="business-next7" class="bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
+                        <p class="switch-auth">Ufite konti? <a href="#" onclick="showLogin()">Injira</a></p>
                     </div>
                     <div id="business-step8" class="signup-step hidden">
                         <label for="business-customers">Umubare w'abakiriya buri kwezi</label>
@@ -252,11 +269,13 @@
                             <option value="1000+">1000+</option>
                         </select>
                         <button id="business-next8" class="bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
+                        <p class="switch-auth">Ufite konti? <a href="#" onclick="showLogin()">Injira</a></p>
                     </div>
                     <div id="business-step9" class="signup-step hidden">
                         <label for="business-description">Ibisobanuro bigufi by'ubucuruzi</label>
                         <input type="text" id="business-description" placeholder="Injiza ibisobanuro bigufi" class="border-blue-800">
                         <button id="business-finish" class="bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
+                        <p class="switch-auth">Ufite konti? <a href="#" onclick="showLogin()">Injira</a></p>
                     </div>
                 </div>
             </div>
@@ -311,12 +330,36 @@
             document.getElementById('error-message').style.display = 'none';
         }
 
+        function resetSignupForms() {
+            // Hide all signup steps
+            document.getElementById('step1').classList.remove('hidden');
+            document.getElementById('family-signup').classList.add('hidden');
+            document.getElementById('business-signup').classList.add('hidden');
+            
+            // Hide all family steps
+            document.querySelectorAll('#family-signup > div').forEach(div => {
+                div.classList.add('hidden');
+            });
+            
+            // Hide all business steps
+            document.querySelectorAll('#business-signup > div').forEach(div => {
+                div.classList.add('hidden');
+            });
+            
+            // Reset all input fields
+            document.querySelectorAll('input, select').forEach(input => {
+                input.value = '';
+            });
+        }
+
         function showSignup() {
+            resetSignupForms();
             document.getElementById('login-form').classList.add('hidden');
             document.getElementById('signup-form').classList.remove('hidden');
         }
 
         function showLogin() {
+            resetSignupForms();
             document.getElementById('signup-form').classList.add('hidden');
             document.getElementById('login-form').classList.remove('hidden');
         }
