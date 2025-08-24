@@ -19,10 +19,10 @@
         }
         .auth-container {
             width: 100%;
-            max-width: 400px; /* Medium width */
+            max-width: 400px;
             padding: 2rem;
-            border: 1px solid #1e40af; /* Blue border */
-            border-radius: 4px; /* Very small rounded corners */
+            border: 1px solid #1e40af;
+            border-radius: 4px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
         .auth-container h1 {
@@ -38,28 +38,28 @@
             color: #000000;
             font-size: 0.9rem;
         }
-        .auth-container input {
+        .auth-container input, .auth-container select {
             width: 100%;
             padding: 0.5rem;
             margin-bottom: 1rem;
-            border: 1px solid #1e40af; /* Blue border */
-            border-radius: 2px; /* Very small rounded corners */
+            border: 1px solid #1e40af;
+            border-radius: 2px;
             font-size: 0.9rem;
             color: #000000;
         }
         .auth-container button {
             width: 100%;
             padding: 0.5rem;
-            background-color: #1e40af; /* Blue button */
+            background-color: #1e40af;
             color: #ffffff;
             border: none;
-            border-radius: 2px; /* Very small rounded corners */
+            border-radius: 2px;
             font-size: 0.9rem;
             cursor: pointer;
             transition: background-color 0.3s;
         }
         .auth-container button:hover {
-            background-color: #1e3a8a; /* Darker blue on hover */
+            background-color: #1e3a8a;
         }
         .auth-container .switch-auth {
             text-align: center;
@@ -67,17 +67,25 @@
             font-size: 0.85rem;
         }
         .auth-container .switch-auth a {
-            color: #1e40af; /* Blue link */
+            color: #1e40af;
             text-decoration: none;
         }
         .auth-container .switch-auth a:hover {
             text-decoration: underline;
         }
         #error-message {
-            color: red;
-            text-align: center;
-            margin-bottom: 1rem;
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #fee2e2;
+            color: #b91c1c;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
             display: none;
+            z-index: 1000;
+            font-size: 0.9rem;
         }
         #loading {
             display: none;
@@ -119,30 +127,138 @@
         footer a:hover {
             text-decoration: underline;
         }
+        .hidden {
+            display: none;
+        }
     </style>
 </head>
 <body>
     <div class="flex flex-col items-center">
         <h1 class="text-4xl font-bold text-black mb-4">GENZURA</h1>
         <div class="auth-container bg-white">
-            <div id="error-message"></div>
+            <div id="error-message" onclick="hideError()"></div>
             <div id="login-form">
-                <label for="username">Izina ry'ukoresha</label>
-                <input type="text" id="username" placeholder="Injiza izina ry'ukoresha ryawe" class="border-blue-800">
+                <label for="phone">Numero ya terefone</label>
+                <input type="tel" id="phone" placeholder="Injiza numero ya terefone" class="border-blue-800">
                 <label for="password">Ijambo ryibanga</label>
                 <input type="password" id="password" placeholder="Injiza ijambo ryibanga ryawe" class="border-blue-800">
                 <button id="login-button" class="bg-blue-800 hover:bg-blue-900 text-white">Injira</button>
                 <p class="switch-auth">Niba utagira konti? <a href="#" onclick="showSignup()">Iyandikishe</a></p>
             </div>
             <div id="signup-form" class="hidden">
-                <label for="new-username">Izina ry'ukoresha</label>
-                <input type="text" id="new-username" placeholder="Hitamo izina ry'ukoresha" class="border-blue-800">
-                <label for="new-password">Ijambo ryibanga</label>
-                <input type="password" id="new-password" placeholder="Hitamo ijambo ryibanga" class="border-blue-800">
-                <label for="confirm-password">Emeza Ijambo ryibanga</label>
-                <input type="password" id="confirm-password" placeholder="Emeza ijambo ryibanga ryawe" class="border-blue-800">
-                <button id="signup-button" class="bg-blue-800 hover:bg-blue-900 text-white">Iyandikishe</button>
-                <p class="switch-auth">Ufite konti? <a href="#" onclick="showLogin()">Injira</a></p>
+                <div id="step1">
+                    <label for="user-type">Hitamo ubwoko</label>
+                    <select id="user-type" class="border-blue-800">
+                        <option value="" disabled selected>Hitamo: Umuryango cyangwa Ubucuruzi</option>
+                        <option value="family">Umuryango</option>
+                        <option value="business">Ubucuruzi</option>
+                    </select>
+                    <button id="start-signup" class="bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
+                </div>
+                <div id="family-signup" class="hidden">
+                    <div id="family-step1" class="signup-step">
+                        <label for="family-name">Izina</label>
+                        <input type="text" id="family-name" placeholder="Injiza izina ryawe" class="border-blue-800">
+                        <button id="family-next1" class="bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
+                    </div>
+                    <div id="family-step2" class="signup-step hidden">
+                        <label for="family-gender">Igitsina</label>
+                        <select id="family-gender" class="border-blue-800">
+                            <option value="" disabled selected>Hitamo igitsina</option>
+                            <option value="male">Gabo</option>
+                            <option value="female">Gore</option>
+                        </select>
+                        <button id="family-next2" class="bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
+                    </div>
+                    <div id="family-step3" class="signup-step hidden">
+                        <label for="family-phone">Numero ya terefone</label>
+                        <input type="tel" id="family-phone" placeholder="Injiza numero ya terefone" class="border-blue-800">
+                        <button id="family-next3" class="bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
+                    </div>
+                    <div id="family-step4" class="signup-step hidden">
+                        <label for="family-password">Ijambo ryibanga</label>
+                        <input type="password" id="family-password" placeholder="Hitamo ijambo ryibanga" class="border-blue-800">
+                        <button id="family-next4" class="bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
+                    </div>
+                    <div id="family-step5" class="signup-step hidden">
+                        <label for="family-members">Umubare w'abagize umuryango</label>
+                        <select id="family-members" class="border-blue-800">
+                            <option value="" disabled selected>Hitamo umubare</option>
+                            <option value="2-5">2-5</option>
+                            <option value="5-8">5-8</option>
+                            <option value="8-13">8-13</option>
+                            <option value="13+">13+</option>
+                        </select>
+                        <button id="family-next5" class="bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
+                    </div>
+                    <div id="family-step6" class="signup-step hidden">
+                        <label for="family-district">Akarere</label>
+                        <input type="text" id="family-district" placeholder="Injiza akarere" class="border-blue-800">
+                        <button id="family-next6" class="bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
+                    </div>
+                    <div id="family-step7" class="signup-step hidden">
+                        <label for="family-description">Ibisobanuro bigufi by'umuryango</label>
+                        <input type="text" id="family-description" placeholder="Injiza ibisobanuro bigufi" class="border-blue-800">
+                        <button id="family-finish" class="bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
+                    </div>
+                </div>
+                <div id="business-signup" class="hidden">
+                    <div id="business-step1" class="signup-step">
+                        <label for="business-name">Izina</label>
+                        <input type="text" id="business-name" placeholder="Injiza izina ryawe" class="border-blue-800">
+                        <button id="business-next1" class="bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
+                    </div>
+                    <div id="business-step2" class="signup-step hidden">
+                        <label for="business-gender">Igitsina</label>
+                        <select id="business-gender" class="border-blue-800">
+                            <option value="" disabled selected>Hitamo igitsina</option>
+                            <option value="male">Gabo</option>
+                            <option value="female">Gore</option>
+                        </select>
+                        <button id="business-next2" class="bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
+                    </div>
+                    <div id="business-step3" class="signup-step hidden">
+                        <label for="business-phone">Numero ya terefone</label>
+                        <input type="tel" id="business-phone" placeholder="Injiza numero ya terefone" class="border-blue-800">
+                        <button id="business-next3" class="bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
+                    </div>
+                    <div id="business-step4" class="signup-step hidden">
+                        <label for="business-password">Ijambo ryibanga</label>
+                        <input type="password" id="business-password" placeholder="Hitamo ijambo ryibanga" class="border-blue-800">
+                        <button id="business-next4" class="bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
+                    </div>
+                    <div id="business-step5" class="signup-step hidden">
+                        <label for="business-info-name">Izina ry'ubucuruzi</label>
+                        <input type="text" id="business-info-name" placeholder="Injiza izina ry'ubucuruzi" class="border-blue-800">
+                        <button id="business-next5" class="bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
+                    </div>
+                    <div id="business-step6" class="signup-step hidden">
+                        <label for="business-category">Icyiciro cy'ubucuruzi</label>
+                        <input type="text" id="business-category" placeholder="Injiza icyiciro cy'ubucuruzi" class="border-blue-800">
+                        <button id="business-next6" class="bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
+                    </div>
+                    <div id="business-step7" class="signup-step hidden">
+                        <label for="business-address">Aderesi y'ubucuruzi</label>
+                        <input type="text" id="business-address" placeholder="Injiza aderesi y'ubucuruzi" class="border-blue-800">
+                        <button id="business-next7" class="bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
+                    </div>
+                    <div id="business-step8" class="signup-step hidden">
+                        <label for="business-customers">Umubare w'abakiriya buri kwezi</label>
+                        <select id="business-customers" class="border-blue-800">
+                            <option value="" disabled selected>Hitamo umubare</option>
+                            <option value="10-100">10-100</option>
+                            <option value="200-500">200-500</option>
+                            <option value="500-1000">500-1000</option>
+                            <option value="1000+">1000+</option>
+                        </select>
+                        <button id="business-next8" class="bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
+                    </div>
+                    <div id="business-step9" class="signup-step hidden">
+                        <label for="business-description">Ibisobanuro bigufi by'ubucuruzi</label>
+                        <input type="text" id="business-description" placeholder="Injiza ibisobanuro bigufi" class="border-blue-800">
+                        <button id="business-finish" class="bg-blue-800 hover:bg-blue-900 text-white">Komeza</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -155,16 +271,24 @@
         Genzura © 2025 <a href="https://github.com/mkb-nel">M.K.Bertrand</a> - <a href="terms.html">Terms</a>
     </footer>
 
-    <script>
-        function showSignup() {
-            document.getElementById('login-form').classList.add('hidden');
-            document.getElementById('signup-form').classList.remove('hidden');
-        }
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
-        function showLogin() {
-            document.getElementById('signup-form').classList.add('hidden');
-            document.getElementById('login-form').classList.remove('hidden');
-        }
+        const firebaseConfig = {
+            apiKey: "AIzaSyD-8JzL7GPhGhjzQCrAZOJWmyb-hPuaA0U",
+            authDomain: "mypersonalai-22391.firebaseapp.com",
+            databaseURL: "https://mypersonalai-22391-default-rtdb.firebaseio.com",
+            projectId: "mypersonalai-22391",
+            storageBucket: "mypersonalai-22391.firebasestorage.app",
+            messagingSenderId: "527318613254",
+            appId: "1:527318613254:web:be2ede267103601f187287"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
 
         function showLoading() {
             document.getElementById('loading').style.display = 'flex';
@@ -178,50 +302,274 @@
             const errorDiv = document.getElementById('error-message');
             errorDiv.textContent = message;
             errorDiv.style.display = 'block';
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 5000);
         }
 
         function hideError() {
             document.getElementById('error-message').style.display = 'none';
         }
 
-        document.getElementById('login-button').addEventListener('click', function() {
+        function showSignup() {
+            document.getElementById('login-form').classList.add('hidden');
+            document.getElementById('signup-form').classList.remove('hidden');
+        }
+
+        function showLogin() {
+            document.getElementById('signup-form').classList.add('hidden');
+            document.getElementById('login-form').classList.remove('hidden');
+        }
+
+        document.getElementById('login-button').addEventListener('click', async function() {
             hideError();
-            const username = document.getElementById('username').value;
+            const phone = document.getElementById('phone').value;
             const password = document.getElementById('password').value;
 
-            if (!username || !password) {
+            if (!phone || !password) {
                 showError('Nyamuneka uzuze ibirimo byose');
                 return;
             }
 
+            const email = `${phone}@gmail.com`;
             showLoading();
-            setTimeout(() => {
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
                 hideLoading();
-                alert('Ikoranabuhanga ry\'itangantego riri mu bikorwa. Twandikire +250 79 506 5789 kugira ngo uhabwe ibikorwa ry\'ikizamini.');
-            }, 1000); // Simulate loading
+                window.location.href = 'home.html';
+            } catch (error) {
+                hideLoading();
+                showError('Numero ya terefone cyangwa ijambo ryibanga nti byemewe');
+            }
         });
 
-        document.getElementById('signup-button').addEventListener('click', function() {
+        document.getElementById('start-signup').addEventListener('click', function() {
             hideError();
-            const newUsername = document.getElementById('new-username').value;
-            const newPassword = document.getElementById('new-password').value;
-            const confirmPassword = document.getElementById('confirm-password').value;
-
-            if (!newUsername || !newPassword || !confirmPassword) {
-                showError('Nyamuneka uzuze ibirimo byose');
+            const userType = document.getElementById('user-type').value;
+            if (!userType) {
+                showError('Nyamuneka hitamo ubwoko: Umuryango cyangwa Ubucuruzi');
                 return;
             }
+            document.getElementById('step1').classList.add('hidden');
+            if (userType === 'family') {
+                document.getElementById('family-signup').classList.remove('hidden');
+                document.getElementById('family-step1').classList.remove('hidden');
+            } else {
+                document.getElementById('business-signup').classList.remove('hidden');
+                document.getElementById('business-step1').classList.remove('hidden');
+            }
+        });
 
-            if (newPassword !== confirmPassword) {
-                showError('Amagambo ryibanga aryohereza');
+        // Family Signup Steps
+        document.getElementById('family-next1').addEventListener('click', function() {
+            if (!document.getElementById('family-name').value) {
+                showError('Nyamuneka injiza izina ryawe');
                 return;
             }
+            document.getElementById('family-step1').classList.add('hidden');
+            document.getElementById('family-step2').classList.remove('hidden');
+        });
 
+        document.getElementById('family-next2').addEventListener('click', function() {
+            if (!document.getElementById('family-gender').value) {
+                showError('Nyamuneka hitamo igitsina');
+                return;
+            }
+            document.getElementById('family-step2').classList.add('hidden');
+            document.getElementById('family-step3').classList.remove('hidden');
+        });
+
+        document.getElementById('family-next3').addEventListener('click', function() {
+            if (!document.getElementById('family-phone').value) {
+                showError('Nyamuneka injiza numero ya terefone');
+                return;
+            }
+            document.getElementById('family-step3').classList.add('hidden');
+            document.getElementById('family-step4').classList.remove('hidden');
+        });
+
+        document.getElementById('family-next4').addEventListener('click', function() {
+            if (!document.getElementById('family-password').value) {
+                showError('Nyamuneka injiza ijambo ryibanga');
+                return;
+            }
+            document.getElementById('family-step4').classList.add('hidden');
+            document.getElementById('family-step5').classList.remove('hidden');
+        });
+
+        document.getElementById('family-next5').addEventListener('click', function() {
+            if (!document.getElementById('family-members').value) {
+                showError('Nyamuneka hitamo umubare w\'abagize umuryango');
+                return;
+            }
+            document.getElementById('family-step5').classList.add('hidden');
+            document.getElementById('family-step6').classList.remove('hidden');
+        });
+
+        document.getElementById('family-next6').addEventListener('click', function() {
+            if (!document.getElementById('family-district').value) {
+                showError('Nyamuneka injiza akarere');
+                return;
+            }
+            document.getElementById('family-step6').classList.add('hidden');
+            document.getElementById('family-step7').classList.remove('hidden');
+        });
+
+        document.getElementById('family-finish').addEventListener('click', async function() {
+            if (!document.getElementById('family-description').value) {
+                showError('Nyamuneka injiza ibisobanuro bigufi by\'umuryango');
+                return;
+            }
             showLoading();
-            setTimeout(() => {
+            const name = document.getElementById('family-name').value;
+            const gender = document.getElementById('family-gender').value;
+            const phone = document.getElementById('family-phone').value;
+            const password = document.getElementById('family-password').value;
+            const members = document.getElementById('family-members').value;
+            const district = document.getElementById('family-district').value;
+            const description = document.getElementById('family-description').value;
+            const email = `${phone}@gmail.com`;
+
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+                await setDoc(doc(db, 'users', user.uid), {
+                    type: 'family',
+                    name: name,
+                    gender: gender,
+                    phone: phone,
+                    members: members,
+                    district: district,
+                    description: description,
+                    createdAt: new Date()
+                });
                 hideLoading();
-                alert('Ikoranabuhanga ry\'itangantego riri mu bikorwa. Twandikire +250 79 506 5789 kugira ngo uhabwe ibikorwa ry\'ikizamini.');
-            }, 1000); // Simulate loading
+                window.location.href = 'home.html';
+            } catch (error) {
+                hideLoading();
+                showError('Ikosa ryabaye mu kwandikisha: ' + error.message);
+            }
+        });
+
+        // Business Signup Steps
+        document.getElementById('business-next1').addEventListener('click', function() {
+            if (!document.getElementById('business-name').value) {
+                showError('Nyamuneka injiza izina ryawe');
+                return;
+            }
+            document.getElementById('business-step1').classList.add('hidden');
+            document.getElementById('business-step2').classList.remove('hidden');
+        });
+
+        document.getElementById('business-next2').addEventListener('click', function() {
+            if (!document.getElementById('business-gender').value) {
+                showError('Nyamuneka hitamo igitsina');
+                return;
+            }
+            document.getElementById('business-step2').classList.add('hidden');
+            document.getElementById('business-step3').classList.remove('hidden');
+        });
+
+        document.getElementById('business-next3').addEventListener('click', function() {
+            if (!document.getElementById('business-phone').value) {
+                showError('Nyamuneka injiza numero ya terefone');
+                return;
+            }
+            document.getElementById('business-step3').classList.add('hidden');
+            document.getElementById('business-step4').classList.remove('hidden');
+        });
+
+        document.getElementById('business-next4').addEventListener('click', function() {
+            if (!document.getElementById('business-password').value) {
+                showError('Nyamuneka injiza ijambo ryibanga');
+                return;
+            }
+            document.getElementById('business-step4').classList.add('hidden');
+            document.getElementById('business-step5').classList.remove('hidden');
+        });
+
+        document.getElementById('business-next5').addEventListener('click', function() {
+            if (!document.getElementById('business-info-name').value) {
+                showError('Nyamuneka injiza izina ry\'ubucuruzi');
+                return;
+            }
+            document.getElementById('business-step5').classList.add('hidden');
+            document.getElementById('business-step6').classList.remove('hidden');
+        });
+
+        document.getElementById('business-next6').addEventListener('click', function() {
+            if (!document.getElementById('business-category').value) {
+                showError('Nyamuneka injiza icyiciro cy\'ubucuruzi');
+                return;
+            }
+            document.getElementById('business-step6').classList.add('hidden');
+            document.getElementById('business-step7').classList.remove('hidden');
+        });
+
+        document.getElementById('business-next7').addEventListener('click', function() {
+            if (!document.getElementById('business-address').value) {
+                showError('Nyamuneka injiza aderesi y\'ubucuruzi');
+                return;
+            }
+            document.getElementById('business-step7').classList.add('hidden');
+            document.getElementById('business-step8').classList.remove('hidden');
+        });
+
+        document.getElementById('business-next8').addEventListener('click', function() {
+            if (!document.getElementById('business-customers').value) {
+                showError('Nyamuneka hitamo umubare w\'abakiriya');
+                return;
+            }
+            document.getElementById('business-step8').classList.add('hidden');
+            document.getElementById('business-step9').classList.remove('hidden');
+        });
+
+        document.getElementById('business-finish').addEventListener('click', async function() {
+            if (!document.getElementById('business-description').value) {
+                showError('Nyamuneka injiza ibisobanuro bigufi by\'ubucuruzi');
+                return;
+            }
+            showLoading();
+            const name = document.getElementById('business-name').value;
+            const gender = document.getElementById('business-gender').value;
+            const phone = document.getElementById('business-phone').value;
+            const password = document.getElementById('business-password').value;
+            const businessName = document.getElementById('business-info-name').value;
+            const category = document.getElementById('business-category').value;
+            const address = document.getElementById('business-address').value;
+            const customers = document.getElementById('business-customers').value;
+            const description = document.getElementById('business-description').value;
+            const email = `${phone}@gmail.com`;
+
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+                await setDoc(doc(db, 'users', user.uid), {
+                    type: 'business',
+                    name: name,
+                    gender: gender,
+                    phone: phone,
+                    businessInfo: {
+                        name: businessName,
+                        category: category,
+                        address: address
+                    },
+                    customers: customers,
+                    description: description,
+                    createdAt: new Date()
+                });
+                hideLoading();
+                window.location.href = 'home.html';
+            } catch (error) {
+                hideLoading();
+                showError('Ikosa ryabaye mu kwandikisha: ' + error.message);
+            }
+        });
+
+        document.addEventListener('click', function(event) {
+            if (event.target.id !== 'error-message') {
+                hideError();
+            }
         });
     </script>
 </body>
