@@ -9,37 +9,49 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body {
-            background-color: #f7fafc;
-            color: #1a202c;
-            font-family: 'Inter', Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            min-height: 100vh;
+            background-color: #ffffff;
+            color: #000000;
+            font-family: Arial, sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
             overflow-x: hidden;
         }
         .header {
             width: 100%;
-            padding: 1.5rem 2rem;
+            padding: 1.2rem 1.5rem;
             position: fixed;
             top: 0;
             z-index: 10;
+            background: #ffffff;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         .header h2 {
             margin: 0;
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             font-weight: 600;
             color: #1e40af;
+            text-align: center;
+        }
+        .greeting {
+            font-size: 0.9rem;
+            color: #4b5563;
+            margin-top: 0.2rem;
+            text-align: center;
         }
         .content {
-            margin-top: 6rem;
+            margin-top: 7rem;
             display: flex;
             flex-direction: column;
             align-items: center;
             width: 100%;
-            max-width: 500px;
+            max-width: 400px;
             padding: 1rem;
         }
         .animation-container {
@@ -48,16 +60,50 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
         }
         .human-icon {
             font-size: 2.5rem;
             color: #1e40af;
             animation: bounce 2s ease-in-out infinite;
+            z-index: 2;
         }
         @keyframes bounce {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-15px); }
+        }
+        .flower {
+            position: absolute;
+            font-size: 1.2rem;
+            opacity: 0.7;
+            color: #93c5fd;
+            z-index: 1;
+        }
+        .flower-1 {
+            top: 20px;
+            left: 30px;
+            animation: sway 6s ease-in-out infinite;
+        }
+        .flower-2 {
+            bottom: 10px;
+            right: 40px;
+            animation: sway 7s ease-in-out infinite 1s;
+        }
+        .flower-3 {
+            top: 60px;
+            right: 20px;
+            animation: sway 5s ease-in-out infinite 0.5s;
+            color: #1e40af;
+        }
+        .flower-4 {
+            bottom: 40px;
+            left: 20px;
+            animation: sway 8s ease-in-out infinite 1.5s;
+            color: #1e40af;
+        }
+        @keyframes sway {
+            0%, 100% { transform: rotate(-5deg) scale(1); }
+            50% { transform: rotate(5deg) scale(1.1); }
         }
         .particle {
             position: absolute;
@@ -73,27 +119,27 @@
         .buttons-container {
             display: flex;
             flex-direction: column;
-            gap: 1rem;
+            gap: 0.8rem;
             width: 100%;
-            max-width: 300px;
         }
         .button {
-            padding: 0.75rem;
+            padding: 0.7rem;
             background-color: #1e40af;
             color: #ffffff;
             text-align: center;
-            border-radius: 6px;
+            border-radius: 4px;
             cursor: pointer;
             font-weight: 500;
-            font-size: 1rem;
-            transition: background-color 0.3s ease, transform 0.2s ease;
+            font-size: 0.9rem;
+            transition: background-color 0.3s;
+            border: 1px solid #1e40af;
         }
         .button:hover {
             background-color: #1e3a8a;
-            transform: translateY(-2px);
         }
         .sign-out {
             background-color: #ef4444;
+            border-color: #ef4444;
         }
         .sign-out:hover {
             background-color: #dc2626;
@@ -110,7 +156,7 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
             display: none;
             z-index: 1000;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
         }
         #loading {
             display: none;
@@ -139,8 +185,8 @@
         footer {
             text-align: center;
             padding: 1rem;
-            color: #4b5563;
-            font-size: 0.85rem;
+            color: #000000;
+            font-size: 0.8rem;
             width: 100%;
             margin-top: auto;
         }
@@ -152,11 +198,35 @@
             text-decoration: underline;
         }
         @media (max-width: 640px) {
+            .header {
+                padding: 1rem;
+            }
+            .header h2 {
+                font-size: 1.1rem;
+            }
+            .greeting {
+                font-size: 0.8rem;
+            }
             .content {
+                margin-top: 6rem;
                 padding: 0.5rem;
             }
             .buttons-container {
                 max-width: 100%;
+            }
+            .button {
+                font-size: 0.85rem;
+                padding: 0.6rem;
+            }
+            .animation-container {
+                height: 130px;
+                margin-bottom: 1.2rem;
+            }
+            .human-icon {
+                font-size: 2.2rem;
+            }
+            .flower {
+                font-size: 1rem;
             }
         }
     </style>
@@ -164,18 +234,26 @@
 <body>
     <div class="header">
         <h2 id="user-name"></h2>
+        <div class="greeting" id="greeting"></div>
     </div>
+    
     <div class="content">
         <div class="animation-container">
             <i class="fas fa-user-friends human-icon"></i>
+            <!-- Animated flowers -->
+            <i class="fas fa-leaf flower flower-1"></i>
+            <i class="fas fa-leaf flower flower-2"></i>
+            <i class="fas fa-feather flower flower-3"></i>
+            <i class="fas fa-feather flower flower-4"></i>
         </div>
+        
         <div class="buttons-container">
             <div class="button" onclick="window.location.href='overview.html'">Overview</div>
-            <div class="button" onclick="window.location.href='manage.html'">Manage</div>
             <div class="button" onclick="window.location.href='stock.html'">Stock</div>
             <div class="button" onclick="window.location.href='notes.html'">Notes</div>
             <div class="button sign-out" onclick="signOut()">Sign out</div>
         </div>
+        
         <div id="error-message" onclick="hideError()"></div>
     </div>
 
@@ -205,6 +283,22 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
+
+        // Set greeting based on time of day
+        function setGreeting() {
+            const hour = new Date().getHours();
+            let greeting = "";
+            
+            if (hour >= 5 && hour < 12) {
+                greeting = "Mwaramutse"; // Morning
+            } else if (hour >= 12 && hour < 17) {
+                greeting = "Mwiriwe"; // Afternoon
+            } else {
+                greeting = "Mwiriwe neza"; // Evening
+            }
+            
+            document.getElementById('greeting').textContent = greeting;
+        }
 
         function showLoading() {
             document.getElementById('loading').style.display = 'flex';
@@ -298,6 +392,8 @@
             }
         }
 
+        // Initialize the page
+        setGreeting();
         loadUserName();
         createParticles();
 
