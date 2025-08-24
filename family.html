@@ -98,6 +98,44 @@
         .sign-out:hover {
             background-color: #dc2626;
         }
+        #error-message {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #fee2e2;
+            color: #b91c1c;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            display: none;
+            z-index: 1000;
+            font-size: 0.9rem;
+        }
+        #loading {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        #loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #1e40af;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
         footer {
             text-align: center;
             padding: 1rem;
@@ -138,6 +176,11 @@
             <div class="button" onclick="window.location.href='notes.html'">Notes</div>
             <div class="button sign-out" onclick="signOut()">Sign out</div>
         </div>
+        <div id="error-message" onclick="hideError()"></div>
+    </div>
+
+    <div id="loading">
+        <div id="loading-spinner"></div>
     </div>
 
     <footer>
@@ -146,7 +189,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
-        import { getAuth, signOut as firebaseSignOut } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+        import { getAuth, onAuthStateChanged, signOut as firebaseSignOut } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
         import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -163,25 +206,81 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
+        function showLoading() {
+            document.getElementById('loading').style.display = 'flex';
+        }
+
+        function hideLoading() {
+            document.getElementById('loading').style.display = 'none';
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('error-message');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        function hideError() {
+            document.getElementById('error-message').style.display = 'none';
+        }
+
         async function loadUserName() {
-            const user = auth.currentUser;
-            if (user) {
-                const userDocRef = doc(db, 'users', user.uid);
-                const userDoc = await getDoc(userDocRef);
-                if (userDoc.exists()) {
-                    document.getElementById('user-name').textContent = userDoc.data().name;
-                } else {
-                    console.error('User document not found');
-                }
-            } else {
-                window.location.href = 'index.html';
+            showLoading();
+            try {
+                await new Promise((resolve, reject) => {
+                    onAuthStateChanged(auth, async (user) => {
+                        if (!user) {
+                            hideLoading();
+                            showError('Nta muntu wabashije kwinjira. Ongera winjire.');
+                            setTimeout(() => { window.location.href = 'index.html'; }, 3000);
+                            reject('No user authenticated');
+                            return;
+                        }
+                        try {
+                            const userDocRef = doc(db, 'users', user.uid);
+                            const userDoc = await getDoc(userDocRef);
+                            if (userDoc.exists()) {
+                                const userData = userDoc.data();
+                                if (userData.type !== 'family') {
+                                    hideLoading();
+                                    showError('Konti si iya umuryango. Kohereza ku ipaji yihariye.');
+                                    setTimeout(() => { window.location.href = userData.type === 'business' ? 'business.html' : 'index.html'; }, 3000);
+                                    reject('Invalid user type');
+                                    return;
+                                }
+                                document.getElementById('user-name').textContent = userData.name;
+                                hideLoading();
+                                resolve();
+                            } else {
+                                hideLoading();
+                                showError('Ibisobanuro bya konti ntibibashije kuboneka.');
+                                setTimeout(() => { window.location.href = 'index.html'; }, 3000);
+                                reject('User document not found');
+                            }
+                        } catch (error) {
+                            hideLoading();
+                            showError('Ikosa ryabaye mu kubona izina: ' + error.message);
+                            setTimeout(() => { window.location.href = 'index.html'; }, 3000);
+                            reject(error);
+                        }
+                    });
+                });
+            } catch (error) {
+                console.error('Authentication error:', error);
             }
         }
 
         function signOut() {
+            showLoading();
             firebaseSignOut(auth).then(() => {
+                hideLoading();
                 window.location.href = 'index.html';
             }).catch((error) => {
+                hideLoading();
+                showError('Ikosa ryabaye mu gusohoka: ' + error.message);
                 console.error('Error signing out:', error);
             });
         }
@@ -201,6 +300,12 @@
 
         loadUserName();
         createParticles();
+
+        document.addEventListener('click', function(event) {
+            if (event.target.id !== 'error-message') {
+                hideError();
+            }
+        });
     </script>
 </body>
 </html>
