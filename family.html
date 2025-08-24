@@ -9,66 +9,29 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body {
-            background: linear-gradient(135deg, #f7fafc 0%, #e0f2fe 100%);
-            color: #1a202c;
-            font-family: 'Inter', Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            min-height: 100vh;
+            background-color: #ffffff;
+            color: #000000;
+            font-family: Arial, sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
             overflow-x: hidden;
-            position: relative;
         }
-        
-        /* Background decorative elements */
-        .corner-decoration {
-            position: fixed;
-            width: 200px;
-            height: 200px;
-            z-index: 0;
-        }
-        
-        .corner-top-left {
-            top: -50px;
-            left: -50px;
-            background: radial-gradient(circle, #93c5fd 0%, transparent 70%);
-            opacity: 0.3;
-        }
-        
-        .corner-top-right {
-            top: -50px;
-            right: -50px;
-            background: radial-gradient(circle, #1e40af 0%, transparent 70%);
-            opacity: 0.2;
-        }
-        
-        .corner-bottom-left {
-            bottom: -50px;
-            left: -50px;
-            background: radial-gradient(circle, #1e40af 0%, transparent 70%);
-            opacity: 0.2;
-        }
-        
-        .corner-bottom-right {
-            bottom: -50px;
-            right: -50px;
-            background: radial-gradient(circle, #93c5fd 0%, transparent 70%);
-            opacity: 0.3;
-        }
-        
         .header {
             width: 100%;
             padding: 1.2rem 1.5rem;
             position: fixed;
             top: 0;
             z-index: 10;
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(5px);
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            background: #ffffff;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
-        
         .header h2 {
             margin: 0;
             font-size: 1.3rem;
@@ -76,26 +39,21 @@
             color: #1e40af;
             text-align: center;
         }
-        
         .greeting {
             font-size: 0.9rem;
             color: #4b5563;
             margin-top: 0.2rem;
             text-align: center;
         }
-        
         .content {
             margin-top: 7rem;
             display: flex;
             flex-direction: column;
             align-items: center;
             width: 100%;
-            max-width: 500px;
+            max-width: 400px;
             padding: 1rem;
-            position: relative;
-            z-index: 1;
         }
-        
         .animation-container {
             height: 150px;
             position: relative;
@@ -104,19 +62,16 @@
             align-items: center;
             margin-bottom: 1.5rem;
         }
-        
         .human-icon {
             font-size: 2.5rem;
             color: #1e40af;
             animation: bounce 2s ease-in-out infinite;
             z-index: 2;
         }
-        
         @keyframes bounce {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-15px); }
         }
-        
         .flower {
             position: absolute;
             font-size: 1.2rem;
@@ -124,38 +79,32 @@
             color: #93c5fd;
             z-index: 1;
         }
-        
         .flower-1 {
             top: 20px;
             left: 30px;
             animation: sway 6s ease-in-out infinite;
         }
-        
         .flower-2 {
             bottom: 10px;
             right: 40px;
             animation: sway 7s ease-in-out infinite 1s;
         }
-        
         .flower-3 {
             top: 60px;
             right: 20px;
             animation: sway 5s ease-in-out infinite 0.5s;
             color: #1e40af;
         }
-        
         .flower-4 {
             bottom: 40px;
             left: 20px;
             animation: sway 8s ease-in-out infinite 1.5s;
             color: #1e40af;
         }
-        
         @keyframes sway {
             0%, 100% { transform: rotate(-5deg) scale(1); }
             50% { transform: rotate(5deg) scale(1.1); }
         }
-        
         .particle {
             position: absolute;
             background-color: #60a5fa;
@@ -163,47 +112,38 @@
             opacity: 0.5;
             animation: particles 6s linear infinite;
         }
-        
         @keyframes particles {
             0% { transform: translateY(0); opacity: 0.5; }
             100% { transform: translateY(-100vh); opacity: 0; }
         }
-        
         .buttons-container {
             display: flex;
             flex-direction: column;
             gap: 0.8rem;
             width: 100%;
-            max-width: 280px;
         }
-        
         .button {
             padding: 0.7rem;
-            background: linear-gradient(to right, #1e40af, #3b82f6);
+            background-color: #1e40af;
             color: #ffffff;
             text-align: center;
-            border-radius: 8px;
+            border-radius: 4px;
             cursor: pointer;
             font-weight: 500;
             font-size: 0.9rem;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 6px rgba(30, 64, 175, 0.2);
+            transition: background-color 0.3s;
+            border: 1px solid #1e40af;
         }
-        
         .button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 10px rgba(30, 64, 175, 0.3);
+            background-color: #1e3a8a;
         }
-        
         .sign-out {
-            background: linear-gradient(to right, #ef4444, #f87171);
-            box-shadow: 0 4px 6px rgba(239, 68, 68, 0.2);
+            background-color: #ef4444;
+            border-color: #ef4444;
         }
-        
         .sign-out:hover {
-            box-shadow: 0 6px 10px rgba(239, 68, 68, 0.3);
+            background-color: #dc2626;
         }
-        
         #error-message {
             position: fixed;
             bottom: 20px;
@@ -218,7 +158,6 @@
             z-index: 1000;
             font-size: 0.85rem;
         }
-        
         #loading {
             display: none;
             position: fixed;
@@ -231,7 +170,6 @@
             align-items: center;
             z-index: 1000;
         }
-        
         #loading-spinner {
             border: 4px solid #f3f3f3;
             border-top: 4px solid #1e40af;
@@ -240,68 +178,53 @@
             height: 30px;
             animation: spin 1s linear infinite;
         }
-        
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        
         footer {
             text-align: center;
             padding: 1rem;
-            color: #4b5563;
+            color: #000000;
             font-size: 0.8rem;
             width: 100%;
             margin-top: auto;
-            position: relative;
-            z-index: 1;
         }
-        
         footer a {
             color: #1e40af;
             text-decoration: none;
         }
-        
         footer a:hover {
             text-decoration: underline;
         }
-        
         @media (max-width: 640px) {
             .header {
                 padding: 1rem;
             }
-            
             .header h2 {
                 font-size: 1.1rem;
             }
-            
             .greeting {
                 font-size: 0.8rem;
             }
-            
             .content {
                 margin-top: 6rem;
                 padding: 0.5rem;
             }
-            
             .buttons-container {
                 max-width: 100%;
             }
-            
             .button {
                 font-size: 0.85rem;
                 padding: 0.6rem;
             }
-            
             .animation-container {
                 height: 130px;
                 margin-bottom: 1.2rem;
             }
-            
             .human-icon {
                 font-size: 2.2rem;
             }
-            
             .flower {
                 font-size: 1rem;
             }
@@ -309,12 +232,6 @@
     </style>
 </head>
 <body>
-    <!-- Background decorative corners -->
-    <div class="corner-decoration corner-top-left"></div>
-    <div class="corner-decoration corner-top-right"></div>
-    <div class="corner-decoration corner-bottom-left"></div>
-    <div class="corner-decoration corner-bottom-right"></div>
-
     <div class="header">
         <h2 id="user-name"></h2>
         <div class="greeting" id="greeting"></div>
