@@ -1,1 +1,224 @@
-Hello.
+<!DOCTYPE html>
+<html lang="rw">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Genzura - Itangantego</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background-color: #ffffff;
+            color: #000000;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .auth-container {
+            width: 100%;
+            max-width: 400px; /* Medium width */
+            padding: 2rem;
+            border: 1px solid #1e40af; /* Blue border */
+            border-radius: 4px; /* Very small rounded corners */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .auth-container h1 {
+            font-size: 1.5rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: #000000;
+        }
+        .auth-container label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #000000;
+            font-size: 0.9rem;
+        }
+        .auth-container input {
+            width: 100%;
+            padding: 0.5rem;
+            margin-bottom: 1rem;
+            border: 1px solid #1e40af; /* Blue border */
+            border-radius: 2px; /* Very small rounded corners */
+            font-size: 0.9rem;
+            color: #000000;
+        }
+        .auth-container button {
+            width: 100%;
+            padding: 0.5rem;
+            background-color: #1e40af; /* Blue button */
+            color: #ffffff;
+            border: none;
+            border-radius: 2px; /* Very small rounded corners */
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .auth-container button:hover {
+            background-color: #1e3a8a; /* Darker blue on hover */
+        }
+        .auth-container .switch-auth {
+            text-align: center;
+            margin-top: 1rem;
+            font-size: 0.85rem;
+        }
+        .auth-container .switch-auth a {
+            color: #1e40af; /* Blue link */
+            text-decoration: none;
+        }
+        .auth-container .switch-auth a:hover {
+            text-decoration: underline;
+        }
+        #error-message {
+            color: red;
+            text-align: center;
+            margin-bottom: 1rem;
+            display: none;
+        }
+        #loading {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        #loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #1e40af;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        footer {
+            text-align: center;
+            padding: 1rem;
+            color: #000000;
+            font-size: 0.85rem;
+            width: 100%;
+            position: absolute;
+            bottom: 0;
+        }
+        footer a {
+            color: #1e40af;
+            text-decoration: none;
+        }
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container bg-white">
+        <h1 class="text-black">Murakaza neza muri Genzura</h1>
+        <div id="error-message"></div>
+        <div id="login-form">
+            <label for="username">Izina ry'ukoresha</label>
+            <input type="text" id="username" placeholder="Injiza izina ry'ukoresha ryawe" class="border-blue-800">
+            <label for="password">Ijambo ryibanga</label>
+            <input type="password" id="password" placeholder="Injiza ijambo ryibanga ryawe" class="border-blue-800">
+            <button id="login-button" class="bg-blue-800 hover:bg-blue-900 text-white">Injira</button>
+            <p class="switch-auth">Niba utagira konti? <a href="#" onclick="showSignup()">Iyandikishe</a></p>
+        </div>
+        <div id="signup-form" class="hidden">
+            <label for="new-username">Izina ry'ukoresha</label>
+            <input type="text" id="new-username" placeholder="Hitamo izina ry'ukoresha" class="border-blue-800">
+            <label for="new-password">Ijambo ryibanga</label>
+            <input type="password" id="new-password" placeholder="Hitamo ijambo ryibanga" class="border-blue-800">
+            <label for="confirm-password">Emeza Ijambo ryibanga</label>
+            <input type="password" id="confirm-password" placeholder="Emeza ijambo ryibanga ryawe" class="border-blue-800">
+            <button id="signup-button" class="bg-blue-800 hover:bg-blue-900 text-white">Iyandikishe</button>
+            <p class="switch-auth">Ufite konti? <a href="#" onclick="showLogin()">Injira</a></p>
+        </div>
+    </div>
+
+    <div id="loading">
+        <div id="loading-spinner"></div>
+    </div>
+
+    <footer>
+        Genzura © 2025 <a href="https://github.com/mkb-nel">M.K.Bertrand</a> - <a href="terms.html">Terms</a>
+    </footer>
+
+    <script>
+        function showSignup() {
+            document.getElementById('login-form').classList.add('hidden');
+            document.getElementById('signup-form').classList.remove('hidden');
+        }
+
+        function showLogin() {
+            document.getElementById('signup-form').classList.add('hidden');
+            document.getElementById('login-form').classList.remove('hidden');
+        }
+
+        function showLoading() {
+            document.getElementById('loading').style.display = 'flex';
+        }
+
+        function hideLoading() {
+            document.getElementById('loading').style.display = 'none';
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('error-message');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+        }
+
+        function hideError() {
+            document.getElementById('error-message').style.display = 'none';
+        }
+
+        document.getElementById('login-button').addEventListener('click', function() {
+            hideError();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            if (!username || !password) {
+                showError('Nyamuneka uzuze ibirimo byose');
+                return;
+            }
+
+            showLoading();
+            setTimeout(() => {
+                hideLoading();
+                alert('Ikoranabuhanga ry\'itangantego riri mu bikorwa. Twandikire +250 79 506 5789 kugira ngo uhabwe ibikorwa ry\'ikizamini.');
+            }, 1000); // Simulate loading
+        });
+
+        document.getElementById('signup-button').addEventListener('click', function() {
+            hideError();
+            const newUsername = document.getElementById('new-username').value;
+            const newPassword = document.getElementById('new-password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+
+            if (!newUsername || !newPassword || !confirmPassword) {
+                showError('Nyamuneka uzuze ibirimo byose');
+                return;
+            }
+
+            if (newPassword !== confirmPassword) {
+                showError('Amagambo ryibanga aryohereza');
+                return;
+            }
+
+            showLoading();
+            setTimeout(() => {
+                hideLoading();
+                alert('Ikoranabuhanga ry\'itangantego riri mu bikorwa. Twandikire +250 79 506 5789 kugira ngo uhabwe ibikorwa ry\'ikizamini.');
+            }, 1000); // Simulate loading
+        });
+    </script>
+</body>
+</html>
