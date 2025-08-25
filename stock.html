@@ -707,6 +707,68 @@
     </div>
   </div>
 
+  <!-- Edit Product Modal -->
+  <div class="modal" id="editProductModal">
+    <div class="modal-content">
+      <h2 class="modal-title">Edit Product</h2>
+      
+      <form id="editProductForm">
+        <input type="hidden" id="editProductId">
+        
+        <div class="form-group">
+          <label for="editProductName">Product Name *</label>
+          <input type="text" id="editProductName" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="editProductImage">Product Image</label>
+          <input type="file" id="editProductImage" class="file-input" accept="image/*">
+          <button type="button" class="modal-btn secondary" onclick="document.getElementById('editProductImage').click()" style="margin-top: 8px;">
+            Select Image
+          </button>
+          <div class="image-preview" id="editImagePreview">
+            <span>No image selected</span>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="editProductCost">Cost (RWF) *</label>
+          <input type="number" id="editProductCost" min="0" step="0.01" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="editProductQuantity">Quantity (Number of items) *</label>
+          <input type="number" id="editProductQuantity" min="0" required>
+        </div>
+        
+        <div class="form-group" id="editCostPerUnitGroup" style="display: none;">
+          <label for="editCostPerUnit">Cost per unit (RWF)</label>
+          <input type="number" id="editCostPerUnit" min="0" step="0.01" readonly>
+        </div>
+        
+        <div class="form-group">
+          <label for="editProductWeight">Quantity (KG) - Optional</label>
+          <input type="number" id="editProductWeight" min="0" step="0.01">
+        </div>
+        
+        <div class="form-group">
+          <label for="editEstimatedSellDate">Estimated Sell By Date</label>
+          <input type="date" id="editEstimatedSellDate">
+        </div>
+        
+        <div class="form-group">
+          <label for="editProductSold">Sold Amount (RWF)</label>
+          <input type="number" id="editProductSold" min="0" step="0.01">
+        </div>
+        
+        <div class="modal-actions">
+          <button type="button" class="modal-btn secondary" onclick="closeModal('editProductModal')">Cancel</button>
+          <button type="submit" class="modal-btn primary">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
@@ -738,12 +800,19 @@
     const productsList = document.getElementById('productsList');
     const addProductModal = document.getElementById('addProductModal');
     const viewProductModal = document.getElementById('viewProductModal');
+    const editProductModal = document.getElementById('editProductModal');
     const addProductForm = document.getElementById('addProductForm');
+    const editProductForm = document.getElementById('editProductForm');
     const productImageInput = document.getElementById('productImage');
+    const editProductImageInput = document.getElementById('editProductImage');
     const imagePreview = document.getElementById('imagePreview');
+    const editImagePreview = document.getElementById('editImagePreview');
     const productQuantityInput = document.getElementById('productQuantity');
+    const editProductQuantityInput = document.getElementById('editProductQuantity');
     const costPerUnitGroup = document.getElementById('costPerUnitGroup');
+    const editCostPerUnitGroup = document.getElementById('editCostPerUnitGroup');
     const costPerUnitInput = document.getElementById('costPerUnit');
+    const editCostPerUnitInput = document.getElementById('editCostPerUnit');
     const reportBtn = document.getElementById('reportBtn');
     const introVideo = document.getElementById('introVideo');
     const editProductBtn = document.getElementById('editProductBtn');
@@ -758,6 +827,14 @@
     const viewProductSold = document.getElementById('viewProductSold');
     const viewProductDate = document.getElementById('viewProductDate');
     const viewProductImage = document.getElementById('viewProductImage');
+
+    // Edit product form elements
+    const editProductId = document.getElementById('editProductId');
+    const editProductName = document.getElementById('editProductName');
+    const editProductCost = document.getElementById('editProductCost');
+    const editProductWeight = document.getElementById('editProductWeight');
+    const editEstimatedSellDate = document.getElementById('editEstimatedSellDate');
+    const editProductSold = document.getElementById('editProductSold');
 
     // Global variables
     let currentUser = null;
@@ -918,8 +995,7 @@
 
     // Setup event listeners for edit and delete buttons
     editProductBtn.addEventListener('click', () => {
-      alert('Edit functionality would open here. Product ID: ' + selectedProduct.id);
-      // In a real implementation, you would open an edit form
+      openEditProductModal(selectedProduct);
     });
 
     deleteProductBtn.addEventListener('click', () => {
@@ -936,6 +1012,47 @@
           });
       }
     });
+
+    // Open edit product modal
+    function openEditProductModal(product) {
+      // Close view modal and open edit modal
+      closeModal('viewProductModal');
+      
+      // Populate edit form with product data
+      editProductId.value = product.id;
+      editProductName.value = product.name;
+      editProductCost.value = product.cost || 0;
+      editProductQuantity.value = product.quantity || 0;
+      editProductWeight.value = product.weight || '';
+      editEstimatedSellDate.value = product.estimatedSellDate || '';
+      editProductSold.value = product.soldAmount || 0;
+      
+      // Show image if available
+      if (product.imageUrl) {
+        editImagePreview.innerHTML = `<img src="${product.imageUrl}" alt="Product Image">`;
+      } else {
+        editImagePreview.innerHTML = '<span>No image selected</span>';
+      }
+      
+      // Calculate cost per unit
+      calculateEditCostPerUnit();
+      
+      // Show the edit modal
+      editProductModal.style.display = 'flex';
+    }
+
+    // Calculate cost per unit for edit form
+    function calculateEditCostPerUnit() {
+      const quantity = parseInt(editProductQuantity.value) || 0;
+      const cost = parseFloat(editProductCost.value) || 0;
+      
+      if (quantity > 1 && cost > 0) {
+        editCostPerUnitInput.value = (cost / quantity).toFixed(2);
+        editCostPerUnitGroup.style.display = 'block';
+      } else {
+        editCostPerUnitGroup.style.display = 'none';
+      }
+    }
 
     // Search functionality with 300ms delay
     searchInput.addEventListener('input', function() {
@@ -985,6 +1102,10 @@
         addProductForm.reset();
         imagePreview.innerHTML = '<span>No image selected</span>';
         costPerUnitGroup.style.display = 'none';
+      } else if (modalId === 'editProductModal') {
+        editProductForm.reset();
+        editImagePreview.innerHTML = '<span>No image selected</span>';
+        editCostPerUnitGroup.style.display = 'none';
       }
     }
 
@@ -1001,7 +1122,11 @@
       }
     });
 
-    // Handle image preview
+    // Calculate cost per unit when quantity changes in edit form
+    editProductQuantityInput.addEventListener('input', calculateEditCostPerUnit);
+    editProductCost.addEventListener('input', calculateEditCostPerUnit);
+
+    // Handle image preview for add form
     productImageInput.addEventListener('change', function(event) {
       const file = event.target.files[0];
       if (!file) return;
@@ -1018,7 +1143,24 @@
       reader.readAsDataURL(file);
     });
 
-    // Handle form submission
+    // Handle image preview for edit form
+    editProductImageInput.addEventListener('change', function(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      
+      if (!file.type.match('image.*')) {
+        alert('Please select an image file');
+        return;
+      }
+      
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        editImagePreview.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
+      };
+      reader.readAsDataURL(file);
+    });
+
+    // Handle add form submission
     addProductForm.addEventListener('submit', function(e) {
       e.preventDefault();
       
@@ -1053,6 +1195,46 @@
       .catch((error) => {
         console.error('Error adding product: ', error);
         alert('Error adding product. Please try again.');
+      });
+    });
+
+    // Handle edit form submission
+    editProductForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const productId = editProductId.value;
+      const productName = editProductName.value;
+      const productCost = parseFloat(editProductCost.value);
+      const productQuantity = parseInt(editProductQuantity.value);
+      const productWeight = editProductWeight.value ? parseFloat(editProductWeight.value) : null;
+      const estimatedSellDate = editEstimatedSellDate.value;
+      const soldAmount = parseFloat(editProductSold.value) || 0;
+      
+      // For demo purposes, we'll use the existing image
+      // In a real app, you would handle image upload here
+      const imageUrl = editProductImageInput.files[0] ? 
+        'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0="100%" fill="#f0f0f0"/><text x="50%" y="50%" font-family="Arial, sans-serif" font-size="14" fill="#777" text-anchor="middle" dy=".35em">Product Image</text></svg>' : 
+        selectedProduct.imageUrl;
+      
+      // Update product in Firestore
+      db.collection('stock').doc(productId).update({
+        name: productName,
+        cost: productCost,
+        quantity: productQuantity,
+        weight: productWeight,
+        estimatedSellDate: estimatedSellDate || null,
+        imageUrl: imageUrl,
+        soldAmount: soldAmount,
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+      })
+      .then(() => {
+        alert('Product updated successfully!');
+        closeModal('editProductModal');
+        loadStockData(currentUser.uid); // Reload stock data
+      })
+      .catch((error) => {
+        console.error('Error updating product: ', error);
+        alert('Error updating product. Please try again.');
       });
     });
 
@@ -1093,6 +1275,10 @@
           addProductForm.reset();
           imagePreview.innerHTML = '<span>No image selected</span>';
           costPerUnitGroup.style.display = 'none';
+        } else if (event.target.id === 'editProductModal') {
+          editProductForm.reset();
+          editImagePreview.innerHTML = '<span>No image selected</span>';
+          editCostPerUnitGroup.style.display = 'none';
         }
       }
     });
