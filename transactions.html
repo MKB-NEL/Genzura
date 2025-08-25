@@ -120,6 +120,29 @@
       margin-bottom: 4px;
     }
     
+    /* Search Bar */
+    .search-container {
+      margin: 15px 0;
+      position: relative;
+    }
+    
+    .search-bar {
+      width: 100%;
+      padding: 10px 35px 10px 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    
+    .search-bar i {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #777;
+      font-size: 14px;
+    }
+    
     /* Tabs Navigation */
     .tabs {
       display: flex;
@@ -180,6 +203,28 @@
     
     .add-btn i {
       font-size: 14px;
+    }
+    
+    /* Filter Buttons */
+    .filter-buttons {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+    
+    .filter-btn {
+      padding: 6px 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      background-color: white;
+      cursor: pointer;
+      font-size: 13px;
+    }
+    
+    .filter-btn.active {
+      background-color: #0055cc;
+      color: white;
+      border-color: #0055cc;
     }
     
     /* Products/Sales List */
@@ -274,6 +319,24 @@
       border-radius: 4px;
       padding: 12px;
       background-color: white;
+      position: relative;
+    }
+    
+    .loan-status {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+    
+    .loan-status.pending {
+      background-color: #f44336;
+    }
+    
+    .loan-status.paid {
+      background-color: #87ceeb;
     }
     
     .loan-header, .supplier-header {
@@ -286,6 +349,9 @@
     .loan-name, .supplier-name {
       font-size: 16px;
       font-weight: bold;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
     
     .loan-details, .supplier-details {
@@ -304,6 +370,18 @@
       font-weight: bold;
       color: #666;
       margin-bottom: 2px;
+    }
+    
+    .days-remaining {
+      font-weight: bold;
+    }
+    
+    .days-remaining.future {
+      color: #4caf50;
+    }
+    
+    .days-remaining.past {
+      color: #f44336;
     }
     
     .loan-actions, .supplier-actions {
@@ -328,6 +406,21 @@
     
     .copy-btn {
       background-color: #2196f3;
+      color: white;
+    }
+    
+    .edit-btn {
+      background-color: #ff9800;
+      color: white;
+    }
+    
+    .delete-btn {
+      background-color: #f44336;
+      color: white;
+    }
+    
+    .done-btn {
+      background-color: #4caf50;
       color: white;
     }
     
@@ -444,6 +537,57 @@
       font-size: 14px;
     }
     
+    /* Loading Spinner */
+    .loading {
+      display: none;
+      text-align: center;
+      padding: 20px;
+    }
+    
+    .loading-spinner {
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid #0055cc;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 10px;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    /* Notification Popup */
+    .notification {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #333;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 4px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      z-index: 1001;
+      display: none;
+      max-width: 90%;
+      text-align: center;
+    }
+    
+    .notification.success {
+      background-color: #4CAF50;
+    }
+    
+    .notification.error {
+      background-color: #f44336;
+    }
+    
+    .notification.info {
+      background-color: #2196F3;
+    }
+    
     /* Responsive Design */
     @media (max-width: 768px) {
       .header {
@@ -507,6 +651,10 @@
       .modal-content {
         padding: 15px;
       }
+      
+      .loan-actions, .supplier-actions {
+        flex-wrap: wrap;
+      }
     }
   </style>
 </head>
@@ -537,6 +685,12 @@
       </div>
     </div>
     
+    <!-- Search Bar -->
+    <div class="search-container">
+      <input type="text" id="searchInput" class="search-bar" placeholder="Search across all tabs...">
+      <i class="fas fa-search"></i>
+    </div>
+    
     <!-- Tabs Navigation -->
     <div class="tabs">
       <div class="tab active" data-tab="sold">Sold</div>
@@ -548,6 +702,11 @@
     <div class="tab-content active" id="sold-tab">
       <div class="section-header">
         <h3 class="section-title">Record Sales</h3>
+      </div>
+      
+      <div class="loading" id="soldLoading">
+        <div class="loading-spinner"></div>
+        <p>Loading products...</p>
       </div>
       
       <div class="items-list" id="productsList">
@@ -564,6 +723,17 @@
         </button>
       </div>
       
+      <div class="filter-buttons">
+        <button class="filter-btn active" data-filter="all">All Loans</button>
+        <button class="filter-btn" data-filter="pending">Undone Loans</button>
+        <button class="filter-btn" data-filter="paid">Completed Loans</button>
+      </div>
+      
+      <div class="loading" id="loansLoading">
+        <div class="loading-spinner"></div>
+        <p>Loading loans...</p>
+      </div>
+      
       <div class="loans-list" id="loansList">
         <div class="no-items">No loan records yet.</div>
       </div>
@@ -576,6 +746,11 @@
         <button class="add-btn" id="addSupplierBtn">
           <i class="fas fa-plus"></i> Add Supplier
         </button>
+      </div>
+      
+      <div class="loading" id="suppliersLoading">
+        <div class="loading-spinner"></div>
+        <p>Loading suppliers...</p>
       </div>
       
       <div class="suppliers-list" id="suppliersList">
@@ -669,6 +844,47 @@
     </div>
   </div>
   
+  <!-- Edit Loan Modal -->
+  <div class="modal" id="editLoanModal">
+    <div class="modal-content">
+      <h2 class="modal-title">Edit Loan Record</h2>
+      
+      <form id="editLoanForm">
+        <input type="hidden" id="editLoanId">
+        
+        <div class="form-group">
+          <label for="editLoanName">Borrower Name *</label>
+          <input type="text" id="editLoanName" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="editLoanProduct">Product/Service *</label>
+          <input type="text" id="editLoanProduct" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="editLoanAmount">Amount (RWF) *</label>
+          <input type="number" id="editLoanAmount" min="1" step="0.01" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="editLoanDate">Loan Date</label>
+          <input type="date" id="editLoanDate">
+        </div>
+        
+        <div class="form-group">
+          <label for="editDueDate">Due Date *</label>
+          <input type="date" id="editDueDate" required>
+        </div>
+        
+        <div class="modal-actions">
+          <button type="button" class="modal-btn secondary" onclick="closeModal('editLoanModal')">Cancel</button>
+          <button type="submit" class="modal-btn primary">Update Loan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  
   <!-- Add Supplier Modal -->
   <div class="modal" id="addSupplierModal">
     <div class="modal-content">
@@ -703,6 +919,9 @@
     </div>
   </div>
 
+  <!-- Notification Popup -->
+  <div class="notification" id="notification"></div>
+
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
@@ -728,26 +947,38 @@
     // DOM elements
     const businessNameElement = document.getElementById('businessName');
     const businessLogoElement = document.getElementById('businessLogo');
+    const searchInput = document.getElementById('searchInput');
     const productsList = document.getElementById('productsList');
     const loansList = document.getElementById('loansList');
     const suppliersList = document.getElementById('suppliersList');
     const introVideo = document.getElementById('introVideo');
     const tabs = document.querySelectorAll('.tab');
     const tabContents = document.querySelectorAll('.tab-content');
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    
+    // Loading elements
+    const soldLoading = document.getElementById('soldLoading');
+    const loansLoading = document.getElementById('loansLoading');
+    const suppliersLoading = document.getElementById('suppliersLoading');
     
     // Modal elements
     const recordSaleModal = document.getElementById('recordSaleModal');
     const addLoanModal = document.getElementById('addLoanModal');
+    const editLoanModal = document.getElementById('editLoanModal');
     const addSupplierModal = document.getElementById('addSupplierModal');
     
     // Form elements
     const recordSaleForm = document.getElementById('recordSaleForm');
     const addLoanForm = document.getElementById('addLoanForm');
+    const editLoanForm = document.getElementById('editLoanForm');
     const addSupplierForm = document.getElementById('addSupplierForm');
     
     // Button elements
     const addLoanBtn = document.getElementById('addLoanBtn');
     const addSupplierBtn = document.getElementById('addSupplierBtn');
+    
+    // Notification element
+    const notification = document.getElementById('notification');
 
     // Global variables
     let currentUser = null;
@@ -755,6 +986,10 @@
     let stockData = [];
     let loansData = [];
     let suppliersData = [];
+    let searchTimeout = null;
+    let selectedLoan = null;
+    let currentFilter = 'all';
+    let isOnline = navigator.onLine;
 
     // Check if user is logged in
     window.addEventListener('DOMContentLoaded', () => {
@@ -767,9 +1002,19 @@
       
       currentUser = JSON.parse(userDataStr);
       loadUserData(currentUser.uid);
-      loadStockData(currentUser.uid);
-      loadLoansData(currentUser.uid);
-      loadSuppliersData(currentUser.uid);
+      checkOnlineStatus();
+      
+      // Setup online/offline detection
+      window.addEventListener('online', () => {
+        isOnline = true;
+        showNotification('Back online. Syncing data...', 'success');
+        syncOfflineData();
+      });
+      
+      window.addEventListener('offline', () => {
+        isOnline = false;
+        showNotification('You are offline. Data will be saved locally.', 'info');
+      });
       
       // Handle video errors gracefully
       introVideo.addEventListener('error', function() {
@@ -789,6 +1034,29 @@
           // Show correct content
           tabContents.forEach(content => content.classList.remove('active'));
           document.getElementById(`${tabId}-tab`).classList.add('active');
+          
+          // Load data for the selected tab if not already loaded
+          if (tabId === 'sold' && stockData.length === 0) {
+            loadStockData(currentUser.uid);
+          } else if (tabId === 'loans' && loansData.length === 0) {
+            loadLoansData(currentUser.uid);
+          } else if (tabId === 'suppliers' && suppliersData.length === 0) {
+            loadSuppliersData(currentUser.uid);
+          }
+        });
+      });
+      
+      // Setup filter buttons
+      filterButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          const filter = button.getAttribute('data-filter');
+          
+          // Update active filter
+          filterButtons.forEach(btn => btn.classList.remove('active'));
+          button.classList.add('active');
+          
+          currentFilter = filter;
+          filterLoans(filter);
         });
       });
       
@@ -801,7 +1069,42 @@
       addSupplierBtn.addEventListener('click', () => {
         addSupplierModal.style.display = 'flex';
       });
+      
+      // Setup search with 300ms delay
+      searchInput.addEventListener('input', function() {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+          const searchTerm = this.value.toLowerCase();
+          performSearch(searchTerm);
+        }, 300);
+      });
+      
+      // Load initial data
+      loadStockData(currentUser.uid);
+      loadLoansData(currentUser.uid);
+      loadSuppliersData(currentUser.uid);
     });
+
+    // Check online status
+    function checkOnlineStatus() {
+      isOnline = navigator.onLine;
+      if (!isOnline) {
+        showNotification('You are offline. Data will be saved locally.', 'info');
+        loadOfflineData();
+      }
+    }
+
+    // Show notification
+    function showNotification(message, type = 'info') {
+      notification.textContent = message;
+      notification.className = `notification ${type}`;
+      notification.style.display = 'block';
+      
+      // Hide after 3 seconds
+      setTimeout(() => {
+        notification.style.display = 'none';
+      }, 3000);
+    }
 
     // Load user data from Firestore
     function loadUserData(userId) {
@@ -832,77 +1135,279 @@
 
     // Load stock data from Firestore
     function loadStockData(userId) {
-      db.collection('stock')
-        .where('userId', '==', userId)
-        .get()
-        .then((querySnapshot) => {
-          stockData = [];
+      soldLoading.style.display = 'block';
+      
+      if (isOnline) {
+        db.collection('stock')
+          .where('userId', '==', userId)
+          .get()
+          .then((querySnapshot) => {
+            stockData = [];
+            productsList.innerHTML = '';
+            
+            if (querySnapshot.empty) {
+              productsList.innerHTML = '<div class="no-items">No products available. Add products in Stock first.</div>';
+              soldLoading.style.display = 'none';
+              return;
+            }
+            
+            querySnapshot.forEach((doc) => {
+              const product = { id: doc.id, ...doc.data() };
+              stockData.push(product);
+              renderProductCard(product);
+            });
+            
+            soldLoading.style.display = 'none';
+          })
+          .catch((error) => {
+            console.log("Error getting stock data:", error);
+            soldLoading.style.display = 'none';
+          });
+      } else {
+        // Load from local storage if offline
+        const offlineStock = localStorage.getItem('offlineStock');
+        if (offlineStock) {
+          stockData = JSON.parse(offlineStock);
           productsList.innerHTML = '';
           
-          if (querySnapshot.empty) {
+          if (stockData.length === 0) {
             productsList.innerHTML = '<div class="no-items">No products available. Add products in Stock first.</div>';
-            return;
+          } else {
+            stockData.forEach(product => renderProductCard(product));
           }
-          
-          querySnapshot.forEach((doc) => {
-            const product = { id: doc.id, ...doc.data() };
-            stockData.push(product);
-            renderProductCard(product);
-          });
-        })
-        .catch((error) => {
-          console.log("Error getting stock data:", error);
-        });
+        }
+        soldLoading.style.display = 'none';
+      }
     }
 
     // Load loans data from Firestore
     function loadLoansData(userId) {
-      db.collection('loans')
-        .where('userId', '==', userId)
-        .get()
-        .then((querySnapshot) => {
-          loansData = [];
+      loansLoading.style.display = 'block';
+      
+      if (isOnline) {
+        db.collection('loans')
+          .where('userId', '==', userId)
+          .orderBy('createdAt', 'desc')
+          .get()
+          .then((querySnapshot) => {
+            loansData = [];
+            loansList.innerHTML = '';
+            
+            if (querySnapshot.empty) {
+              loansList.innerHTML = '<div class="no-items">No loan records yet.</div>';
+              loansLoading.style.display = 'none';
+              return;
+            }
+            
+            querySnapshot.forEach((doc) => {
+              const loan = { id: doc.id, ...doc.data() };
+              loansData.push(loan);
+              renderLoanCard(loan);
+            });
+            
+            loansLoading.style.display = 'none';
+          })
+          .catch((error) => {
+            console.log("Error getting loans data:", error);
+            loansLoading.style.display = 'none';
+          });
+      } else {
+        // Load from local storage if offline
+        const offlineLoans = localStorage.getItem('offlineLoans');
+        if (offlineLoans) {
+          loansData = JSON.parse(offlineLoans);
           loansList.innerHTML = '';
           
-          if (querySnapshot.empty) {
+          if (loansData.length === 0) {
             loansList.innerHTML = '<div class="no-items">No loan records yet.</div>';
-            return;
+          } else {
+            loansData.forEach(loan => renderLoanCard(loan));
+            filterLoans(currentFilter);
           }
-          
-          querySnapshot.forEach((doc) => {
-            const loan = { id: doc.id, ...doc.data() };
-            loansData.push(loan);
-            renderLoanCard(loan);
-          });
-        })
-        .catch((error) => {
-          console.log("Error getting loans data:", error);
-        });
+        }
+        loansLoading.style.display = 'none';
+      }
     }
 
     // Load suppliers data from Firestore
     function loadSuppliersData(userId) {
-      db.collection('suppliers')
-        .where('userId', '==', userId)
-        .get()
-        .then((querySnapshot) => {
-          suppliersData = [];
+      suppliersLoading.style.display = 'block';
+      
+      if (isOnline) {
+        db.collection('suppliers')
+          .where('userId', '==', userId)
+          .get()
+          .then((querySnapshot) => {
+            suppliersData = [];
+            suppliersList.innerHTML = '';
+            
+            if (querySnapshot.empty) {
+              suppliersList.innerHTML = '<div class="no-items">No suppliers added yet.</div>';
+              suppliersLoading.style.display = 'none';
+              return;
+            }
+            
+            querySnapshot.forEach((doc) => {
+              const supplier = { id: doc.id, ...doc.data() };
+              suppliersData.push(supplier);
+              renderSupplierCard(supplier);
+            });
+            
+            suppliersLoading.style.display = 'none';
+          })
+          .catch((error) => {
+            console.log("Error getting suppliers data:", error);
+            suppliersLoading.style.display = 'none';
+          });
+      } else {
+        // Load from local storage if offline
+        const offlineSuppliers = localStorage.getItem('offlineSuppliers');
+        if (offlineSuppliers) {
+          suppliersData = JSON.parse(offlineSuppliers);
           suppliersList.innerHTML = '';
           
-          if (querySnapshot.empty) {
+          if (suppliersData.length === 0) {
             suppliersList.innerHTML = '<div class="no-items">No suppliers added yet.</div>';
-            return;
+          } else {
+            suppliersData.forEach(supplier => renderSupplierCard(supplier));
           }
-          
-          querySnapshot.forEach((doc) => {
-            const supplier = { id: doc.id, ...doc.data() };
-            suppliersData.push(supplier);
-            renderSupplierCard(supplier);
-          });
-        })
-        .catch((error) => {
-          console.log("Error getting suppliers data:", error);
+        }
+        suppliersLoading.style.display = 'none';
+      }
+    }
+
+    // Load offline data from local storage
+    function loadOfflineData() {
+      // Load offline stock
+      const offlineStock = localStorage.getItem('offlineStock');
+      if (offlineStock) {
+        stockData = JSON.parse(offlineStock);
+        productsList.innerHTML = '';
+        
+        if (stockData.length === 0) {
+          productsList.innerHTML = '<div class="no-items">No products available. Add products in Stock first.</div>';
+        } else {
+          stockData.forEach(product => renderProductCard(product));
+        }
+      }
+      
+      // Load offline loans
+      const offlineLoans = localStorage.getItem('offlineLoans');
+      if (offlineLoans) {
+        loansData = JSON.parse(offlineLoans);
+        loansList.innerHTML = '';
+        
+        if (loansData.length === 0) {
+          loansList.innerHTML = '<div class="no-items">No loan records yet.</div>';
+        } else {
+          loansData.forEach(loan => renderLoanCard(loan));
+          filterLoans(currentFilter);
+        }
+      }
+      
+      // Load offline suppliers
+      const offlineSuppliers = localStorage.getItem('offlineSuppliers');
+      if (offlineSuppliers) {
+        suppliersData = JSON.parse(offlineSuppliers);
+        suppliersList.innerHTML = '';
+        
+        if (suppliersData.length === 0) {
+          suppliersList.innerHTML = '<div class="no-items">No suppliers added yet.</div>';
+        } else {
+          suppliersData.forEach(supplier => renderSupplierCard(supplier));
+        }
+      }
+    }
+
+    // Sync offline data when coming back online
+    function syncOfflineData() {
+      // Sync offline sales
+      const offlineSales = JSON.parse(localStorage.getItem('offlineSales') || '[]');
+      if (offlineSales.length > 0) {
+        offlineSales.forEach(sale => {
+          recordOnlineSale(sale);
         });
+        localStorage.removeItem('offlineSales');
+      }
+      
+      // Sync offline loans
+      const offlineLoans = JSON.parse(localStorage.getItem('offlineLoansNew') || '[]');
+      if (offlineLoans.length > 0) {
+        offlineLoans.forEach(loan => {
+          addOnlineLoan(loan);
+        });
+        localStorage.removeItem('offlineLoansNew');
+      }
+      
+      // Sync offline suppliers
+      const offlineSuppliers = JSON.parse(localStorage.getItem('offlineSuppliersNew') || '[]');
+      if (offlineSuppliers.length > 0) {
+        offlineSuppliers.forEach(supplier => {
+          addOnlineSupplier(supplier);
+        });
+        localStorage.removeItem('offlineSuppliersNew');
+      }
+      
+      // Reload data from Firestore
+      loadStockData(currentUser.uid);
+      loadLoansData(currentUser.uid);
+      loadSuppliersData(currentUser.uid);
+    }
+
+    // Record sale online
+    function recordOnlineSale(sale) {
+      db.collection('sold').add({
+        userId: currentUser.uid,
+        productId: sale.productId,
+        productName: sale.productName,
+        quantity: sale.quantity,
+        price: sale.price,
+        totalAmount: sale.totalAmount,
+        saleDate: sale.saleDate,
+        recordedAt: firebase.firestore.FieldValue.serverTimestamp()
+      })
+      .then(() => {
+        // Update the user's sold items count
+        db.collection('users').doc(currentUser.uid).update({
+          totalSales: firebase.firestore.FieldValue.increment(sale.totalAmount),
+          lastSale: firebase.firestore.FieldValue.serverTimestamp()
+        });
+      })
+      .catch((error) => {
+        console.error('Error syncing sale: ', error);
+      });
+    }
+
+    // Add loan online
+    function addOnlineLoan(loan) {
+      db.collection('loans').add({
+        userId: currentUser.uid,
+        borrowerName: loan.borrowerName,
+        product: loan.product,
+        amount: loan.amount,
+        loanDate: loan.loanDate,
+        dueDate: loan.dueDate,
+        status: loan.status,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      })
+      .catch((error) => {
+        console.error('Error syncing loan: ', error);
+      });
+    }
+
+    // Add supplier online
+    function addOnlineSupplier(supplier) {
+      db.collection('suppliers').add({
+        userId: currentUser.uid,
+        name: supplier.name,
+        phone: supplier.phone,
+        products: supplier.products,
+        tin: supplier.tin,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      })
+      .catch((error) => {
+        console.error('Error syncing supplier: ', error);
+      });
     }
 
     // Render product card for sale
@@ -959,14 +1464,39 @@
       const loanCard = document.createElement('div');
       loanCard.className = 'loan-card';
       loanCard.setAttribute('data-id', loan.id);
+      loanCard.setAttribute('data-status', loan.status || 'pending');
       
-      // Format dates
-      const loanDate = loan.loanDate ? new Date(loan.loanDate.seconds * 1000).toLocaleDateString() : 'N/A';
-      const dueDate = loan.dueDate ? new Date(loan.dueDate.seconds * 1000).toLocaleDateString() : 'N/A';
+      // Format dates and calculate days remaining
+      const loanDate = loan.loanDate ? new Date(loan.loanDate.seconds * 1000) : new Date();
+      const dueDate = loan.dueDate ? new Date(loan.dueDate.seconds * 1000) : new Date();
+      const today = new Date();
+      const timeDiff = dueDate.getTime() - today.getTime();
+      const daysRemaining = Math.ceil(timeDiff / (1000 * 3600 * 24));
+      
+      let daysText = '';
+      let daysClass = '';
+      
+      if (loan.status === 'paid') {
+        daysText = 'Loan paid';
+        daysClass = 'future';
+      } else if (daysRemaining > 0) {
+        daysText = `${daysRemaining} days remaining`;
+        daysClass = 'future';
+      } else if (daysRemaining === 0) {
+        daysText = 'Due today';
+        daysClass = 'past';
+      } else {
+        daysText = `${Math.abs(daysRemaining)} days overdue`;
+        daysClass = 'past';
+      }
       
       loanCard.innerHTML = `
+        <div class="loan-status ${loan.status === 'paid' ? 'paid' : 'pending'}"></div>
         <div class="loan-header">
-          <div class="loan-name">${loan.borrowerName}</div>
+          <div class="loan-name">
+            ${loan.status !== 'paid' ? '<i class="fas fa-flag" style="color: #f44336;"></i>' : '<i class="fas fa-flag" style="color: #87ceeb;"></i>'}
+            ${loan.borrowerName}
+          </div>
         </div>
         <div class="loan-details">
           <div class="loan-detail">
@@ -978,15 +1508,38 @@
             <div>RWF ${loan.amount}</div>
           </div>
           <div class="loan-detail">
-            <label>Loan Date</label>
-            <div>${loanDate}</div>
+            <label>Due Date</label>
+            <div>${dueDate.toLocaleDateString()}</div>
           </div>
           <div class="loan-detail">
-            <label>Due Date</label>
-            <div>${dueDate}</div>
+            <label>Status</label>
+            <div class="days-remaining ${daysClass}">${daysText}</div>
           </div>
         </div>
+        <div class="loan-actions">
+          <button class="action-btn edit-btn"><i class="fas fa-edit"></i> Edit</button>
+          <button class="action-btn delete-btn"><i class="fas fa-trash"></i> Delete</button>
+          ${loan.status !== 'paid' ? '<button class="action-btn done-btn"><i class="fas fa-check"></i> Mark Paid</button>' : ''}
+        </div>
       `;
+      
+      // Add event listeners to action buttons
+      const editBtn = loanCard.querySelector('.edit-btn');
+      editBtn.addEventListener('click', () => {
+        openEditLoanModal(loan);
+      });
+      
+      const deleteBtn = loanCard.querySelector('.delete-btn');
+      deleteBtn.addEventListener('click', () => {
+        deleteLoan(loan.id);
+      });
+      
+      if (loan.status !== 'paid') {
+        const doneBtn = loanCard.querySelector('.done-btn');
+        doneBtn.addEventListener('click', () => {
+          markLoanAsPaid(loan.id);
+        });
+      }
       
       loansList.appendChild(loanCard);
     }
@@ -1026,6 +1579,8 @@
           ${supplier.tin ? `<button class="action-btn copy-btn" data-tin="${supplier.tin}">
             <i class="fas fa-copy"></i> Copy TIN
           </button>` : ''}
+          <button class="action-btn edit-btn"><i class="fas fa-edit"></i> Edit</button>
+          <button class="action-btn delete-btn"><i class="fas fa-trash"></i> Delete</button>
         </div>
       `;
       
@@ -1040,7 +1595,7 @@
         copyBtn.addEventListener('click', () => {
           navigator.clipboard.writeText(supplier.tin)
             .then(() => {
-              alert('TIN number copied to clipboard!');
+              showNotification('TIN number copied to clipboard!', 'success');
             })
             .catch(err => {
               console.error('Failed to copy: ', err);
@@ -1048,7 +1603,99 @@
         });
       }
       
+      const editBtn = supplierCard.querySelector('.edit-btn');
+      editBtn.addEventListener('click', () => {
+        // Edit functionality would be implemented here
+        showNotification('Edit supplier functionality would be implemented here', 'info');
+      });
+      
+      const deleteBtn = supplierCard.querySelector('.delete-btn');
+      deleteBtn.addEventListener('click', () => {
+        deleteSupplier(supplier.id);
+      });
+      
       suppliersList.appendChild(supplierCard);
+    }
+
+    // Filter loans by status
+    function filterLoans(filter) {
+      const loanCards = loansList.querySelectorAll('.loan-card');
+      
+      loanCards.forEach(card => {
+        const status = card.getAttribute('data-status');
+        
+        if (filter === 'all') {
+          card.style.display = 'block';
+        } else if (filter === 'pending' && status === 'pending') {
+          card.style.display = 'block';
+        } else if (filter === 'paid' && status === 'paid') {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+      
+      // Check if any loans are visible
+      const visibleLoans = loansList.querySelectorAll('.loan-card[style="display: block"]');
+      if (visibleLoans.length === 0) {
+        loansList.innerHTML = '<div class="no-items">No loans match the selected filter.</div>';
+      }
+    }
+
+    // Perform search across all tabs
+    function performSearch(searchTerm) {
+      if (!searchTerm) {
+        // If search is empty, show all items
+        stockData.forEach(product => {
+          const card = productsList.querySelector(`[data-id="${product.id}"]`);
+          if (card) card.style.display = 'block';
+        });
+        
+        loansData.forEach(loan => {
+          const card = loansList.querySelector(`[data-id="${loan.id}"]`);
+          if (card) card.style.display = 'block';
+        });
+        
+        suppliersData.forEach(supplier => {
+          const card = suppliersList.querySelector(`[data-id="${supplier.id}"]`);
+          if (card) card.style.display = 'block';
+        });
+        
+        return;
+      }
+      
+      // Search in products
+      stockData.forEach(product => {
+        const card = productsList.querySelector(`[data-id="${product.id}"]`);
+        if (card) {
+          const matches = product.name.toLowerCase().includes(searchTerm) ||
+                         product.cost.toString().includes(searchTerm);
+          card.style.display = matches ? 'block' : 'none';
+        }
+      });
+      
+      // Search in loans
+      loansData.forEach(loan => {
+        const card = loansList.querySelector(`[data-id="${loan.id}"]`);
+        if (card) {
+          const matches = loan.borrowerName.toLowerCase().includes(searchTerm) ||
+                         loan.product.toLowerCase().includes(searchTerm) ||
+                         loan.amount.toString().includes(searchTerm);
+          card.style.display = matches ? 'block' : 'none';
+        }
+      });
+      
+      // Search in suppliers
+      suppliersData.forEach(supplier => {
+        const card = suppliersList.querySelector(`[data-id="${supplier.id}"]`);
+        if (card) {
+          const matches = supplier.name.toLowerCase().includes(searchTerm) ||
+                         supplier.phone.includes(searchTerm) ||
+                         supplier.products.toLowerCase().includes(searchTerm) ||
+                         (supplier.tin && supplier.tin.includes(searchTerm));
+          card.style.display = matches ? 'block' : 'none';
+        }
+      });
     }
 
     // Open record sale modal
@@ -1063,9 +1710,109 @@
       recordSaleModal.style.display = 'flex';
     }
 
+    // Open edit loan modal
+    function openEditLoanModal(loan) {
+      selectedLoan = loan;
+      
+      document.getElementById('editLoanId').value = loan.id;
+      document.getElementById('editLoanName').value = loan.borrowerName;
+      document.getElementById('editLoanProduct').value = loan.product;
+      document.getElementById('editLoanAmount').value = loan.amount;
+      
+      // Format dates for input fields
+      const loanDate = loan.loanDate ? new Date(loan.loanDate.seconds * 1000) : new Date();
+      const dueDate = loan.dueDate ? new Date(loan.dueDate.seconds * 1000) : new Date();
+      
+      document.getElementById('editLoanDate').valueAsDate = loanDate;
+      document.getElementById('editDueDate').valueAsDate = dueDate;
+      
+      editLoanModal.style.display = 'flex';
+    }
+
     // Close modal function
     function closeModal(modalId) {
       document.getElementById(modalId).style.display = 'none';
+    }
+
+    // Mark loan as paid
+    function markLoanAsPaid(loanId) {
+      if (isOnline) {
+        db.collection('loans').doc(loanId).update({
+          status: 'paid',
+          paidAt: firebase.firestore.FieldValue.serverTimestamp()
+        })
+        .then(() => {
+          showNotification('Loan marked as paid!', 'success');
+          loadLoansData(currentUser.uid);
+        })
+        .catch((error) => {
+          console.error('Error updating loan: ', error);
+          showNotification('Error updating loan. Please try again.', 'error');
+        });
+      } else {
+        // Update locally if offline
+        const offlineLoans = JSON.parse(localStorage.getItem('offlineLoans') || '[]');
+        const updatedLoans = offlineLoans.map(loan => {
+          if (loan.id === loanId) {
+            return { ...loan, status: 'paid' };
+          }
+          return loan;
+        });
+        
+        localStorage.setItem('offlineLoans', JSON.stringify(updatedLoans));
+        showNotification('Loan marked as paid (offline). Will sync when online.', 'success');
+        loadLoansData(currentUser.uid);
+      }
+    }
+
+    // Delete loan
+    function deleteLoan(loanId) {
+      if (confirm('Are you sure you want to delete this loan record?')) {
+        if (isOnline) {
+          db.collection('loans').doc(loanId).delete()
+            .then(() => {
+              showNotification('Loan deleted successfully!', 'success');
+              loadLoansData(currentUser.uid);
+            })
+            .catch((error) => {
+              console.error('Error deleting loan: ', error);
+              showNotification('Error deleting loan. Please try again.', 'error');
+            });
+        } else {
+          // Delete locally if offline
+          const offlineLoans = JSON.parse(localStorage.getItem('offlineLoans') || '[]');
+          const updatedLoans = offlineLoans.filter(loan => loan.id !== loanId);
+          
+          localStorage.setItem('offlineLoans', JSON.stringify(updatedLoans));
+          showNotification('Loan deleted (offline). Will sync when online.', 'success');
+          loadLoansData(currentUser.uid);
+        }
+      }
+    }
+
+    // Delete supplier
+    function deleteSupplier(supplierId) {
+      if (confirm('Are you sure you want to delete this supplier?')) {
+        if (isOnline) {
+          db.collection('suppliers').doc(supplierId).delete()
+            .then(() => {
+              showNotification('Supplier deleted successfully!', 'success');
+              loadSuppliersData(currentUser.uid);
+            })
+            .catch((error) => {
+              console.error('Error deleting supplier: ', error);
+              showNotification('Error deleting supplier. Please try again.', 'error');
+            });
+        } else {
+          // Delete locally if offline
+          const offlineSuppliers = JSON.parse(localStorage.getItem('offlineSuppliers') || '[]');
+          const updatedSuppliers = offlineSuppliers.filter(supplier => supplier.id !== supplierId);
+          
+          localStorage.setItem('offlineSuppliers', JSON.stringify(updatedSuppliers));
+          showNotification('Supplier deleted (offline). Will sync when online.', 'success');
+          loadSuppliersData(currentUser.uid);
+        }
+      }
     }
 
     // Handle record sale form submission
@@ -1082,12 +1829,12 @@
       const product = stockData.find(p => p.id === productId);
       
       if (!product) {
-        alert('Product not found!');
+        showNotification('Product not found!', 'error');
         return;
       }
       
       if (quantity > product.quantity) {
-        alert(`Cannot sell more than available quantity (${product.quantity})!`);
+        showNotification(`Cannot sell more than available quantity (${product.quantity})!`, 'error');
         return;
       }
       
@@ -1095,40 +1842,75 @@
       const newQuantity = product.quantity - quantity;
       const newSoldAmount = (product.soldAmount || 0) + totalSaleAmount;
       
-      // Update stock in Firestore
-      db.collection('stock').doc(productId).update({
-        quantity: newQuantity,
-        soldAmount: newSoldAmount
-      })
-      .then(() => {
-        // Record sale in sold collection
-        return db.collection('sold').add({
-          userId: currentUser.uid,
-          productId: productId,
-          productName: productName,
-          quantity: quantity,
-          price: price,
+      if (isOnline) {
+        // Update stock in Firestore
+        db.collection('stock').doc(productId).update({
+          quantity: newQuantity,
+          soldAmount: newSoldAmount
+        })
+        .then(() => {
+          // Record sale in sold collection
+          return db.collection('sold').add({
+            userId: currentUser.uid,
+            productId: productId,
+            productName: productName,
+            quantity: quantity,
+            price: price,
+            totalAmount: totalSaleAmount,
+            saleDate: saleDate,
+            recordedAt: firebase.firestore.FieldValue.serverTimestamp()
+          });
+        })
+        .then(() => {
+          // Also update the user's sold items count
+          return db.collection('users').doc(currentUser.uid).update({
+            totalSales: firebase.firestore.FieldValue.increment(totalSaleAmount),
+            lastSale: firebase.firestore.FieldValue.serverTimestamp()
+          });
+        })
+        .then(() => {
+          showNotification('Sale recorded successfully!', 'success');
+          closeModal('recordSaleModal');
+          loadStockData(currentUser.uid); // Reload stock data
+        })
+        .catch((error) => {
+          console.error('Error recording sale: ', error);
+          showNotification('Error recording sale. Please try again.', 'error');
+        });
+      } else {
+        // Save sale locally if offline
+        const saleRecord = {
+          productId,
+          productName,
+          quantity,
+          price,
           totalAmount: totalSaleAmount,
-          saleDate: saleDate,
-          recordedAt: firebase.firestore.FieldValue.serverTimestamp()
+          saleDate
+        };
+        
+        const offlineSales = JSON.parse(localStorage.getItem('offlineSales') || '[]');
+        offlineSales.push(saleRecord);
+        localStorage.setItem('offlineSales', JSON.stringify(offlineSales));
+        
+        // Update local stock data
+        const offlineStock = JSON.parse(localStorage.getItem('offlineStock') || '[]');
+        const updatedStock = offlineStock.map(item => {
+          if (item.id === productId) {
+            return {
+              ...item,
+              quantity: item.quantity - quantity,
+              soldAmount: (item.soldAmount || 0) + totalSaleAmount
+            };
+          }
+          return item;
         });
-      })
-      .then(() => {
-        // Also update the user's sold items count
-        return db.collection('users').doc(currentUser.uid).update({
-          totalSales: firebase.firestore.FieldValue.increment(totalSaleAmount),
-          lastSale: firebase.firestore.FieldValue.serverTimestamp()
-        });
-      })
-      .then(() => {
-        alert('Sale recorded successfully!');
+        
+        localStorage.setItem('offlineStock', JSON.stringify(updatedStock));
+        
+        showNotification('Sale recorded offline. Will sync when online.', 'success');
         closeModal('recordSaleModal');
         loadStockData(currentUser.uid); // Reload stock data
-      })
-      .catch((error) => {
-        console.error('Error recording sale: ', error);
-        alert('Error recording sale. Please try again.');
-      });
+      }
     });
 
     // Handle add loan form submission
@@ -1141,26 +1923,101 @@
       const loanDate = document.getElementById('loanDate').value;
       const dueDate = document.getElementById('dueDate').value;
       
-      // Add loan to Firestore
-      db.collection('loans').add({
-        userId: currentUser.uid,
-        borrowerName: borrowerName,
-        product: product,
-        amount: amount,
-        loanDate: loanDate,
-        dueDate: dueDate,
+      const loanRecord = {
+        borrowerName,
+        product,
+        amount,
+        loanDate,
+        dueDate,
         status: 'pending',
-        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-      })
-      .then(() => {
-        alert('Loan record added successfully!');
+        createdAt: new Date().toISOString()
+      };
+      
+      if (isOnline) {
+        // Add loan to Firestore
+        db.collection('loans').add({
+          userId: currentUser.uid,
+          ...loanRecord,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        })
+        .then(() => {
+          showNotification('Loan record added successfully!', 'success');
+          closeModal('addLoanModal');
+          loadLoansData(currentUser.uid); // Reload loans data
+        })
+        .catch((error) => {
+          console.error('Error adding loan: ', error);
+          showNotification('Error adding loan. Please try again.', 'error');
+        });
+      } else {
+        // Save loan locally if offline
+        const offlineLoans = JSON.parse(localStorage.getItem('offlineLoansNew') || '[]');
+        loanRecord.id = 'offline_' + Date.now();
+        offlineLoans.push(loanRecord);
+        localStorage.setItem('offlineLoansNew', JSON.stringify(offlineLoans));
+        
+        // Also add to main loans list for display
+        const existingLoans = JSON.parse(localStorage.getItem('offlineLoans') || '[]');
+        existingLoans.push(loanRecord);
+        localStorage.setItem('offlineLoans', JSON.stringify(existingLoans));
+        
+        showNotification('Loan added offline. Will sync when online.', 'success');
         closeModal('addLoanModal');
         loadLoansData(currentUser.uid); // Reload loans data
-      })
-      .catch((error) => {
-        console.error('Error adding loan: ', error);
-        alert('Error adding loan. Please try again.');
-      });
+      }
+    });
+
+    // Handle edit loan form submission
+    editLoanForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const loanId = document.getElementById('editLoanId').value;
+      const borrowerName = document.getElementById('editLoanName').value;
+      const product = document.getElementById('editLoanProduct').value;
+      const amount = parseFloat(document.getElementById('editLoanAmount').value);
+      const loanDate = document.getElementById('editLoanDate').value;
+      const dueDate = document.getElementById('editDueDate').value;
+      
+      if (isOnline) {
+        // Update loan in Firestore
+        db.collection('loans').doc(loanId).update({
+          borrowerName,
+          product,
+          amount,
+          loanDate,
+          dueDate
+        })
+        .then(() => {
+          showNotification('Loan updated successfully!', 'success');
+          closeModal('editLoanModal');
+          loadLoansData(currentUser.uid); // Reload loans data
+        })
+        .catch((error) => {
+          console.error('Error updating loan: ', error);
+          showNotification('Error updating loan. Please try again.', 'error');
+        });
+      } else {
+        // Update loan locally if offline
+        const offlineLoans = JSON.parse(localStorage.getItem('offlineLoans') || '[]');
+        const updatedLoans = offlineLoans.map(loan => {
+          if (loan.id === loanId) {
+            return {
+              ...loan,
+              borrowerName,
+              product,
+              amount,
+              loanDate,
+              dueDate
+            };
+          }
+          return loan;
+        });
+        
+        localStorage.setItem('offlineLoans', JSON.stringify(updatedLoans));
+        showNotification('Loan updated offline. Will sync when online.', 'success');
+        closeModal('editLoanModal');
+        loadLoansData(currentUser.uid); // Reload loans data
+      }
     });
 
     // Handle add supplier form submission
@@ -1172,24 +2029,46 @@
       const products = document.getElementById('supplierProducts').value;
       const tin = document.getElementById('supplierTin').value;
       
-      // Add supplier to Firestore
-      db.collection('suppliers').add({
-        userId: currentUser.uid,
-        name: name,
-        phone: phone,
-        products: products,
+      const supplierRecord = {
+        name,
+        phone,
+        products,
         tin: tin || null,
-        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-      })
-      .then(() => {
-        alert('Supplier added successfully!');
+        createdAt: new Date().toISOString()
+      };
+      
+      if (isOnline) {
+        // Add supplier to Firestore
+        db.collection('suppliers').add({
+          userId: currentUser.uid,
+          ...supplierRecord,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        })
+        .then(() => {
+          showNotification('Supplier added successfully!', 'success');
+          closeModal('addSupplierModal');
+          loadSuppliersData(currentUser.uid); // Reload suppliers data
+        })
+        .catch((error) => {
+          console.error('Error adding supplier: ', error);
+          showNotification('Error adding supplier. Please try again.', 'error');
+        });
+      } else {
+        // Save supplier locally if offline
+        const offlineSuppliers = JSON.parse(localStorage.getItem('offlineSuppliersNew') || '[]');
+        supplierRecord.id = 'offline_' + Date.now();
+        offlineSuppliers.push(supplierRecord);
+        localStorage.setItem('offlineSuppliersNew', JSON.stringify(offlineSuppliers));
+        
+        // Also add to main suppliers list for display
+        const existingSuppliers = JSON.parse(localStorage.getItem('offlineSuppliers') || '[]');
+        existingSuppliers.push(supplierRecord);
+        localStorage.setItem('offlineSuppliers', JSON.stringify(existingSuppliers));
+        
+        showNotification('Supplier added offline. Will sync when online.', 'success');
         closeModal('addSupplierModal');
         loadSuppliersData(currentUser.uid); // Reload suppliers data
-      })
-      .catch((error) => {
-        console.error('Error adding supplier: ', error);
-        alert('Error adding supplier. Please try again.');
-      });
+      }
     });
 
     // Close modal when clicking outside
