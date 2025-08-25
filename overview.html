@@ -825,7 +825,10 @@
             monthInitialized = true;
             monthInitSection.style.display = 'none';
             dashboardContent.style.display = 'block';
-            loadAnalyticsData();
+            // Wait a bit to ensure canvas is rendered
+            setTimeout(() => {
+              loadAnalyticsData();
+            }, 100);
           } else {
             // Month not initialized, show initialization section
             monthInitialized = false;
@@ -869,7 +872,10 @@
                   monthInitialized = true;
                   monthInitSection.style.display = 'none';
                   dashboardContent.style.display = 'block';
-                  loadAnalyticsData();
+                  // Wait a bit to ensure canvas is rendered
+                  setTimeout(() => {
+                    loadAnalyticsData();
+                  }, 100);
                 }, 1000);
               })
               .catch((error) => {
@@ -946,7 +952,7 @@
 
     // Load sales data
     function loadSalesData(startDate) {
-      return new Promise((resolve, reject) => {
+      return new Promise((resolve, reject) {
         db.collection('sold')
           .where('userId', '==', currentUser.uid)
           .where('saleDate', '>=', startDate.toISOString().split('T')[0])
