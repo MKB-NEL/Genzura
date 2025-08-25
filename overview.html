@@ -289,6 +289,7 @@
       border-radius: 8px;
       box-shadow: 0 2px 10px rgba(0,0,0,0.05);
       margin-bottom: 20px;
+      overflow-x: auto;
     }
     
     .chart-container h3 {
@@ -302,6 +303,30 @@
     .chart-wrapper {
       position: relative;
       height: 300px;
+      min-width: 800px;
+    }
+    
+    /* Chart Navigation */
+    .chart-navigation {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 15px;
+      padding: 0 10px;
+    }
+    
+    .nav-btn {
+      background-color: #0055cc;
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    
+    .nav-btn:disabled {
+      background-color: #cccccc;
+      cursor: not-allowed;
     }
     
     /* Insights Section */
@@ -501,6 +526,10 @@
       .split-boxes {
         grid-template-columns: 1fr;
       }
+      
+      .chart-wrapper {
+        min-width: 600px;
+      }
     }
     
     @media (max-width: 480px) {
@@ -525,6 +554,10 @@
       .performance-table th,
       .performance-table td {
         padding: 8px 5px;
+      }
+      
+      .chart-wrapper {
+        min-width: 400px;
       }
     }
   </style>
@@ -637,6 +670,15 @@
         <div class="chart-wrapper">
           <canvas id="revenueChart"></canvas>
         </div>
+        <div class="chart-navigation">
+          <button class="nav-btn" id="prevDatesBtn" disabled>
+            <i class="fas fa-chevron-left"></i> Previous Dates
+          </button>
+          <span id="dateRangeDisplay">Showing dates</span>
+          <button class="nav-btn" id="nextDatesBtn">
+            Next Dates <i class="fas fa-chevron-right"></i>
+          </button>
+        </div>
       </div>
       
       <!-- AI Insights -->
@@ -734,6 +776,11 @@
     const activeLoansElement = document.getElementById('activeLoans');
     const paidLoansElement = document.getElementById('paidLoans');
     
+    // Chart navigation elements
+    const prevDatesBtn = document.getElementById('prevDatesBtn');
+    const nextDatesBtn = document.getElementById('nextDatesBtn');
+    const dateRangeDisplay = document.getElementById('dateRangeDisplay');
+    
     // Other elements
     const insightsContainer = document.getElementById('insightsContainer');
     const productPerformanceBody = document.getElementById('productPerformanceBody');
@@ -752,6 +799,7 @@
       timeRange: 30
     };
     let monthInitialized = false;
+    let chartDataOffset = 0; // For tracking which dates we're showing
 
     // Check if user is logged in
     window.addEventListener('DOMContentLoaded', () => {
@@ -768,6 +816,7 @@
       // Setup event listeners
       timeRangeSelect.addEventListener('change', () => {
         analyticsData.timeRange = parseInt(timeRangeSelect.value);
+        chartDataOffset = 0; // Reset to current dates
         if (monthInitialized) {
           loadAnalyticsData();
         }
@@ -775,6 +824,19 @@
       
       downloadReportsBtn.addEventListener('click', downloadAllReports);
       startMonthBtn.addEventListener('click', initializeMonth);
+      
+      // Chart navigation event listeners
+      prevDatesBtn.addEventListener('click', () => {
+        chartDataOffset += analyticsData.timeRange;
+        updateChartNavigation();
+        generateRevenueChart();
+      });
+      
+      nextDatesBtn.addEventListener('click', () => {
+        chartDataOffset = Math.max(0, chartDataOffset - analyticsData.timeRange);
+        updateChartNavigation();
+        generateRevenueChart();
+      });
     });
 
     // Load business data
@@ -930,6 +992,7 @@
             }
             
             processAnalyticsData();
+            updateChartNavigation();
             hideLoading();
           }).catch(error => {
             console.error("Error loading analytics data:", error);
@@ -1056,6 +1119,22 @@
       element.className = `change ${isPositive ? 'positive' : 'negative'}`;
     }
 
+    // Update chart navigation buttons and display
+    function updateChartNavigation() {
+      // Enable/disable navigation buttons based on offset
+      prevDatesBtn.disabled = chartDataOffset <= 0;
+      
+      // Update date range display
+      const days = analyticsData.timeRange;
+      const endDate = new Date();
+      endDate.setDate(endDate.getDate() - chartDataOffset);
+      
+      const startDate = new Date();
+      startDate.setDate(startDate.getDate() - (chartDataOffset + days - 1));
+      
+      dateRangeDisplay.textContent = `Showing ${startDate.toLocaleDateString()} to ${endDate.toLocaleDateString()}`;
+    }
+
     // Generate revenue chart
     function generateRevenueChart() {
       const ctx = document.getElementById('revenueChart');
@@ -1069,17 +1148,42 @@
         revenueChart.destroy();
       }
       
-      // Sample data - in a real app, this would be based on actual sales data
+      // Generate dates based on time range and offset
       const days = analyticsData.timeRange;
       const labels = Array.from({length: days}, (_, i) => {
         const date = new Date();
-        date.setDate(date.getDate() - (days - i - 1));
+        date.setDate(date.getDate() - (chartDataOffset + days - i - 1));
         return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
       });
       
-      // Generate earned and lost data
-      const earnedData = Array.from({length: days}, () => Math.floor(Math.random() * 100000) + 50000);
-      const lostData = Array.from({length: days}, () => Math.floor(Math.random() * 30000));
+      // Generate earned and lost data based on actual sales data if available
+      let earnedData = [];
+      let lostData = [];
+      
+      if (analyticsData.sales.length > 0) {
+        // Group sales by date
+        const salesByDate = {};
+        
+        analyticsData.sales.forEach(sale => {
+          const saleDate = new Date(sale.saleDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+          if (!salesByDate[saleDate]) {
+            salesByDate[saleDate] = { earned: 0, lost: 0 };
+          }
+          salesByDate[saleDate].earned += sale.totalAmount || 0;
+          // For lost data, we'd need cost information which might not be available
+        });
+        
+        // Fill the data arrays
+        labels.forEach(label => {
+          earnedData.push(salesByDate[label] ? salesByDate[label].earned : 0);
+          // For demonstration, using random lost data
+          lostData.push(Math.floor(Math.random() * 30000));
+        });
+      } else {
+        // Fallback to random data if no sales data
+        earnedData = Array.from({length: days}, () => Math.floor(Math.random() * 100000) + 50000);
+        lostData = Array.from({length: days}, () => Math.floor(Math.random() * 30000));
+      }
       
       revenueChart = new Chart(ctx, {
         type: 'bar',
