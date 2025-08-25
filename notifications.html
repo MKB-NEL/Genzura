@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GENZURA - Notifications</title>
+  <link rel="icon" type="image/png" href="https://i.ibb.co/mFqfcpPj/cropped-circle-image.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Arial, sans-serif;
+    }
+    
+    body {
+      background-color: #f8f9fa;
+      color: #333;
+      line-height: 1.6;
+      padding: 0;
+      margin: 0;
+    }
+    
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 15px;
+    }
+    
+    /* Header Styles */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 10px;
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    
+    .back-btn {
+      display: flex;
+      align-items: center;
+      background-color: #0055cc;
+      color: white;
+      padding: 8px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 14px;
+    }
+    
+    .back-btn i {
+      margin-right: 6px;
+    }
+    
+    .header-center {
+      text-align: center;
+    }
+    
+    .header-center h1 {
+      font-size: 24px;
+      color: #0055cc;
+      margin-bottom: 5px;
+    }
+    
+    .header-center p {
+      font-size: 14px;
+      color: #666;
+    }
+    
+    .admin-btn {
+      background-color: #ff9800;
+      color: white;
+      padding: 8px 15px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      text-decoration: none;
+    }
+    
+    /* Search Bar */
+    .search-container {
+      margin: 15px 0;
+      position: relative;
+    }
+    
+    .search-bar {
+      width: 100%;
+      padding: 12px 40px 12px 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 16px;
+    }
+    
+    .search-bar i {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #777;
+      font-size: 16px;
+    }
+    
+    /* Notification Filters */
+    .notification-filters {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    
+    .filter-btn {
+      padding: 8px 16px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      background-color: white;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    
+    .filter-btn.active {
+      background-color: #0055cc;
+      color: white;
+      border-color: #0055cc;
+    }
+    
+    /* Notifications List */
+    .notifications-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 25px;
+    }
+    
+    .notification-card {
+      background: white;
+      padding: 16px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      display: flex;
+      gap: 15px;
+      position: relative;
+    }
+    
+    .notification-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    
+    .notification-icon.success {
+      background-color: #4caf50;
+      color: white;
+    }
+    
+    .notification-icon.warning {
+      background-color: #ff9800;
+      color: white;
+    }
+    
+    .notification-icon.info {
+      background-color: #2196f3;
+      color: white;
+    }
+    
+    .notification-icon.alert {
+      background-color: #f44336;
+      color: white;
+    }
+    
+    .notification-content {
+      flex: 1;
+    }
+    
+    .notification-title {
+      font-size: 16px;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    
+    .notification-message {
+      font-size: 14px;
+      color: #555;
+      margin-bottom: 8px;
+    }
+    
+    .notification-time {
+      font-size: 12px;
+      color: #888;
+    }
+    
+    .notification-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background-color: #f44336;
+      color: white;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+    }
+    
+    /* Footer */
+    .footer {
+      margin-top: 30px;
+      text-align: center;
+      padding: 20px 0;
+      border-top: 1px solid #eee;
+    }
+    
+    .copyright {
+      font-size: 14px;
+      color: #666;
+    }
+    
+    .copyright a {
+      color: #0055cc;
+      text-decoration: none;
+    }
+    
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    
+    .modal-content {
+      background-color: white;
+      padding: 25px;
+      border-radius: 8px;
+      width: 90%;
+      max-width: 500px;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+    
+    .modal-title {
+      margin-bottom: 15px;
+      color: #0055cc;
+      text-align: center;
+      font-size: 20px;
+    }
+    
+    .form-group {
+      margin-bottom: 15px;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 14px;
+      color: #333;
+      font-weight: bold;
+    }
+    
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 16px;
+    }
+    
+    .form-group textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+    
+    .modal-actions {
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+    
+    .modal-btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 16px;
+    }
+    
+    .modal-btn.primary {
+      background-color: #0055cc;
+      color: white;
+    }
+    
+    .modal-btn.secondary {
+      background-color: #f0f0f0;
+      color: #333;
+    }
+    
+    /* No notifications message */
+    .no-notifications {
+      text-align: center;
+      padding: 40px;
+      color: #777;
+      font-style: italic;
+      font-size: 16px;
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .header-center {
+        text-align: left;
+        width: 100%;
+        margin: 10px 0;
+      }
+      
+      .notification-filters {
+        overflow-x: auto;
+        padding-bottom: 5px;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .container {
+        padding: 10px;
+      }
+      
+      .notification-card {
+        flex-direction: column;
+        text-align: center;
+      }
+      
+      .notification-icon {
+        align-self: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <a href="home.html" class="back-btn">
+        <i class="fas fa-arrow-left"></i> BACK
+      </a>
+      
+      <div class="header-center">
+        <h1>Notifications</h1>
+        <p>Stay updated with your business activities</p>
+      </div>
+      
+      <a href="admin.html" class="admin-btn">
+        <i class="fas fa-cog"></i> Admin Panel
+      </a>
+    </div>
+    
+    <!-- Search Bar -->
+    <div class="search-container">
+      <input type="text" id="searchInput" class="search-bar" placeholder="Search notifications...">
+      <i class="fas fa-search"></i>
+    </div>
+    
+    <!-- Notification Filters -->
+    <div class="notification-filters">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="sales">Sales</button>
+      <button class="filter-btn" data-filter="loans">Loans</button>
+      <button class="filter-btn" data-filter="system">System</button>
+      <button class="filter-btn" data-filter="admin">Admin</button>
+      <button class="filter-btn" data-filter="unread">Unread</button>
+    </div>
+    
+    <!-- Notifications List -->
+    <div class="notifications-list" id="notificationsList">
+      <div class="no-notifications">
+        <i class="fas fa-bell-slash" style="font-size: 40px; margin-bottom: 15px;"></i>
+        <p>No notifications yet</p>
+        <p style="font-size: 14px; margin-top: 10px;">You'll see important updates here</p>
+      </div>
+    </div>
+    
+    <!-- Footer -->
+    <div class="footer">
+      <p class="copyright">
+        Genzura © 2025 <a href="https://github.com/mkb-nel" target="_blank">M.K.Bertrand</a> - 
+        <a href="terms.html">Terms</a>
+      </p>
+    </div>
+  </div>
+  
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-messaging.js"></script>
+  
+  <script>
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyD-8JzL7GPhGhjzQCrAZOJWmyb-hPuaA0U",
+      authDomain: "mypersonalai-22391.firebaseapp.com",
+      databaseURL: "https://mypersonalai-22391-default-rtdb.firebaseio.com",
+      projectId: "mypersonalai-22391",
+      storageBucket: "mypersonalai-22391.firebasestorage.app",
+      messagingSenderId: "527318613254",
+      appId: "1:527318613254:web:be2ede267103601f187287"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+    const messaging = firebase.messaging();
+
+    // DOM elements
+    const notificationsList = document.getElementById('notificationsList');
+    const searchInput = document.getElementById('searchInput');
+    const filterButtons = document.querySelectorAll('.filter-btn');
+
+    // Global variables
+    let currentUser = null;
+    let notificationsData = [];
+    let currentFilter = 'all';
+
+    // Check if user is logged in
+    window.addEventListener('DOMContentLoaded', () => {
+      const userDataStr = localStorage.getItem('genzuraUser');
+      
+      if (!userDataStr) {
+        window.location.href = 'index.html';
+        return;
+      }
+      
+      currentUser = JSON.parse(userDataStr);
+      loadNotifications();
+      requestNotificationPermission();
+      setupMessaging();
+      
+      // Setup event listeners
+      searchInput.addEventListener('input', performSearch);
+      
+      filterButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          const filter = button.getAttribute('data-filter');
+          
+          // Update active filter
+          filterButtons.forEach(btn => btn.classList.remove('active'));
+          button.classList.add('active');
+          
+          currentFilter = filter;
+          filterNotifications(filter);
+        });
+      });
+    });
+
+    // Load notifications from Firestore
+    function loadNotifications() {
+      db.collection('notifications')
+        .where('userId', '==', currentUser.uid)
+        .orderBy('timestamp', 'desc')
+        .limit(50)
+        .get()
+        .then((querySnapshot) => {
+          notificationsData = [];
+          notificationsList.innerHTML = '';
+          
+          if (querySnapshot.empty) {
+            notificationsList.innerHTML = `
+              <div class="no-notifications">
+                <i class="fas fa-bell-slash" style="font-size: 40px; margin-bottom: 15px;"></i>
+                <p>No notifications yet</p>
+                <p style="font-size: 14px; margin-top: 10px;">You'll see important updates here</p>
+              </div>
+            `;
+            return;
+          }
+          
+          querySnapshot.forEach((doc) => {
+            const notification = { id: doc.id, ...doc.data() };
+            notificationsData.push(notification);
+            renderNotification(notification);
+          });
+        })
+        .catch((error) => {
+          console.log("Error getting notifications:", error);
+        });
+    }
+
+    // Render notification card
+    function renderNotification(notification) {
+      // Remove no notifications message if it exists
+      const noNotifications = document.querySelector('.no-notifications');
+      if (noNotifications) noNotifications.remove();
+      
+      const notificationCard = document.createElement('div');
+      notificationCard.className = 'notification-card';
+      notificationCard.setAttribute('data-type', notification.type);
+      notificationCard.setAttribute('data-read', notification.read);
+      
+      let iconClass = 'info';
+      let icon = 'fas fa-info-circle';
+      
+      switch(notification.type) {
+        case 'sale':
+          iconClass = 'success';
+          icon = 'fas fa-shopping-cart';
+          break;
+        case 'loan':
+          iconClass = 'warning';
+          icon = 'fas fa-hand-holding-usd';
+          break;
+        case 'system':
+          iconClass = 'info';
+          icon = 'fas fa-cog';
+          break;
+        case 'admin':
+          iconClass = 'alert';
+          icon = 'fas fa-bullhorn';
+          break;
+      }
+      
+      notificationCard.innerHTML = `
+        <div class="notification-icon ${iconClass}">
+          <i class="${icon}"></i>
+        </div>
+        <div class="notification-content">
+          <div class="notification-title">${notification.title}</div>
+          <div class="notification-message">${notification.message}</div>
+          <div class="notification-time">${formatTime(notification.timestamp?.toDate())}</div>
+        </div>
+        ${!notification.read ? '<div class="notification-badge">!</div>' : ''}
+      `;
+      
+      // Mark as read when clicked
+      notificationCard.addEventListener('click', () => {
+        if (!notification.read) {
+          markAsRead(notification.id);
+          notificationCard.querySelector('.notification-badge')?.remove();
+          notificationCard.setAttribute('data-read', 'true');
+        }
+      });
+      
+      notificationsList.appendChild(notificationCard);
+    }
+
+    // Filter notifications
+    function filterNotifications(filter) {
+      const notificationCards = notificationsList.querySelectorAll('.notification-card');
+      
+      notificationCards.forEach(card => {
+        const type = card.getAttribute('data-type');
+        const read = card.getAttribute('data-read');
+        
+        if (filter === 'all') {
+          card.style.display = 'flex';
+        } else if (filter === 'unread' && read === 'false') {
+          card.style.display = 'flex';
+        } else if (filter === type) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+      
+      // Check if any notifications are visible
+      const visibleNotifications = notificationsList.querySelectorAll('.notification-card[style="display: flex"]');
+      if (visibleNotifications.length === 0 && notificationsData.length > 0) {
+        notificationsList.innerHTML = `
+          <div class="no-notifications">
+            <i class="fas fa-filter" style="font-size: 40px; margin-bottom: 15px;"></i>
+            <p>No notifications match the selected filter</p>
+          </div>
+        `;
+      }
+    }
+
+    // Perform search
+    function performSearch() {
+      const searchTerm = searchInput.value.toLowerCase();
+      
+      if (!searchTerm) {
+        filterNotifications(currentFilter);
+        return;
+      }
+      
+      const notificationCards = notificationsList.querySelectorAll('.notification-card');
+      let visibleCount = 0;
+      
+      notificationCards.forEach(card => {
+        const title = card.querySelector('.notification-title').textContent.toLowerCase();
+        const message = card.querySelector('.notification-message').textContent.toLowerCase();
+        
+        if (title.includes(searchTerm) || message.includes(searchTerm)) {
+          card.style.display = 'flex';
+          visibleCount++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+      
+      if (visibleCount === 0) {
+        notificationsList.innerHTML = `
+          <div class="no-notifications">
+            <i class="fas fa-search" style="font-size: 40px; margin-bottom: 15px;"></i>
+            <p>No notifications found for "${searchTerm}"</p>
+          </div>
+        `;
+      }
+    }
+
+    // Mark notification as read
+    function markAsRead(notificationId) {
+      db.collection('notifications').doc(notificationId).update({
+        read: true,
+        readAt: firebase.firestore.FieldValue.serverTimestamp()
+      })
+      .catch((error) => {
+        console.error("Error marking notification as read:", error);
+      });
+    }
+
+    // Request notification permission
+    function requestNotificationPermission() {
+      Notification.requestPermission().then((permission) => {
+        if (permission === 'granted') {
+          console.log('Notification permission granted');
+        }
+      });
+    }
+
+    // Setup Firebase Messaging
+    function setupMessaging() {
+      messaging.requestPermission()
+        .then(() => {
+          return messaging.getToken();
+        })
+        .then((token) => {
+          // Save the token to Firestore for this user
+          saveMessagingToken(token);
+        })
+        .catch((err) => {
+          console.log('Unable to get permission to notify.', err);
+        });
+      
+      // Handle incoming messages
+      messaging.onMessage((payload) => {
+        console.log('Message received:', payload);
+        
+        // Create a notification
+        const notification = {
+          title: payload.notification?.title || 'New Notification',
+          body: payload.notification?.body || 'You have a new message',
+          icon: payload.notification?.icon || '/icon.png'
+        };
+        
+        // Display the notification
+        if (Notification.permission === 'granted') {
+          new Notification(notification.title, {
+            body: notification.body,
+            icon: notification.icon
+          });
+        }
+        
+        // Add to notifications list
+        addNotificationLocally({
+          title: payload.data?.title || payload.notification?.title,
+          message: payload.data?.message || payload.notification?.body,
+          type: payload.data?.type || 'system',
+          timestamp: new Date()
+        });
+      });
+    }
+
+    // Save messaging token to Firestore
+    function saveMessagingToken(token) {
+      if (!currentUser) return;
+      
+      db.collection('users').doc(currentUser.uid).update({
+        messagingTokens: firebase.firestore.FieldValue.arrayUnion(token)
+      })
+      .catch((error) => {
+        console.error("Error saving messaging token:", error);
+      });
+    }
+
+    // Add notification locally
+    function addNotificationLocally(notificationData) {
+      const notification = {
+        id: 'local-' + Date.now(),
+        title: notificationData.title,
+        message: notificationData.message,
+        type: notificationData.type,
+        timestamp: notificationData.timestamp,
+        read: false
+      };
+      
+      notificationsData.unshift(notification);
+      
+      // Remove no notifications message if it exists
+      const noNotifications = document.querySelector('.no-notifications');
+      if (noNotifications) noNotifications.remove();
+      
+      // Add to the top of the list
+      const firstChild = notificationsList.firstChild;
+      renderNotification(notification);
+      
+      if (firstChild) {
+        notificationsList.insertBefore(notificationsList.lastChild, firstChild);
+      }
+    }
+
+    // Format time
+    function formatTime(date) {
+      if (!date) return 'Just now';
+      
+      const now = new Date();
+      const diffMs = now - date;
+      const diffSecs = Math.round(diffMs / 1000);
+      const diffMins = Math.round(diffSecs / 60);
+      const diffHours = Math.round(diffMins / 60);
+      const diffDays = Math.round(diffHours / 24);
+      
+      if (diffSecs < 60) {
+        return 'Just now';
+      } else if (diffMins < 60) {
+        return `${diffMins} min ago`;
+      } else if (diffHours < 24) {
+        return `${diffHours} hr ago`;
+      } else if (diffDays < 7) {
+        return `${diffDays} day ago`;
+      } else {
+        return date.toLocaleDateString();
+      }
+    }
+  </script>
+</body>
+</html>
