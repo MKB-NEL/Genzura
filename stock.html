@@ -35,14 +35,21 @@
     }
     
     /* Header Styles */
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 15px;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
+   .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 15px;
+
+  /* Added for mobile safe area / prevent top cut-off */
+  position: relative; /* keeps header in normal flow */
+  padding-top: env(safe-area-inset-top, 25px); /* iPhone notch / Android status bar */
+  box-sizing: border-box; /* include padding in height */
+  background-color: #ffffff; /* ensures header is visible */
+}
+
     
     .back-btn {
       display: flex;
