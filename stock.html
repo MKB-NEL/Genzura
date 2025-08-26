@@ -302,7 +302,7 @@
       text-decoration: none;
     }
     
-   /* Make sure html & body fill the screen */
+/* Ensure full height */
 html, body {
   height: 100%;
   margin: 0;
@@ -318,8 +318,6 @@ html, body {
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
-
-  /* Flex container for centering */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -328,15 +326,86 @@ html, body {
 
 /* Modal content */
 .modal-content {
-  background-color: white;
+  background-color: white;       /* Keep original color */
   padding: 20px;
   border-radius: 4px;
   width: 90%;
   max-width: 450px;
-
-  /* Instead of vh, use percentage of parent */
   max-height: 85%;
   overflow-y: auto;
+}
+
+/* Modal title */
+.modal-title {
+  margin-bottom: 15px;
+  color: #0055cc;                /* Keep original blue */
+  text-align: center;
+  font-size: 18px;
+}
+
+/* Form group */
+.form-group {
+  margin-bottom: 12px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 13px;
+  color: #333;                   /* Keep original dark text */
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+/* Form row */
+.form-row {
+  display: flex;
+  gap: 8px;
+}
+
+.form-row .form-group {
+  flex: 1;
+}
+
+/* Modal actions */
+.modal-actions {
+  margin-top: 15px;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* Buttons */
+.modal-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+/* Button colors */
+.modal-btn.primary {
+  background-color: #0055cc;     /* Keep blue */
+  color: white;
+}
+
+.modal-btn.secondary {
+  background-color: #f0f0f0;     /* Keep light gray */
+  color: #333;
+}
+
+.modal-btn.danger {
+  background-color: #f44336;     /* Keep red */
+  color: white;
 }
 
     
