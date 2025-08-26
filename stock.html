@@ -49,7 +49,127 @@
   box-sizing: border-box; /* include padding in height */
   background-color: #ffffff; /* ensures header is visible */
 }
+ 
+/* Modal backdrop */
+.calcModal {
+  position: fixed;
+  top:0; left:0;
+  width:100%; height:100%;
+  background: rgba(0,0,0,0.6);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
 
+/* Modal box */
+.calcContent {
+  background:white;
+  border-radius:12px;
+  padding:20px;
+  width:300px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+  position: relative;
+  text-align: center;
+}
+
+/* Close button */
+.closeBtn {
+  position: absolute;
+  top:10px;
+  right:10px;
+  background: #f44336;
+  color: white;
+  border:none;
+  border-radius:50%;
+  width:30px; height:30px;
+  font-size:16px;
+  cursor:pointer;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  transition: background 0.2s;
+}
+.closeBtn:hover {
+  background:#d32f2f;
+}
+
+/* Display */
+.calcDisplay {
+  width: 90%;
+  font-size: 22px;
+  text-align: right;
+  margin-bottom: 15px;
+  padding:10px;
+  border-radius:8px;
+  border:1px solid #ccc;
+  box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Button grid */
+.btnGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap:8px;
+}
+
+/* Buttons */
+.btn {
+  padding:15px;
+  font-size:18px;
+  border:none;
+  border-radius:8px;
+  background:#f0f0f0;
+  cursor:pointer;
+  transition: all 0.2s;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+.btn:hover {
+  background:#e0e0e0;
+  transform: translateY(-2px);
+}
+
+/* Operators styling */
+.operator {
+  background:#0055cc;
+  color:white;
+}
+.operator:hover {
+  background:#004bb5;
+}
+
+/* Clear button styling */
+.clearBtn {
+  grid-column: span 4;
+  background:#f44336;
+  color:white;
+}
+.clearBtn:hover {
+  background:#d32f2f;
+}
+.ansBtn {
+  background:#1fdc58;
+  color:white;
+}
+.ansBtn:hover {
+  background:#29d6f0;
+}
+
+/* Open calculator button */
+.openCalcBtn {
+  padding:12px 25px;
+  font-size:16px;
+  border:none;
+  border-radius:3px;
+  border: 2px solid #666;
+  background-color: #b4b4b4;
+  color:rgb(0, 0, 0);
+  cursor:pointer;
+  transition: all 0.2s;
+}
+.openCalcBtn:hover {
+  background:#004bb5;
+  color:rgb(255, 255, 255);
+  transform: translateY(-2px);
+}
     
     .back-btn {
       display: flex;
@@ -624,16 +744,8 @@
           <input type="text" id="productName" required>
         </div>
         
-        <div class="form-group">
-          <label for="productImage">Product Image</label>
-          <input type="file" id="productImage" class="file-input" accept="image/*">
-          <button type="button" class="modal-btn secondary" onclick="document.getElementById('productImage').click()" style="margin-top: 8px;">
-            Select Image
-          </button>
-          <div class="image-preview" id="imagePreview">
-            <span>No image selected</span>
-          </div>
-        </div>
+         <button id="openCalcBtn" class="openCalcBtn">Calculatrice</button>
+
         
         <div class="form-group">
           <label for="productCost">Cost (RWF) *</label>
@@ -729,13 +841,10 @@
         </div>
         
         <div class="form-group">
-          <label for="editProductImage">Product Image</label>
+          <label for="editProductImage">Image feature removed</label>
           <input type="file" id="editProductImage" class="file-input" accept="image/*">
-          <button type="button" class="modal-btn secondary" onclick="document.getElementById('editProductImage').click()" style="margin-top: 8px;">
-            Select Image
-          </button>
           <div class="image-preview" id="editImagePreview">
-            <span>No image selected</span>
+            <span>.</span>
           </div>
         </div>
         
@@ -776,6 +885,35 @@
       </form>
     </div>
   </div>
+
+  <!-- Calculator Modal -->
+<div id="calcModal" class="calcModal">
+  <div class="calcContent">
+    <button id="closeCalcBtn" class="closeBtn">✖</button>
+    <h3>Calculator</h3>
+    <input type="text" id="calcDisplay" class="calcDisplay" readonly>
+
+    <div class="btnGrid">
+      <button class="btn">7</button>
+      <button class="btn">8</button>
+      <button class="btn">9</button>
+      <button class="btn operator">/</button>
+      <button class="btn">4</button>
+      <button class="btn">5</button>
+      <button class="btn">6</button>
+      <button class="btn operator">✖</button>
+      <button class="btn">1</button>
+      <button class="btn">2</button>
+      <button class="btn">3</button>
+      <button class="btn operator">-</button>
+      <button class="btn">0</button>
+      <button class="btn">.</button>
+      <button class="btn ansBtn" id="ansBtn">=</button>
+      <button class="btn operator">+</button>
+      <button class="btn clearBtn" id="clearBtn">Del</button>
+    </div>
+  </div>
+</div>
 
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -1097,6 +1235,33 @@
       }
     }
 
+        //Calculator button
+   const openBtn = document.getElementById('openCalcBtn');
+const calcModal = document.getElementById('calcModal');
+const closeBtn = document.getElementById('closeCalcBtn');
+const calcDisplay = document.getElementById('calcDisplay');
+const buttons = document.querySelectorAll('.btn');
+const clearBtn = document.getElementById('clearBtn');
+
+// Open and close modal
+openBtn.onclick = () => calcModal.style.display = 'flex';
+closeBtn.onclick = () => calcModal.style.display = 'none';
+window.onclick = (e) => { if(e.target === calcModal) calcModal.style.display = 'none'; }
+
+// Calculator button clicks
+buttons.forEach(btn => {
+  btn.addEventListener('click', () => {
+    const val = btn.textContent;
+    if(val === '='){
+      try { calcDisplay.value = eval(calcDisplay.value); } catch(e){ calcDisplay.value = "Error"; }
+    } else {
+      calcDisplay.value += val;
+    }
+  });
+});
+clearBtn.onclick = () => calcDisplay.value = '';
+
+
     // Open add product modal
     addProductBtn.addEventListener('click', function() {
       addProductModal.style.display = 'flex';
@@ -1133,40 +1298,6 @@
     // Calculate cost per unit when quantity changes in edit form
     editProductQuantityInput.addEventListener('input', calculateEditCostPerUnit);
     editProductCost.addEventListener('input', calculateEditCostPerUnit);
-
-    // Handle image preview for add form
-    productImageInput.addEventListener('change', function(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-      
-      if (!file.type.match('image.*')) {
-        alert('Please select an image file');
-        return;
-      }
-      
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        imagePreview.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
-      };
-      reader.readAsDataURL(file);
-    });
-
-    // Handle image preview for edit form
-    editProductImageInput.addEventListener('change', function(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-      
-      if (!file.type.match('image.*')) {
-        alert('Please select an image file');
-        return;
-      }
-      
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        editImagePreview.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
-      };
-      reader.readAsDataURL(file);
-    });
 
     // Handle add form submission
     addProductForm.addEventListener('submit', function(e) {
@@ -1290,6 +1421,7 @@
         }
       }
     });
+    
   </script>
 </body>
 </html>
