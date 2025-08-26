@@ -1,769 +1,247 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GENZURA - Login</title>
-  <link rel="icon" type="image/png" href="https://i.ibb.co/mFqfcpPj/cropped-circle-image.png">
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-    
-    body {
-      font-family: Arial, sans-serif;
-      background: #fff;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      position: relative;
-    }
-    
-    .container {
-      width: 100%;
-      max-width: 400px;
-      padding: 20px;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-    
-    .login-container {
-      width: 100%;
-      text-align: center;
-    }
-    
-    .logo {
-      font-size: 28px;
-      font-weight: bold;
-      color: #0055cc;
-      margin-bottom: 20px;
-    }
-    
-    h2 {
-      font-size: 20px;
-      margin-bottom: 10px;
-    }
-    
-    p {
-      color: #555;
-      font-size: 14px;
-      margin-bottom: 20px;
-    }
-    
-    input {
-      width: 100%;
-      padding: 12px;
-      margin: 8px 0;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      font-size: 16px;
-    }
-    
-    .forgot {
-      display: block;
-      text-align: right;
-      font-size: 13px;
-      margin-bottom: 15px;
-      color: #0055cc;
-      text-decoration: none;
-    }
-    
-    button {
-      width: 100%;
-      padding: 14px;
-      background: black;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      font-size: 16px;
-      cursor: pointer;
-      margin-top: 5px;
-    }
-    
-    .terms {
-      font-size: 12px;
-      color: #555;
-      margin-top: 15px;
-      line-height: 1.4;
-    }
-    
-    .create {
-      margin-top: 15px;
-      font-size: 14px;
-    }
-    
-    .create a {
-      color: #0055cc;
-      text-decoration: none;
-      cursor: pointer;
-    }
-    
-    /* Footer styles */
-    footer {
-      width: 100%;
-      text-align: center;
-      padding: 15px;
-      margin-top: auto;
-      font-size: 12px;
-      color: #666;
-      border-top: 1px solid #eee;
-    }
-    
-    footer a {
-      color: #0055cc;
-      text-decoration: none;
-    }
-    
-    /* Modal styles */
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.5);
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-    }
-    
-    .modal-content {
-      background-color: white;
-      padding: 25px;
-      border-radius: 8px;
-      width: 90%;
-      max-width: 400px;
-      max-height: 80vh;
-      overflow-y: auto;
-    }
-    
-    .close {
-      float: right;
-      font-size: 24px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    
-    .form-group {
-      margin-bottom: 15px;
-      text-align: left;
-    }
-    
-    .form-group label {
-      display: block;
-      margin-bottom: 5px;
-      font-size: 14px;
-      color: #333;
-    }
-    
-    .form-group select {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      font-size: 16px;
-    }
-    
-    .form-group textarea {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      font-size: 16px;
-      resize: vertical;
-      min-height: 80px;
-    }
-    
-    .checkbox-group {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 8px;
-      margin: 10px 0;
-    }
-    
-    .checkbox-item {
-      display: flex;
-      align-items: center;
-    }
-    
-    .checkbox-item input {
-      width: auto;
-      margin-right: 8px;
-    }
-    
-    .error {
-      color: red;
-      font-size: 12px;
-      margin-top: 5px;
-      display: none;
-    }
-    
-    .info-text {
-      color: #666;
-      font-size: 12px;
-      margin-top: 4px;
-      font-style: italic;
-    }
-    
-    .loading {
-      display: none;
-      text-align: center;
-      margin: 10px 0;
-    }
-    
-    .loading-spinner {
-      border: 3px solid #f3f3f3;
-      border-top: 3px solid #0055cc;
-      border-radius: 50%;
-      width: 20px;
-      height: 20px;
-      animation: spin 1s linear infinite;
-      margin: 0 auto;
-    }
-    
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-    
-    /* Popup notification */
-    .popup {
-      position: fixed;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      background-color: #333;
-      color: white;
-      padding: 12px 20px;
-      border-radius: 6px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      z-index: 1001;
-      display: none;
-      max-width: 90%;
-      text-align: center;
-    }
-    
-    .popup.success {
-      background-color: #4CAF50;
-    }
-    
-    .popup.error {
-      background-color: #f44336;
-    }
-    
-    .popup.info {
-      background-color: #2196F3;
-    }
-    
-    /* Mobile responsiveness */
-    @media (max-width: 480px) {
-      .container {
-        padding: 15px;
-      }
-      
-      input, select, textarea {
-        font-size: 16px;
-      }
-      
-      .modal-content {
-        padding: 20px;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GENZURA | Loading</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #fdfdfd;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: fixed;
+            width: 100%;
+            color: #000;
+        }
+        
+        .splash-container {
+            text-align: center;
+            padding: 20px;
+            width: 100%;
+            max-width: 100%;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .brand-name {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+            color: #000;
+            position: relative;
+        }
+        
+        .quote {
+            font-size: 1rem;
+            max-width: 300px;
+            margin: 0 auto 40px;
+            line-height: 1.6;
+            color: #333;
+            font-weight: 400;
+        }
+        
+        .spinner-container {
+            position: relative;
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 25px;
+        }
+        
+        .spinner {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 2px solid transparent;
+        }
+        
+        .spinner-1 {
+            top: 0;
+            left: 0;
+            border-top: 2px solid #0066ff;
+            border-right: 2px solid transparent;
+            animation: spin 1.8s infinite cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+        
+        .spinner-2 {
+            top: 0;
+            left: 0;
+            border-bottom: 2px solid #0066ff;
+            border-left: 2px solid transparent;
+            animation: spin-reverse 1.5s infinite cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+        
+        .loading-text {
+            font-size: 0.85rem;
+            color: #555;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+        
+        .copyright {
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            text-align: center;
+            color: #777;
+            font-size: 0.7rem;
+        }
+        
+        /* Minimalist animated elements */
+        .dot {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background-color: #0066ff;
+            border-radius: 50%;
+            opacity: 0.3;
+        }
+        
+        .line {
+            position: absolute;
+            height: 1px;
+            background-color: #0066ff;
+            opacity: 0.2;
+            animation: line-grow 8s infinite linear;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @keyframes spin-reverse {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(-360deg); }
+        }
+        
+        @keyframes line-grow {
+            0% { width: 0px; opacity: 0; }
+            10% { opacity: 0.2; }
+            50% { width: 80px; }
+            90% { opacity: 0.2; }
+            100% { width: 0px; opacity: 0; }
+        }
+        
+        /* Mobile-specific optimizations */
+        @media (max-width: 480px) {
+            .brand-name {
+                font-size: 2.2rem;
+            }
+            
+            .quote {
+                font-size: 0.9rem;
+                max-width: 260px;
+                margin-bottom: 35px;
+            }
+            
+            .spinner-container {
+                width: 60px;
+                height: 60px;
+            }
+        }
+        
+        @media (max-height: 600px) {
+            .brand-name {
+                margin-bottom: 15px;
+                font-size: 2rem;
+            }
+            
+            .quote {
+                margin-bottom: 30px;
+                font-size: 0.85rem;
+            }
+            
+            .copyright {
+                bottom: 15px;
+            }
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <div class="login-container">
-      <div class="logo">GENZURA</div>
-      <h2>Sign in</h2>
-      <p>Please enter your details to continue to GENZURA</p>
-      
-      <form id="loginForm">
-        <input type="text" id="loginPhone" placeholder="Enter your phone number" required>
-        <input type="password" id="loginPassword" placeholder="Enter your password" required>
-        <a href="#" class="forgot">Forgot password?</a>
-        <button type="submit">Sign In</button>
-      </form>
-      
-      <div class="terms">
-        By logging-in, you accept the new <a href="terms.html">Terms of use</a> including 
-        <a href="terms.html">Privacy Policy</a> of GenzuraAccount.
-      </div>
-      
-      <div class="create">
-        Don't have an account? <a id="showSignup">Create Account</a>
-      </div>
+    <!-- Minimalist animated elements -->
+    <div class="dot" style="top: 20%; left: 15%;"></div>
+    <div class="dot" style="top: 75%; right: 10%;"></div>
+    <div class="dot" style="bottom: 30%; left: 20%;"></div>
+    <div class="dot" style="top: 25%; right: 20%;"></div>
+    
+    <div class="line" style="top: 18%; left: 18%; transform: rotate(45deg);"></div>
+    <div class="line" style="bottom: 22%; right: 15%; transform: rotate(-30deg);"></div>
+    <div class="line" style="top: 70%; left: 10%; transform: rotate(15deg);"></div>
+    <div class="line" style="bottom: 15%; right: 25%; transform: rotate(-60deg);"></div>
+
+    <!-- Main content -->
+    <div class="splash-container">
+        <h1 class="brand-name">GENZURA</h1>
+        <p class="quote">"Business is not about hardwork, it's about your selling and management strategy."</p>
+        
+        <div class="spinner-container">
+            <div class="spinner spinner-1"></div>
+            <div class="spinner spinner-2"></div>
+        </div>
+        
+        <p class="loading-text">Loading</p>
     </div>
-  </div>
-
-  <footer>
-    Genzura © 2025 <a href="https://github.com/mkb-nel" target="_blank">M.K.Bertrand</a> - <a href="terms.html">Terms</a>
-  </footer>
-
-  <!-- Signup Modal -->
-  <div id="signupModal" class="modal">
-    <div class="modal-content">
-      <span class="close">&times;</span>
-      <h2>Create Account</h2>
-      
-      <form id="signupForm">
-        <div class="form-group">
-          <label for="fullName">Your Name</label>
-          <input type="text" id="fullName" required>
-          <div class="error" id="nameError">Please enter your name</div>
-        </div>
-        
-        <div class="form-group">
-          <label for="gender">Gender</label>
-          <select id="gender" required>
-            <option value="">Select Gender</option>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-            <option value="other">Other</option>
-          </select>
-          <div class="error" id="genderError">Please select your gender</div>
-        </div>
-        
-        <!-- Phone Number Field -->
-        <div class="form-group">
-          <label for="phone">Phone Number</label>
-          <input type="text" id="phone" placeholder="e.g., 0781234567" required>
-          <div class="info-text">It will be used in Login, Make sure that is correct.</div>
-          <div class="error" id="phoneError">Please enter a valid phone number</div>
-        </div>
-        
-        <!-- Password Field -->
-        <div class="form-group">
-          <label for="password">Password</label>
-          <input type="password" id="password" placeholder="Create a secure password" required>
-          <div class="info-text">Use at least 8 characters with a mix of letters and numbers.</div>
-          <div class="error" id="passwordError">Password must be at least 8 characters</div>
-        </div>
-        
-        <div class="form-group">
-          <label for="businessName">Business Name</label>
-          <input type="text" id="businessName" required>
-          <div class="error" id="businessError">Please enter your business name</div>
-        </div>
-        
-        <div class="form-group">
-          <label>Business Category (Select one or more)</label>
-          <div class="checkbox-group">
-            <div class="checkbox-item">
-              <input type="checkbox" id="category1" name="category" value="Foodstuff & groceries">
-              <label for="category1">Foodstuff & groceries</label>
-            </div>
-            <div class="checkbox-item">
-              <input type="checkbox" id="category2" name="category" value="Clothing & fashion">
-              <label for="category2">Clothing & fashion</label>
-            </div>
-            <div class="checkbox-item">
-              <input type="checkbox" id="category3" name="category" value="Electronics & mobile phones">
-              <label for="category3">Electronics & mobile phones</label>
-            </div>
-            <div class="checkbox-item">
-              <input type="checkbox" id="category4" name="category" value="Household goods">
-              <label for="category4">Household goods</label>
-            </div>
-            <div class="checkbox-item">
-              <input type="checkbox" id="category5" name="category" value="Building & Construction materials">
-              <label for="category5">Building & Construction</label>
-            </div>
-            <div class="checkbox-item">
-              <input type="checkbox" id="category6" name="category" value="Cosmetics & beauty products">
-              <label for="category6">Cosmetics & beauty</label>
-            </div>
-            <div class="checkbox-item">
-              <input type="checkbox" id="category7" name="category" value="Agricultural produce">
-              <label for="category7">Agricultural produce</label>
-            </div>
-            <div class="checkbox-item">
-              <input type="checkbox" id="category8" name="category" value="Livestock & meat products">
-              <label for="category8">Livestock & meat</label>
-            </div>
-            <div class="checkbox-item">
-              <input type="checkbox" id="category9" name="category" value="Motorcycles & spare parts">
-              <label for="category9">Motorcycles & parts</label>
-            </div>
-            <div class="checkbox-item">
-              <input type="checkbox" id="category10" name="category" value="Cars & vehicle spare parts">
-              <label for="category10">Cars & vehicle parts</label>
-            </div>
-            <div class="checkbox-item">
-              <input type="checkbox" id="category11" name="category" value="Stationery & books">
-              <label for="category11">Stationery & books</label>
-            </div>
-            <div class="checkbox-item">
-              <input type="checkbox" id="category12" name="category" value="Drinks & bottled water">
-              <label for="category12">Drinks & bottled water</label>
-            </div>
-            <div class="checkbox-item">
-              <input type="checkbox" id="category13" name="category" value="Jewelry & watches">
-              <label for="category13">Jewelry & watches</label>
-            </div>
-            <div class="checkbox-item">
-              <input type="checkbox" id="category14" name="category" value="Pharmaceuticals & health products">
-              <label for="category14">Pharmaceuticals</label>
-            </div>
-            <div class="checkbox-item">
-              <input type="checkbox" id="category15" name="category" value="Baby products & toys">
-              <label for="category15">Baby products & toys</label>
-            </div>
-          </div>
-          <div class="error" id="categoryError">Please select at least one category</div>
-        </div>
-        
-        <div class="form-group">
-          <label for="clients">Estimated clients per month</label>
-          <select id="clients" required>
-            <option value="">Select range</option>
-            <option value="20-100">20 - 100</option>
-            <option value="100-300">100 - 300</option>
-            <option value="300-800">300 - 800</option>
-            <option value="800-1000">800 - 1000</option>
-            <option value="1000-2000">1000 - 2000</option>
-            <option value="2000-5000">2000 - 5000</option>
-            <option value="5000+">5000+</option>
-          </select>
-          <div class="error" id="clientsError">Please select an estimate</div>
-        </div>
-        
-        <div class="form-group">
-          <label for="country">Country</label>
-          <select id="country" required>
-            <option value="">Select Country</option>
-            <option value="Rwanda">Rwanda</option>
-            <option value="Kenya">Kenya</option>
-            <option value="Uganda">Uganda</option>
-            <option value="Tanzania">Tanzania</option>
-          </select>
-          <div class="error" id="countryError">Please select your country</div>
-        </div>
-        
-        <div class="form-group">
-          <label for="district">District</label>
-          <input type="text" id="district" required>
-          <div class="error" id="districtError">Please enter your district</div>
-        </div>
-        
-        <div class="form-group">
-          <label for="description">Business Description</label>
-          <textarea id="description" placeholder="Describe your business"></textarea>
-        </div>
-        
-        <div class="loading">
-          <div class="loading-spinner"></div>
-          <p>Creating account...</p>
-        </div>
-        
-        <button type="submit">Create Account</button>
-      </form>
+    
+    <div class="copyright">
+        © 2023 GENZURA • All Rights Reserved
     </div>
-  </div>
 
-  <!-- Popup Notification -->
-  <div id="popup" class="popup"></div>
-
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-  
-  <script>
-    // Your web app's Firebase configuration
-    const firebaseConfig = {
-      apiKey: "AIzaSyD-8JzL7GPhGhjzQCrAZOJWmyb-hPuaA0U",
-      authDomain: "mypersonalai-22391.firebaseapp.com",
-      databaseURL: "https://mypersonalai-22391-default-rtdb.firebaseio.com",
-      projectId: "mypersonalai-22391",
-      storageBucket: "mypersonalai-22391.firebasestorage.app",
-      messagingSenderId: "527318613254",
-      appId: "1:527318613254:web:be2ede267103601f187287"
-    };
-
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.firestore();
-
-    // DOM elements
-    const loginForm = document.getElementById('loginForm');
-    const signupForm = document.getElementById('signupForm');
-    const showSignupBtn = document.getElementById('showSignup');
-    const modal = document.getElementById('signupModal');
-    const closeBtn = document.querySelector('.close');
-    const loadingEl = document.querySelector('.loading');
-    const popup = document.getElementById('popup');
-
-    // Check if user is already logged in
-    window.addEventListener('DOMContentLoaded', () => {
-      const userData = localStorage.getItem('genzuraUser');
-      if (userData) {
-        showPopup('Welcome back! Redirecting to home...', 'success');
-        setTimeout(() => {
-          window.location.href = 'home.html';
-        }, 2000);
-      }
-    });
-
-    // Show modal when Create Account is clicked
-    showSignupBtn.addEventListener('click', () => {
-      modal.style.display = 'flex';
-    });
-
-    // Close modal when X is clicked
-    closeBtn.addEventListener('click', () => {
-      modal.style.display = 'none';
-      resetSignupForm();
-    });
-
-    // Close modal when clicking outside
-    window.addEventListener('click', (event) => {
-      if (event.target === modal) {
-        modal.style.display = 'none';
-        resetSignupForm();
-      }
-    });
-
-    // Handle login form submission
-    loginForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const phone = document.getElementById('loginPhone').value;
-      const password = document.getElementById('loginPassword').value;
-      
-      if (!phone || !password) {
-        showPopup('Please enter both phone number and password', 'error');
-        return;
-      }
-      
-      // Convert phone to email format for authentication
-      const email = `${phone}@gmail.com`;
-      
-      auth.signInWithEmailAndPassword(email, password)
-        .then((userCredential) => {
-          // Signed in 
-          const user = userCredential.user;
-          
-          // Store user data in localStorage
-          localStorage.setItem('genzuraUser', JSON.stringify({
-            uid: user.uid,
-            phone: phone,
-            email: email
-          }));
-          
-          showPopup('Login successful! Redirecting...', 'success');
-          
-          // Redirect to home page
-          setTimeout(() => {
-            window.location.href = 'home.html';
-          }, 2000);
-        })
-        .catch((error) => {
-          showPopup('Login error: ' + error.message, 'error');
-        });
-    });
-
-    // Handle signup form submission
-    signupForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      
-      // Validate form
-      if (!validateSignupForm()) return;
-      
-      // Show loading state
-      loadingEl.style.display = 'block';
-      
-      // Get form values
-      const fullName = document.getElementById('fullName').value;
-      const gender = document.getElementById('gender').value;
-      const phone = document.getElementById('phone').value;
-      const password = document.getElementById('password').value;
-      const businessName = document.getElementById('businessName').value;
-      const clients = document.getElementById('clients').value;
-      const country = document.getElementById('country').value;
-      const district = document.getElementById('district').value;
-      const description = document.getElementById('description').value;
-      
-      // Get selected categories
-      const selectedCategories = [];
-      document.querySelectorAll('input[name="category"]:checked').forEach((checkbox) => {
-        selectedCategories.push(checkbox.value);
-      });
-      
-      // Convert phone to email format for authentication
-      const email = `${phone}@gmail.com`;
-      
-      // Create user with email and password
-      auth.createUserWithEmailAndPassword(email, password)
-        .then((userCredential) => {
-          // Signed up successfully
-          const user = userCredential.user;
-          
-          // Save additional user data to Firestore
-          return db.collection('users').doc(user.uid).set({
-            fullName,
-            gender,
-            phone,
-            businessName,
-            businessCategories: selectedCategories,
-            estimatedClients: clients,
-            country,
-            district,
-            businessDescription: description,
-            createdAt: firebase.firestore.FieldValue.serverTimestamp()
-          });
-        })
-        .then(() => {
-          // Store user data in localStorage
-          localStorage.setItem('genzuraUser', JSON.stringify({
-            uid: auth.currentUser.uid,
-            phone: phone,
-            email: email
-          }));
-          
-          // Hide loading
-          loadingEl.style.display = 'none';
-          
-          showPopup('Account created successfully! Redirecting...', 'success');
-          
-          // Reset form and close modal
-          setTimeout(() => {
-            modal.style.display = 'none';
-            resetSignupForm();
+    <script>
+        // Preload the next page (login.html)
+        function preloadUrl(url) {
+            const link = document.createElement('link');
+            link.rel = 'preload';
+            link.href = url;
+            link.as = 'document';
+            document.head.appendChild(link);
+        }
+        
+        // Create additional minimalist elements
+        function createMinimalistElements() {
+            const container = document.body;
             
-            // Redirect to home page
-            window.location.href = 'home.html';
-          }, 2000);
-        })
-        .catch((error) => {
-          // Handle errors
-          loadingEl.style.display = 'none';
-          showPopup('Error creating account: ' + error.message, 'error');
+            // Add a few more dots
+            for (let i = 0; i < 4; i++) {
+                const dot = document.createElement('div');
+                dot.classList.add('dot');
+                
+                const top = Math.random() * 80 + 10;
+                const left = Math.random() * 80 + 10;
+                
+                dot.style.top = `${top}%`;
+                dot.style.left = `${left}%`;
+                
+                // Random slight animation
+                dot.style.animation = `pulse ${Math.random() * 3 + 2}s infinite alternate`;
+                
+                container.appendChild(dot);
+            }
+        }
+        
+        // Preload the login page and create elements
+        window.addEventListener('load', function() {
+            preloadUrl('login.html');
+            createMinimalistElements();
         });
-    });
-
-    // Form validation function
-    function validateSignupForm() {
-      let isValid = true;
-      
-      // Reset errors
-      document.querySelectorAll('.error').forEach(el => {
-        el.style.display = 'none';
-      });
-      
-      // Validate name
-      const fullName = document.getElementById('fullName').value;
-      if (!fullName) {
-        document.getElementById('nameError').style.display = 'block';
-        isValid = false;
-      }
-      
-      // Validate gender
-      const gender = document.getElementById('gender').value;
-      if (!gender) {
-        document.getElementById('genderError').style.display = 'block';
-        isValid = false;
-      }
-      
-      // Validate phone
-      const phone = document.getElementById('phone').value;
-      if (!phone) {
-        document.getElementById('phoneError').style.display = 'block';
-        document.getElementById('phoneError').textContent = 'Please enter your phone number';
-        isValid = false;
-      } else if (!isValidPhone(phone)) {
-        document.getElementById('phoneError').style.display = 'block';
-        document.getElementById('phoneError').textContent = 'Please enter a valid phone number';
-        isValid = false;
-      }
-      
-      // Validate password
-      const password = document.getElementById('password').value;
-      if (!password) {
-        document.getElementById('passwordError').style.display = 'block';
-        document.getElementById('passwordError').textContent = 'Please enter a password';
-        isValid = false;
-      } else if (password.length < 8) {
-        document.getElementById('passwordError').style.display = 'block';
-        document.getElementById('passwordError').textContent = 'Password must be at least 8 characters';
-        isValid = false;
-      }
-      
-      // Validate business name
-      const businessName = document.getElementById('businessName').value;
-      if (!businessName) {
-        document.getElementById('businessError').style.display = 'block';
-        isValid = false;
-      }
-      
-      // Validate categories
-      const selectedCategories = document.querySelectorAll('input[name="category"]:checked');
-      if (selectedCategories.length === 0) {
-        document.getElementById('categoryError').style.display = 'block';
-        isValid = false;
-      }
-      
-      // Validate clients
-      const clients = document.getElementById('clients').value;
-      if (!clients) {
-        document.getElementById('clientsError').style.display = 'block';
-        isValid = false;
-      }
-      
-      // Validate country
-      const country = document.getElementById('country').value;
-      if (!country) {
-        document.getElementById('countryError').style.display = 'block';
-        isValid = false;
-      }
-      
-      // Validate district
-      const district = document.getElementById('district').value;
-      if (!district) {
-        document.getElementById('districtError').style.display = 'block';
-        isValid = false;
-      }
-      
-      return isValid;
-    }
-
-    // Validate phone number format
-    function isValidPhone(phone) {
-      // Simple validation for East African phone numbers
-      const phoneRegex = /^(\+?25)?(0|7)[2-8][0-9]{8}$/;
-      return phoneRegex.test(phone.replace(/\s/g, ''));
-    }
-
-    // Reset signup form
-    function resetSignupForm() {
-      document.getElementById('signupForm').reset();
-      document.querySelectorAll('.error').forEach(el => {
-        el.style.display = 'none';
-      });
-      loadingEl.style.display = 'none';
-    }
-
-    // Show popup notification
-    function showPopup(message, type = 'info') {
-      const popup = document.getElementById('popup');
-      popup.textContent = message;
-      popup.className = 'popup ' + type;
-      popup.style.display = 'block';
-      
-      // Hide after 3 seconds
-      setTimeout(() => {
-        popup.style.display = 'none';
-      }, 3000);
-    }
-  </script>
+        
+        // Redirect after 3 seconds
+        setTimeout(function() {
+            window.location.href = 'login.html';
+        }, 3000);
+    </script>
 </body>
 </html>
