@@ -1239,33 +1239,6 @@
       }
     }
 
-        //Calculator button
-   const openBtn = document.getElementById('openCalcBtn');
-const calcModal = document.getElementById('calcModal');
-const closeBtn = document.getElementById('closeCalcBtn');
-const calcDisplay = document.getElementById('calcDisplay');
-const buttons = document.querySelectorAll('.btn');
-const clearBtn = document.getElementById('clearBtn');
-
-// Open and close modal
-openBtn.onclick = () => calcModal.style.display = 'flex';
-closeBtn.onclick = () => calcModal.style.display = 'none';
-window.onclick = (e) => { if(e.target === calcModal) calcModal.style.display = 'none'; }
-
-// Calculator button clicks
-buttons.forEach(btn => {
-  btn.addEventListener('click', () => {
-    const val = btn.textContent;
-    if(val === '='){
-      try { calcDisplay.value = eval(calcDisplay.value); } catch(e){ calcDisplay.value = "Error"; }
-    } else {
-      calcDisplay.value += val;
-    }
-  });
-});
-clearBtn.onclick = () => calcDisplay.value = '';
-
-
     // Open add product modal
     addProductBtn.addEventListener('click', function() {
       addProductModal.style.display = 'flex';
@@ -1436,6 +1409,31 @@ clearBtn.onclick = () => calcDisplay.value = '';
           .catch((err) => console.log("❌ Service Worker failed:", err));
       });
     }
+     //Calculator button
+   const openBtn = document.getElementById('openCalcBtn');
+const calcModal = document.getElementById('calcModal');
+const closeBtn = document.getElementById('closeCalcBtn');
+const calcDisplay = document.getElementById('calcDisplay');
+const buttons = document.querySelectorAll('.btn');
+const clearBtn = document.getElementById('clearBtn');
+
+// Open and close modal
+openBtn.onclick = () => calcModal.style.display = 'flex';
+closeBtn.onclick = () => calcModal.style.display = 'none';
+window.onclick = (e) => { if(e.target === calcModal) calcModal.style.display = 'none'; }
+
+// Calculator button clicks
+buttons.forEach(btn => {
+  btn.addEventListener('click', () => {
+    const val = btn.textContent;
+    if(val === '='){
+      try { calcDisplay.value = eval(calcDisplay.value); } catch(e){ calcDisplay.value = "Error"; }
+    } else {
+      calcDisplay.value += val;
+    }
+  });
+});
+clearBtn.onclick = () => calcDisplay.value = '';
   </script>
 </body>
 </html>
