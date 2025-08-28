@@ -1,4 +1,4 @@
-const CACHE_NAME = "genzura-cache-v3"; // bump version for each deploy
+const CACHE_NAME = "genzura-cache-v4"; // bump version on each deploy
 const urlsToCache = [
   "/",
   "/index.html",
@@ -13,15 +13,15 @@ const urlsToCache = [
   "/icons/icon-512.png"
 ];
 
-// Install: cache files immediately
+// Install & cache files
 self.addEventListener("install", (event) => {
-  self.skipWaiting(); // activate new SW immediately
+  self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => cache.addAll(urlsToCache))
   );
 });
 
-// Activate: delete old caches and take control
+// Activate & clean old caches
 self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches.keys().then((cacheNames) =>
@@ -35,22 +35,34 @@ self.addEventListener("activate", (event) => {
   clients.claim();
 });
 
-// Fetch: network-first, fallback to cache
+// Fetch: network-first for HTML, fallback to cache; cache static assets
 self.addEventListener("fetch", (event) => {
-  if (event.request.method !== "GET") return; // ignore non-GET requests
-  event.respondWith(
-    fetch(event.request)
-      .then((response) => {
-        // update cache with fresh response
-        const responseClone = response.clone();
-        caches.open(CACHE_NAME).then((cache) => cache.put(event.request, responseClone));
-        return response;
-      })
-      .catch(() => caches.match(event.request)) // fallback if offline
-  );
-});
+  if (event.request.method !== "GET") return;
 
-// Notify clients when new SW takes over
-self.addEventListener("message", (event) => {
-  if (event.data === "skipWaiting") self.skipWaiting();
+  const url = new URL(event.request.url);
+
+  // Network-first for HTML pages
+  if (url.pathname.endsWith(".html") || url.pathname === "/") {
+    event.respondWith(
+      fetch(event.request)
+        .then((response) => {
+          const clone = response.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
+          return response;
+        })
+        .catch(() => caches.match(event.request))
+    );
+    return;
+  }
+
+  // Cache-first for static assets (images, CSS, JS)
+  event.respondWith(
+    caches.match(event.request).then((cached) => {
+      return cached || fetch(event.request).then((response) => {
+        const clone = response.clone();
+        caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
+        return response;
+      });
+    })
+  );
 });
