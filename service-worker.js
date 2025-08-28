@@ -1,4 +1,4 @@
-const CACHE_NAME = "genzura-cache-v2"; // bump version on deploy
+const CACHE_NAME = "genzura-cache-v3"; // bump version for each deploy
 const urlsToCache = [
   "/",
   "/index.html",
@@ -13,7 +13,7 @@ const urlsToCache = [
   "/icons/icon-512.png"
 ];
 
-// Install & cache resources
+// Install: cache files immediately
 self.addEventListener("install", (event) => {
   self.skipWaiting(); // activate new SW immediately
   event.waitUntil(
@@ -21,7 +21,7 @@ self.addEventListener("install", (event) => {
   );
 });
 
-// Activate: remove old caches
+// Activate: delete old caches and take control
 self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches.keys().then((cacheNames) =>
@@ -32,21 +32,25 @@ self.addEventListener("activate", (event) => {
       )
     )
   );
-  clients.claim(); // take control of all clients immediately
+  clients.claim();
 });
 
 // Fetch: network-first, fallback to cache
 self.addEventListener("fetch", (event) => {
+  if (event.request.method !== "GET") return; // ignore non-GET requests
   event.respondWith(
     fetch(event.request)
       .then((response) => {
-        // optionally update cache
-        if (event.request.method === "GET") {
-          const responseClone = response.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, responseClone));
-        }
+        // update cache with fresh response
+        const responseClone = response.clone();
+        caches.open(CACHE_NAME).then((cache) => cache.put(event.request, responseClone));
         return response;
       })
-      .catch(() => caches.match(event.request))
+      .catch(() => caches.match(event.request)) // fallback if offline
   );
+});
+
+// Notify clients when new SW takes over
+self.addEventListener("message", (event) => {
+  if (event.data === "skipWaiting") self.skipWaiting();
 });
