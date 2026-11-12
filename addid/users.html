@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GENZURA · Admin Panel</title>
+    <link rel="icon" type="image/png" href="https://i.ibb.co/mFqfcpPj/cropped-circle-image.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="dashboard/dashboard.css">
+    <style>
+        .admin-header {
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .admin-header h1 {
+            font-size: 24px;
+            color: var(--primary);
+        }
+
+        .user-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            background: #fff;
+            border: 1px solid var(--border);
+        }
+
+        .user-table th,
+        .user-table td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .user-table th {
+            background: #fafafa;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 11px;
+            color: var(--muted);
+        }
+
+        .user-table tr:hover {
+            background: #fafafa;
+        }
+
+        .action-group {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+        }
+
+        .badge-premium {
+            background: var(--success-soft);
+            color: var(--success);
+            padding: 2px 8px;
+            border-radius: var(--radius-sm);
+            font-weight: 700;
+            font-size: 11px;
+        }
+
+        .badge-expired {
+            background: var(--danger-soft);
+            color: var(--danger);
+            padding: 2px 8px;
+            border-radius: var(--radius-sm);
+            font-weight: 700;
+            font-size: 11px;
+        }
+
+        .badge-admin {
+            background: var(--primary-soft);
+            color: var(--primary);
+            padding: 2px 8px;
+            border-radius: var(--radius-sm);
+            font-weight: 700;
+            font-size: 11px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="app" style="max-width: 1000px;">
+        <header class="app-header">
+            <div class="brand">
+                <a href="dashboard.html" class="icon-btn"><i class="fas fa-arrow-left"></i></a>
+                <div class="brand-logo"><i class="fas fa-shield-halved"></i></div>
+                <div class="brand-text">
+                    <h1>Admin Panel</h1>
+                    <p>Manage user access</p>
+                </div>
+            </div>
+        </header>
+
+        <div class="admin-header">
+            <div class="search" style="max-width: 400px; width: 100%;">
+                <i class="fas fa-search"></i>
+                <input type="search" id="adminSearch" placeholder="Search by name, phone or email...">
+            </div>
+        </div>
+
+        <div id="adminLoading" style="text-align:center; padding: 40px;">
+            <div class="spinner" style="margin: 0 auto 12px;"></div>
+            <p>Verifying admin access...</p>
+        </div>
+
+        <div id="adminContent" style="display:none;">
+            <table class="user-table">
+                <thead>
+                    <tr>
+                        <th>User Details</th>
+                        <th>Status</th>
+                        <th>Actions (Grant Days)</th>
+                    </tr>
+                </thead>
+                <tbody id="userList">
+                    <!-- Users populate here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyD-8JzL7GPhGhjzQCrAZOJWmyb-hPuaA0U",
+            authDomain: "mypersonalai-22391.firebaseapp.com",
+            databaseURL: "https://mypersonalai-22391-default-rtdb.firebaseio.com",
+            projectId: "mypersonalai-22391",
+            storageBucket: "mypersonalai-22391.firebasestorage.app",
+            messagingSenderId: "527318613254",
+            appId: "1:527318613254:web:be2ede267103601f187287"
+        };
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+    </script>
+
+    <script>
+        (function () {
+            var auth = firebase.auth();
+            var db = firebase.firestore();
+            var els = {
+                loading: document.getElementById('adminLoading'),
+                content: document.getElementById('adminContent'),
+                search: document.getElementById('adminSearch'),
+                list: document.getElementById('userList'),
+                toast: document.getElementById('toast')
+            };
+
+            var usersData = [];
+
+            function showToast(msg, type) {
+                els.toast.textContent = msg;
+                els.toast.className = 'toast show ' + (type || '');
+                setTimeout(function () { els.toast.className = 'toast'; }, 3000);
+            }
+
+            auth.onAuthStateChanged(function (user) {
+                if (!user) { window.location.replace('index.html'); return; }
+
+                db.collection('users').doc(user.uid).get().then(function (doc) {
+                    if (doc.exists && doc.data().role === 'admin') {
+                        loadUsers();
+                    } else {
+                        alert('Access Denied: You are not an administrator.');
+                        window.location.replace('dashboard.html');
+                    }
+                });
+            });
+
+            function loadUsers() {
+                db.collection('users').get().then(function (snapshot) {
+                    usersData = snapshot.docs.map(function (d) { return { id: d.id, ...d.data() }; });
+                    els.loading.style.display = 'none';
+                    els.content.style.display = 'block';
+                    renderUsers();
+                });
+            }
+
+            function renderUsers() {
+                var q = els.search.value.toLowerCase();
+                var filtered = usersData.filter(function (u) {
+                    var str = (u.fullName || '') + ' ' + (u.phone || '') + ' ' + (u.email || '');
+                    return str.toLowerCase().includes(q);
+                });
+
+                els.list.innerHTML = filtered.map(function (u) {
+                    var isAdmin = u.role === 'admin';
+                    var isPremium = Locker.isPremium(u) || isAdmin;
+
+                    var statusHtml = '';
+                    if (isAdmin) {
+                        statusHtml = '<span class="badge-admin">ADMIN</span>';
+                    } else if (isPremium) {
+                        var d = new Date(u.premiumUntil.seconds * 1000);
+                        statusHtml = '<span class="badge-premium">PREMIUM until ' + d.toLocaleDateString() + '</span>';
+                    } else {
+                        statusHtml = '<span class="badge-expired">EXPIRED</span>';
+                    }
+
+                    return `
+            <tr>
+              <td>
+                <div style="font-weight:600; font-size:15px;">${u.fullName || 'Unknown'}</div>
+                <div style="color:var(--muted); font-size:13px;">${u.phone || u.email || u.id}</div>
+              </td>
+              <td>${statusHtml}</td>
+              <td>
+                <div class="action-group">
+                  <button class="btn btn-ghost" onclick="grantDays('${u.id}', 3)">+3d</button>
+                  <button class="btn btn-ghost" onclick="grantDays('${u.id}', 7)">+7d</button>
+                  <button class="btn btn-ghost" onclick="grantDays('${u.id}', 12)">+12d</button>
+                  <button class="btn btn-ghost" onclick="grantDays('${u.id}', 30)">+30d</button>
+                </div>
+              </td>
+            </tr>
+          `;
+                }).join('');
+            }
+
+            window.grantDays = function (uid, days) {
+                var user = usersData.find(function (u) { return u.id === uid; });
+                if (!user) return;
+
+                var now = new Date();
+                var currentExpiry = (user.premiumUntil && user.premiumUntil.seconds)
+                    ? new Date(user.premiumUntil.seconds * 1000)
+                    : now;
+
+                var baseDate = currentExpiry > now ? currentExpiry : now;
+                baseDate.setDate(baseDate.getDate() + days);
+
+                db.collection('users').doc(uid).update({
+                    premiumUntil: firebase.firestore.Timestamp.fromDate(baseDate)
+                }).then(function () {
+                    showToast('Granted ' + days + ' days to ' + (user.fullName || 'User'), 'success');
+                    loadUsers(); // reload data
+                }).catch(function (err) {
+                    showToast('Error: ' + err.message, 'error');
+                });
+            };
+
+            els.search.addEventListener('input', renderUsers);
+        })();
+    </script>
+</body>
+
+</html>

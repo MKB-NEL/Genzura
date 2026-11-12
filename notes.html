@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GENZURA · Notes</title>
+    <link rel="icon" type="image/png" href="https://i.ibb.co/mFqfcpPj/cropped-circle-image.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="dashboard/dashboard.css">
+    <link rel="stylesheet" href="notes/notes.css">
+</head>
+
+<body class="is-loading">
+
+    <div id="boot" class="boot">
+        <div class="spinner"></div>
+    </div>
+
+    <div class="app">
+        <header class="app-header">
+            <div class="brand">
+                <a href="dashboard.html" class="icon-btn" title="Back to dashboard" aria-label="Back">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                <div class="brand-logo"><i class="fas fa-note-sticky"></i></div>
+                <div class="brand-text">
+                    <h1>Notes & Reminders</h1>
+                    <p>Capture ideas · set deadlines · get notified</p>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button class="icon-btn" id="enableNotifBtn" title="Enable notifications">
+                    <i class="fas fa-bell"></i>
+                </button>
+            </div>
+        </header>
+
+        <div class="tabs" id="notesFilter">
+            <button class="tab is-active" data-filter="all"><i class="fas fa-list"></i><span>All</span></button>
+            <button class="tab" data-filter="active"><i class="fas fa-circle-dot"></i><span>Active</span></button>
+            <button class="tab" data-filter="done"><i class="fas fa-circle-check"></i><span>Done</span></button>
+            <button class="tab" data-filter="reminders"><i class="fas fa-clock"></i><span>Reminders</span></button>
+        </div>
+
+        <div class="panel-toolbar">
+            <div class="search">
+                <i class="fas fa-search"></i>
+                <input type="search" id="notesSearch" placeholder="Search notes…">
+            </div>
+            <button class="btn btn-primary" id="addNoteBtn">
+                <i class="fas fa-plus"></i><span>New note</span>
+            </button>
+        </div>
+
+        <div id="notesList" class="notes-list">
+            <div class="empty-state">
+                <i class="fas fa-note-sticky"></i>
+                <p>Loading notes...</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="noteModal">
+        <div class="modal-card">
+            <div class="modal-head">
+                <h3 id="noteModalTitle">New note</h3>
+                <button class="icon-btn" data-close aria-label="Close"><i class="fas fa-xmark"></i></button>
+            </div>
+            <form id="noteForm" class="modal-body">
+                <input type="hidden" id="noteId">
+                <label class="field">
+                    <span>Title *</span>
+                    <input type="text" id="noteTitle" required maxlength="100"
+                        placeholder="e.g. Call supplier about delivery">
+                </label>
+                <label class="field">
+                    <span>Note</span>
+                    <textarea id="noteBody" rows="5" maxlength="2000" placeholder="Details…"></textarea>
+                </label>
+                <div class="field-row">
+                    <label class="field">
+                        <span>Reminder</span>
+                        <input type="datetime-local" id="noteReminder">
+                    </label>
+                    <label class="field">
+                        <span>Priority</span>
+                        <select id="notePriority">
+                            <option value="2">Low</option>
+                            <option value="3" selected>Normal</option>
+                            <option value="4">High</option>
+                            <option value="5">Urgent</option>
+                        </select>
+                    </label>
+                </div>
+                <p class="hint" id="notifHint">Tip: enable notifications to get alerts when a reminder is due.</p>
+                <div class="modal-foot">
+                    <button type="button" class="btn btn-ghost" data-close>Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save note</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyD-8JzL7GPhGhjzQCrAZOJWmyb-hPuaA0U",
+            authDomain: "mypersonalai-22391.firebaseapp.com",
+            databaseURL: "https://mypersonalai-22391-default-rtdb.firebaseio.com",
+            projectId: "mypersonalai-22391",
+            storageBucket: "mypersonalai-22391.firebasestorage.app",
+            messagingSenderId: "527318613254",
+            appId: "1:527318613254:web:be2ede267103601f187287"
+        };
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+    </script>
+
+    <script src="ntfy.js"></script>
+    <script src="locker.js"></script>
+    <script>
+        // Locker check for Notes page
+        (function () {
+            if (!window.Locker) {
+                document.body.classList.remove('is-loading');
+                document.getElementById('boot').remove();
+                return;
+            }
+            Locker.guard().then(function (res) {
+                if (!res.unlocked) return;
+                if (res.user && window.Ntfy) window.Ntfy.setUid(res.user.uid);
+            });
+        })();
+    </script>
+
+    <!-- Load script as module -->
+    <script type="module" src="notes/notes.js"></script>
+</body>
+
+</html>

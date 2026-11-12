@@ -1,13 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GENZURA - Login</title>
-  <link rel="manifest" href="/manifest.json">
-<meta name="theme-color" content="#000000">
-<link rel="apple-touch-icon" href="/icons/icon-192.png">
-
   <link rel="icon" type="image/png" href="https://i.ibb.co/mFqfcpPj/cropped-circle-image.png">
   <style>
     * {
@@ -15,53 +12,55 @@
       margin: 0;
       padding: 0;
     }
-    
+
+    html,
+    body {
+      height: 100%;
+    }
+
     body {
       font-family: Arial, sans-serif;
       background: #fff;
-      margin: 0;
-      padding: 0;
       display: flex;
       flex-direction: column;
-      justify-content: center;
-      align-items: center;
       min-height: 100vh;
       position: relative;
     }
-    
+
     .container {
       width: 100%;
       max-width: 400px;
       padding: 20px;
+      margin: 0 auto;
       flex: 1;
       display: flex;
       flex-direction: column;
       justify-content: center;
     }
-    
+
     .login-container {
       width: 100%;
       text-align: center;
     }
-    
+
     .logo {
       font-size: 28px;
       font-weight: bold;
       color: #0055cc;
       margin-bottom: 20px;
     }
-    
+
     h2 {
       font-size: 20px;
       margin-bottom: 10px;
     }
-    
+
     p {
       color: #555;
       font-size: 14px;
       margin-bottom: 20px;
     }
-    
+
     input {
       width: 100%;
       padding: 12px;
@@ -70,7 +69,7 @@
       border-radius: 6px;
       font-size: 16px;
     }
-    
+
     .forgot {
       display: block;
       text-align: right;
@@ -79,7 +78,7 @@
       color: #0055cc;
       text-decoration: none;
     }
-    
+
     button {
       width: 100%;
       padding: 14px;
@@ -91,26 +90,30 @@
       cursor: pointer;
       margin-top: 5px;
     }
-    
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
     .terms {
       font-size: 12px;
       color: #555;
       margin-top: 15px;
       line-height: 1.4;
     }
-    
+
     .create {
       margin-top: 15px;
       font-size: 14px;
     }
-    
+
     .create a {
       color: #0055cc;
       text-decoration: none;
       cursor: pointer;
     }
-    
-    /* Footer styles */
+
     footer {
       width: 100%;
       text-align: center;
@@ -120,110 +123,147 @@
       color: #666;
       border-top: 1px solid #eee;
     }
-    
+
     footer a {
       color: #0055cc;
       text-decoration: none;
     }
-    
-    /* Modal styles */
+
+    /* ===== Modal base ===== */
     .modal {
       display: none;
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      inset: 0;
       background-color: rgba(0, 0, 0, 0.5);
-      justify-content: center;
-      align-items: center;
       z-index: 1000;
+      padding: 0;
+      align-items: stretch;
+      justify-content: stretch;
     }
-    
-    .modal-content {
-      background-color: white;
-      padding: 25px;
-      border-radius: 8px;
-      width: 90%;
-      max-width: 400px;
-      max-height: 90%;
+
+    .modal[data-open="1"] {
+      display: flex;
+    }
+
+    /* ===== Signup — full-screen white splash ===== */
+    #signupModal {
+      background-color: #ffffff;
+    }
+
+    #signupModal .modal-content {
+      width: 100%;
+      max-width: none;
+      min-height: 100vh;
+      min-height: 100dvh;
+      max-height: none;
+      height: auto;
+      border-radius: 0;
+      padding: 20px 20px 40px;
       overflow-y: auto;
+      background-color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      box-sizing: border-box;
+      margin: 0;
     }
-    
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 20px;
+      position: sticky;
+      top: -20px;
+      background: #fff;
+      padding: 8px 0 12px;
+      margin-top: -20px;
+      z-index: 2;
+      border-bottom: 1px solid #eee;
+    }
+
+    .modal-header h2 {
+      margin: 0;
+      font-size: 22px;
+    }
+
     .close {
-      float: right;
-      font-size: 24px;
+      font-size: 28px;
+      line-height: 1;
       font-weight: bold;
       cursor: pointer;
+      color: #333;
+      background: none;
+      border: none;
+      padding: 0 8px;
+      user-select: none;
     }
-    
+
+    /* ===== Form groups ===== */
     .form-group {
       margin-bottom: 15px;
       text-align: left;
     }
-    
-    .form-group label {
+
+    .form-group>label {
       display: block;
       margin-bottom: 5px;
       font-size: 14px;
       color: #333;
     }
-    
-    .form-group select {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      font-size: 16px;
-    }
-    
+
+    .form-group select,
     .form-group textarea {
       width: 100%;
       padding: 12px;
       border: 1px solid #ccc;
       border-radius: 6px;
       font-size: 16px;
+      font-family: inherit;
+    }
+
+    .form-group textarea {
       resize: vertical;
       min-height: 80px;
     }
-    
+
     .checkbox-group {
       display: grid;
       grid-template-columns: 1fr;
       gap: 8px;
       margin: 10px 0;
     }
-    
+
     .checkbox-item {
       display: flex;
       align-items: center;
     }
-    
-    .checkbox-item input {
+
+    .checkbox-item input[type="checkbox"] {
       width: auto;
       margin-right: 8px;
     }
-    
+
     .error {
       color: red;
       font-size: 12px;
       margin-top: 5px;
       display: none;
     }
-    
+
     .info-text {
       color: #666;
       font-size: 12px;
       margin-top: 4px;
       font-style: italic;
     }
-    
+
     .loading {
       display: none;
       text-align: center;
       margin: 10px 0;
     }
-    
+
     .loading-spinner {
       border: 3px solid #f3f3f3;
       border-top: 3px solid #0055cc;
@@ -231,15 +271,15 @@
       width: 20px;
       height: 20px;
       animation: spin 1s linear infinite;
-      margin: 0 auto;
+      margin: 0 auto 8px;
     }
-    
+
     @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+      to {
+        transform: rotate(360deg);
+      }
     }
-    
-    /* Popup notification */
+
     .popup {
       position: fixed;
       bottom: 20px;
@@ -249,60 +289,64 @@
       color: white;
       padding: 12px 20px;
       border-radius: 6px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      z-index: 1001;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      z-index: 2000;
       display: none;
       max-width: 90%;
       text-align: center;
+      font-size: 14px;
     }
-    
+
     .popup.success {
       background-color: #4CAF50;
     }
-    
+
     .popup.error {
       background-color: #f44336;
     }
-    
+
     .popup.info {
       background-color: #2196F3;
     }
-    
-    /* Mobile responsiveness */
+
     @media (max-width: 480px) {
       .container {
         padding: 15px;
       }
-      
-      input, select, textarea {
+
+      input,
+      select,
+      textarea {
         font-size: 16px;
       }
-      
-      .modal-content {
-        padding: 20px;
+
+      #signupModal .modal-content {
+        padding: 16px 16px 32px;
       }
     }
   </style>
 </head>
+
 <body>
+
   <div class="container">
     <div class="login-container">
       <div class="logo">GENZURA</div>
       <h2>Sign in</h2>
       <p>Please enter your details to continue to GENZURA</p>
-      
+
       <form id="loginForm">
         <input type="text" id="loginPhone" placeholder="Enter your phone number" required>
         <input type="password" id="loginPassword" placeholder="Enter your password" required>
         <a href="#" class="forgot">Forgot password?</a>
         <button type="submit">Sign In</button>
       </form>
-      
+
       <div class="terms">
-        By logging-in, you accept the new <a href="terms.html">Terms of use</a> including 
+        By logging-in, you accept the new <a href="terms.html">Terms of use</a> including
         <a href="terms.html">Privacy Policy</a> of GenzuraAccount.
       </div>
-      
+
       <div class="create">
         Don't have an account? <a id="showSignup">Create Account</a>
       </div>
@@ -310,22 +354,25 @@
   </div>
 
   <footer>
-    Genzura © 2025 <a href="https://github.com/mkb-nel" target="_blank">M.K.Bertrand</a> - <a href="terms.html">Terms</a>
+    Genzura © 2025 <a href="https://github.com/mkb-nel" target="_blank">M.K.Bertrand</a> - <a
+      href="terms.html">Terms</a>
   </footer>
 
-  <!-- Signup Modal -->
+  <!-- ===== Signup Modal (full-screen white splash) ===== -->
   <div id="signupModal" class="modal">
     <div class="modal-content">
-      <span class="close">&times;</span>
-      <h2>Create Account</h2>
-      
-      <form id="signupForm">
+      <div class="modal-header">
+        <h2>Create Account</h2>
+        <span class="close" aria-label="Close">&times;</span>
+      </div>
+
+      <form id="signupForm" novalidate>
         <div class="form-group">
           <label for="fullName">Your Name</label>
           <input type="text" id="fullName" required>
           <div class="error" id="nameError">Please enter your name</div>
         </div>
-        
+
         <div class="form-group">
           <label for="gender">Gender</label>
           <select id="gender" required>
@@ -336,96 +383,64 @@
           </select>
           <div class="error" id="genderError">Please select your gender</div>
         </div>
-        
-        <!-- Phone Number Field -->
+
         <div class="form-group">
           <label for="phone">Phone Number</label>
           <input type="text" id="phone" placeholder="e.g., 0781234567" required>
-          <div class="info-text">It will be used in Login, Make sure that is correct.</div>
+          <div class="info-text">It will be used in Login. Make sure it is correct.</div>
           <div class="error" id="phoneError">Please enter a valid phone number</div>
         </div>
-        
-        <!-- Password Field -->
+
         <div class="form-group">
           <label for="password">Password</label>
           <input type="password" id="password" placeholder="Create a secure password" required>
-          <div class="info-text">Use at least 8 characters with a mix of letters and numbers.</div>
+          <div class="info-text">Use at least 8 characters.</div>
           <div class="error" id="passwordError">Password must be at least 8 characters</div>
         </div>
-        
+
         <div class="form-group">
           <label for="businessName">Business Name</label>
           <input type="text" id="businessName" required>
           <div class="error" id="businessError">Please enter your business name</div>
         </div>
-        
+
         <div class="form-group">
           <label>Business Category (Select one or more)</label>
           <div class="checkbox-group">
-            <div class="checkbox-item">
-              <input type="checkbox" id="category1" name="category" value="Foodstuff & groceries">
-              <label for="category1">Foodstuff & groceries</label>
-            </div>
-            <div class="checkbox-item">
-              <input type="checkbox" id="category2" name="category" value="Clothing & fashion">
-              <label for="category2">Clothing & fashion</label>
-            </div>
-            <div class="checkbox-item">
-              <input type="checkbox" id="category3" name="category" value="Electronics & mobile phones">
-              <label for="category3">Electronics & mobile phones</label>
-            </div>
-            <div class="checkbox-item">
-              <input type="checkbox" id="category4" name="category" value="Household goods">
-              <label for="category4">Household goods</label>
-            </div>
-            <div class="checkbox-item">
-              <input type="checkbox" id="category5" name="category" value="Building & Construction materials">
-              <label for="category5">Building & Construction</label>
-            </div>
-            <div class="checkbox-item">
-              <input type="checkbox" id="category6" name="category" value="Cosmetics & beauty products">
-              <label for="category6">Cosmetics & beauty</label>
-            </div>
-            <div class="checkbox-item">
-              <input type="checkbox" id="category7" name="category" value="Agricultural produce">
-              <label for="category7">Agricultural produce</label>
-            </div>
-            <div class="checkbox-item">
-              <input type="checkbox" id="category8" name="category" value="Livestock & meat products">
-              <label for="category8">Livestock & meat</label>
-            </div>
-            <div class="checkbox-item">
-              <input type="checkbox" id="category9" name="category" value="Motorcycles & spare parts">
-              <label for="category9">Motorcycles & parts</label>
-            </div>
-            <div class="checkbox-item">
-              <input type="checkbox" id="category10" name="category" value="Cars & vehicle spare parts">
-              <label for="category10">Cars & vehicle parts</label>
-            </div>
-            <div class="checkbox-item">
-              <input type="checkbox" id="category11" name="category" value="Stationery & books">
-              <label for="category11">Stationery & books</label>
-            </div>
-            <div class="checkbox-item">
-              <input type="checkbox" id="category12" name="category" value="Drinks & bottled water">
-              <label for="category12">Drinks & bottled water</label>
-            </div>
-            <div class="checkbox-item">
-              <input type="checkbox" id="category13" name="category" value="Jewelry & watches">
-              <label for="category13">Jewelry & watches</label>
-            </div>
-            <div class="checkbox-item">
-              <input type="checkbox" id="category14" name="category" value="Pharmaceuticals & health products">
-              <label for="category14">Pharmaceuticals</label>
-            </div>
-            <div class="checkbox-item">
-              <input type="checkbox" id="category15" name="category" value="Baby products & toys">
-              <label for="category15">Baby products & toys</label>
-            </div>
+            <div class="checkbox-item"><input type="checkbox" id="category1" name="category"
+                value="Foodstuff & groceries"><label for="category1">Foodstuff & groceries</label></div>
+            <div class="checkbox-item"><input type="checkbox" id="category2" name="category"
+                value="Clothing & fashion"><label for="category2">Clothing & fashion</label></div>
+            <div class="checkbox-item"><input type="checkbox" id="category3" name="category"
+                value="Electronics & mobile phones"><label for="category3">Electronics & mobile phones</label></div>
+            <div class="checkbox-item"><input type="checkbox" id="category4" name="category"
+                value="Household goods"><label for="category4">Household goods</label></div>
+            <div class="checkbox-item"><input type="checkbox" id="category5" name="category"
+                value="Building & Construction materials"><label for="category5">Building & Construction</label></div>
+            <div class="checkbox-item"><input type="checkbox" id="category6" name="category"
+                value="Cosmetics & beauty products"><label for="category6">Cosmetics & beauty</label></div>
+            <div class="checkbox-item"><input type="checkbox" id="category7" name="category"
+                value="Agricultural produce"><label for="category7">Agricultural produce</label></div>
+            <div class="checkbox-item"><input type="checkbox" id="category8" name="category"
+                value="Livestock & meat products"><label for="category8">Livestock & meat</label></div>
+            <div class="checkbox-item"><input type="checkbox" id="category9" name="category"
+                value="Motorcycles & spare parts"><label for="category9">Motorcycles & parts</label></div>
+            <div class="checkbox-item"><input type="checkbox" id="category10" name="category"
+                value="Cars & vehicle spare parts"><label for="category10">Cars & vehicle parts</label></div>
+            <div class="checkbox-item"><input type="checkbox" id="category11" name="category"
+                value="Stationery & books"><label for="category11">Stationery & books</label></div>
+            <div class="checkbox-item"><input type="checkbox" id="category12" name="category"
+                value="Drinks & bottled water"><label for="category12">Drinks & bottled water</label></div>
+            <div class="checkbox-item"><input type="checkbox" id="category13" name="category"
+                value="Jewelry & watches"><label for="category13">Jewelry & watches</label></div>
+            <div class="checkbox-item"><input type="checkbox" id="category14" name="category"
+                value="Pharmaceuticals & health products"><label for="category14">Pharmaceuticals</label></div>
+            <div class="checkbox-item"><input type="checkbox" id="category15" name="category"
+                value="Baby products & toys"><label for="category15">Baby products & toys</label></div>
           </div>
           <div class="error" id="categoryError">Please select at least one category</div>
         </div>
-        
+
         <div class="form-group">
           <label for="clients">Estimated clients per month</label>
           <select id="clients" required>
@@ -440,7 +455,7 @@
           </select>
           <div class="error" id="clientsError">Please select an estimate</div>
         </div>
-        
+
         <div class="form-group">
           <label for="country">Country</label>
           <select id="country" required>
@@ -452,38 +467,41 @@
           </select>
           <div class="error" id="countryError">Please select your country</div>
         </div>
-        
+
         <div class="form-group">
           <label for="district">District</label>
           <input type="text" id="district" required>
           <div class="error" id="districtError">Please enter your district</div>
         </div>
-        
+
         <div class="form-group">
           <label for="description">Business Description</label>
           <textarea id="description" placeholder="Describe your business"></textarea>
         </div>
-        
-        <div class="loading">
+
+        <div class="loading" id="signupLoading">
           <div class="loading-spinner"></div>
           <p>Creating account...</p>
         </div>
-        
-        <button type="submit">Create Account</button>
+
+        <button type="submit" id="signupSubmitBtn">Create Account</button>
       </form>
     </div>
   </div>
 
-  <!-- Popup Notification -->
   <div id="popup" class="popup"></div>
 
-  <!-- Firebase SDK -->
+  <!-- Firebase v8 -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-  
+
   <script>
-    // Your web app's Firebase configuration
+    /* ============================================================
+       GENZURA · login + signup
+       Single init. No service worker. No outside-click close.
+       ============================================================ */
+
     const firebaseConfig = {
       apiKey: "AIzaSyD-8JzL7GPhGhjzQCrAZOJWmyb-hPuaA0U",
       authDomain: "mypersonalai-22391.firebaseapp.com",
@@ -494,126 +512,216 @@
       appId: "1:527318613254:web:be2ede267103601f187287"
     };
 
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
     const auth = firebase.auth();
     const db = firebase.firestore();
 
-    // DOM elements
+    // ---- DOM ----
     const loginForm = document.getElementById('loginForm');
     const signupForm = document.getElementById('signupForm');
     const showSignupBtn = document.getElementById('showSignup');
     const modal = document.getElementById('signupModal');
     const closeBtn = document.querySelector('.close');
-    const loadingEl = document.querySelector('.loading');
-    const popup = document.getElementById('popup');
+    const loadingEl = document.getElementById('signupLoading');
+    const signupSubmitBtn = document.getElementById('signupSubmitBtn');
 
-    // Check if user is already logged in
+    /* ---------- helpers ---------- */
+    let popupTimer = null;
+    function showPopup(message, type = 'info') {
+      const popup = document.getElementById('popup');
+      if (!popup) return;
+      popup.textContent = message;
+      popup.className = 'popup ' + type;
+      popup.style.display = 'block';
+      clearTimeout(popupTimer);
+      popupTimer = setTimeout(() => { popup.style.display = 'none'; }, 4000);
+    }
+
+    function showLoading() { if (loadingEl) loadingEl.style.display = 'block'; }
+    function hideLoading() { if (loadingEl) loadingEl.style.display = 'none'; }
+
+    function setModalOpen(open) {
+      if (!modal) return;
+      if (open) {
+        modal.setAttribute('data-open', '1');
+      } else {
+        modal.removeAttribute('data-open');
+      }
+    }
+
+    /**
+     * Reject after `ms` if the promise hasn't settled.
+     * The original promise keeps running; the caller can detect
+     * "actually succeeded despite timeout" by checking auth.currentUser.
+     */
+    function withTimeout(promise, ms, message) {
+      let timer;
+      const timeout = new Promise((_, reject) => {
+        timer = setTimeout(() => {
+          const err = new Error(message);
+          err.name = 'TimeoutError';
+          reject(err);
+        }, ms);
+      });
+      return Promise.race([promise, timeout]).finally(() => clearTimeout(timer));
+    }
+
+    function describeAuthError(error) {
+      const code = error && error.code;
+      const map = {
+        'auth/email-already-in-use': 'This phone number is already registered. Try signing in instead.',
+        'auth/invalid-email': 'The phone number format is invalid.',
+        'auth/weak-password': 'Password is too weak. Use at least 8 characters.',
+        'auth/operation-not-allowed': 'Email/password sign-up is disabled in Firebase. Enable it in Authentication → Sign-in method.',
+        'auth/network-request-failed': 'Network error. Check your internet connection and try again.',
+        'auth/too-many-requests': 'Too many attempts. Wait a few minutes and try again.',
+        'auth/unauthorized-domain': 'This domain is not authorized in Firebase. Add it in Authentication → Settings → Authorized domains.',
+        'auth/api-key-not-valid': 'The Firebase API key is invalid or expired.',
+        'auth/invalid-api-key': 'The Firebase API key is invalid or expired.',
+      };
+      if (code && map[code]) return map[code];
+      if (error && error.name === 'TimeoutError') {
+        return 'Sign-up timed out. Check your connection and try again. If the issue persists, your account may have been created — try signing in.';
+      }
+      if (error && error.message) return 'Sign-up failed: ' + error.message;
+      return 'Sign-up failed. Please try again.';
+    }
+
+    /* ---------- auto-redirect if already signed in ---------- */
     window.addEventListener('DOMContentLoaded', () => {
       const userData = localStorage.getItem('genzuraUser');
       if (userData) {
         showPopup('Welcome back! Redirecting to home...', 'success');
-        setTimeout(() => {
-          window.location.href = 'home.html';
-        }, 2000);
+        setTimeout(() => { window.location.href = 'home.html'; }, 1500);
       }
     });
 
-    // Show modal when Create Account is clicked
+    /* ---------- open / close modal ---------- */
     showSignupBtn.addEventListener('click', () => {
-      modal.style.display = 'flex';
+      setModalOpen(true);
     });
 
-    // Close modal when X is clicked
     closeBtn.addEventListener('click', () => {
-      modal.style.display = 'none';
+      if (signupForm.dataset.submitting === 'true') return; // don't close mid-flight
+      setModalOpen(false);
       resetSignupForm();
     });
 
-    // Close modal when clicking outside
-    window.addEventListener('click', (event) => {
-      if (event.target === modal) {
-        modal.style.display = 'none';
-        resetSignupForm();
-      }
-    });
+    // NOTE: outside-click close removed on purpose — signup is a full-screen splash.
 
-    // Handle login form submission
+    /* ---------- login ---------- */
     loginForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      const phone = document.getElementById('loginPhone').value;
+
+      const phone = document.getElementById('loginPhone').value.trim();
       const password = document.getElementById('loginPassword').value;
-      
+
       if (!phone || !password) {
         showPopup('Please enter both phone number and password', 'error');
         return;
       }
-      
-      // Convert phone to email format for authentication
-      const email = `${phone}@gmail.com`;
-      
-      auth.signInWithEmailAndPassword(email, password)
+
+      const email = phone + '@gmail.com';
+
+      // Persistence must be set before any auth call.
+      auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+        .then(() => auth.signInWithEmailAndPassword(email, password))
         .then((userCredential) => {
-          // Signed in 
           const user = userCredential.user;
-          
-          // Store user data in localStorage
           localStorage.setItem('genzuraUser', JSON.stringify({
             uid: user.uid,
             phone: phone,
             email: email
           }));
-          
           showPopup('Login successful! Redirecting...', 'success');
-          
-          // Redirect to home page
-          setTimeout(() => {
-            window.location.href = 'home.html';
-          }, 2000);
+          setTimeout(() => { window.location.href = 'home.html'; }, 1200);
         })
         .catch((error) => {
-          showPopup('Login error: ' + error.message, 'error');
+          console.error('[GENZURA LOGIN FAILED]', { code: error.code, message: error.message });
+          const code = error && error.code;
+          let msg = 'Login error: ' + (error.message || 'unknown');
+          if (code === 'auth/wrong-password' || code === 'auth/user-not-found' || code === 'auth/invalid-credential') {
+            msg = 'Phone number or password is incorrect.';
+          } else if (code === 'auth/too-many-requests') {
+            msg = 'Too many attempts. Try again in a few minutes.';
+          } else if (code === 'auth/network-request-failed') {
+            msg = 'Network error. Check your connection.';
+          }
+          showPopup(msg, 'error');
         });
     });
 
-    // Handle signup form submission
-    signupForm.addEventListener('submit', (e) => {
+    /* ---------- signup ---------- */
+    signupForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      
-      // Validate form
+
+      // Guard against double-submit (old code allowed it; two calls
+      // race and can leave the UI in a confused loading state).
+      if (signupForm.dataset.submitting === 'true') return;
       if (!validateSignupForm()) return;
-      
-      // Show loading state
-      loadingEl.style.display = 'block';
-      
-      // Get form values
-      const fullName = document.getElementById('fullName').value;
+
+      signupForm.dataset.submitting = 'true';
+      signupSubmitBtn.disabled = true;
+      signupSubmitBtn.textContent = 'Creating...';
+      showLoading();
+
+      // Collect form values
+      const fullName = document.getElementById('fullName').value.trim();
       const gender = document.getElementById('gender').value;
-      const phone = document.getElementById('phone').value;
+      const phone = document.getElementById('phone').value.trim();
       const password = document.getElementById('password').value;
-      const businessName = document.getElementById('businessName').value;
+      const businessName = document.getElementById('businessName').value.trim();
       const clients = document.getElementById('clients').value;
       const country = document.getElementById('country').value;
-      const district = document.getElementById('district').value;
+      const district = document.getElementById('district').value.trim();
       const description = document.getElementById('description').value;
-      
-      // Get selected categories
+
       const selectedCategories = [];
-      document.querySelectorAll('input[name="category"]:checked').forEach((checkbox) => {
-        selectedCategories.push(checkbox.value);
+      document.querySelectorAll('input[name="category"]:checked').forEach((cb) => {
+        selectedCategories.push(cb.value);
       });
-      
-      // Convert phone to email format for authentication
-      const email = `${phone}@gmail.com`;
-      
-      // Create user with email and password
-      auth.createUserWithEmailAndPassword(email, password)
-        .then((userCredential) => {
-          // Signed up successfully
-          const user = userCredential.user;
-          
-          // Save additional user data to Firestore
-          return db.collection('users').doc(user.uid).set({
+
+      const email = phone + '@gmail.com';
+
+      try {
+        // 1) Persistence — prevents the auth-persistence iframe from
+        //    silently hanging on some browsers/privacy settings.
+        console.log('[GENZURA SIGNUP] step 1: setPersistence');
+        await withTimeout(
+          auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL),
+          10000,
+          'Auth persistence setup timed out.'
+        );
+
+        // 2) Create auth user
+        console.log('[GENZURA SIGNUP] step 2: createUserWithEmailAndPassword');
+        let userCredential;
+        try {
+          userCredential = await withTimeout(
+            auth.createUserWithEmailAndPassword(email, password),
+            30000,
+            'Sign-up timed out.'
+          );
+        } catch (err) {
+          // Recovery: the call may have actually succeeded and only the
+          // promise wrapper timed out. Check the live auth state.
+          if (err && err.name === 'TimeoutError' && auth.currentUser) {
+            console.warn('[GENZURA SIGNUP] timeout, but auth.currentUser is set — proceeding.');
+            userCredential = { user: auth.currentUser };
+          } else {
+            throw err;
+          }
+        }
+
+        const uid = userCredential.user.uid;
+        console.log('[GENZURA SIGNUP] step 2 ok, uid:', uid);
+
+        // 3) Write profile
+        console.log('[GENZURA SIGNUP] step 3: write users/' + uid);
+        await withTimeout(
+          db.collection('users').doc(uid).set({
             fullName,
             gender,
             phone,
@@ -624,160 +732,120 @@
             district,
             businessDescription: description,
             createdAt: firebase.firestore.FieldValue.serverTimestamp()
-          });
-        })
-        .then(() => {
-          // Store user data in localStorage
-          localStorage.setItem('genzuraUser', JSON.stringify({
-            uid: auth.currentUser.uid,
-            phone: phone,
-            email: email
-          }));
-          
-          // Hide loading
-          loadingEl.style.display = 'none';
-          
-          showPopup('Account created successfully! Redirecting...', 'success');
-          
-          // Reset form and close modal
-          setTimeout(() => {
-            modal.style.display = 'none';
-            resetSignupForm();
-            
-            // Redirect to home page
-            window.location.href = 'home.html';
-          }, 2000);
-        })
-        .catch((error) => {
-          // Handle errors
-          loadingEl.style.display = 'none';
-          showPopup('Error creating account: ' + error.message, 'error');
+          }),
+          30000,
+          'Profile write timed out.'
+        );
+        console.log('[GENZURA SIGNUP] step 3 ok');
+
+        // 4) Persist locally + redirect
+        localStorage.setItem('genzuraUser', JSON.stringify({
+          uid: uid,
+          phone: phone,
+          email: email
+        }));
+
+        hideLoading();
+        showPopup('Account created successfully! Redirecting...', 'success');
+        setTimeout(() => {
+          window.location.href = 'home.html';
+        }, 1200);
+
+      } catch (error) {
+        console.error('[GENZURA SIGNUP FAILED]', {
+          code: error && error.code,
+          name: error && error.name,
+          message: error && error.message,
         });
+
+        hideLoading();
+        signupSubmitBtn.disabled = false;
+        signupSubmitBtn.textContent = 'Create Account';
+        signupForm.dataset.submitting = 'false';
+
+        showPopup(describeAuthError(error), 'error');
+      }
     });
 
-    // Form validation function
+    /* ---------- validation ---------- */
     function validateSignupForm() {
       let isValid = true;
-      
-      // Reset errors
-      document.querySelectorAll('.error').forEach(el => {
+
+      document.querySelectorAll('#signupForm .error').forEach((el) => {
         el.style.display = 'none';
       });
-      
-      // Validate name
-      const fullName = document.getElementById('fullName').value;
-      if (!fullName) {
-        document.getElementById('nameError').style.display = 'block';
-        isValid = false;
-      }
-      
-      // Validate gender
+
+      const setErr = (id, show) => {
+        const el = document.getElementById(id);
+        if (el) el.style.display = show ? 'block' : 'none';
+      };
+
+      const fullName = document.getElementById('fullName').value.trim();
+      if (!fullName) { setErr('nameError', true); isValid = false; }
+
       const gender = document.getElementById('gender').value;
-      if (!gender) {
-        document.getElementById('genderError').style.display = 'block';
-        isValid = false;
-      }
-      
-      // Validate phone
-      const phone = document.getElementById('phone').value;
+      if (!gender) { setErr('genderError', true); isValid = false; }
+
+      const phone = document.getElementById('phone').value.trim();
       if (!phone) {
-        document.getElementById('phoneError').style.display = 'block';
-        document.getElementById('phoneError').textContent = 'Please enter your phone number';
+        const el = document.getElementById('phoneError');
+        el.textContent = 'Please enter your phone number';
+        setErr('phoneError', true);
         isValid = false;
       } else if (!isValidPhone(phone)) {
-        document.getElementById('phoneError').style.display = 'block';
-        document.getElementById('phoneError').textContent = 'Please enter a valid phone number';
+        const el = document.getElementById('phoneError');
+        el.textContent = 'Please enter a valid phone number (e.g. 0781234567)';
+        setErr('phoneError', true);
         isValid = false;
       }
-      
-      // Validate password
+
       const password = document.getElementById('password').value;
       if (!password) {
-        document.getElementById('passwordError').style.display = 'block';
-        document.getElementById('passwordError').textContent = 'Please enter a password';
+        const el = document.getElementById('passwordError');
+        el.textContent = 'Please enter a password';
+        setErr('passwordError', true);
         isValid = false;
       } else if (password.length < 8) {
-        document.getElementById('passwordError').style.display = 'block';
-        document.getElementById('passwordError').textContent = 'Password must be at least 8 characters';
+        const el = document.getElementById('passwordError');
+        el.textContent = 'Password must be at least 8 characters';
+        setErr('passwordError', true);
         isValid = false;
       }
-      
-      // Validate business name
-      const businessName = document.getElementById('businessName').value;
-      if (!businessName) {
-        document.getElementById('businessError').style.display = 'block';
-        isValid = false;
-      }
-      
-      // Validate categories
+
+      const businessName = document.getElementById('businessName').value.trim();
+      if (!businessName) { setErr('businessError', true); isValid = false; }
+
       const selectedCategories = document.querySelectorAll('input[name="category"]:checked');
-      if (selectedCategories.length === 0) {
-        document.getElementById('categoryError').style.display = 'block';
-        isValid = false;
-      }
-      
-      // Validate clients
+      if (selectedCategories.length === 0) { setErr('categoryError', true); isValid = false; }
+
       const clients = document.getElementById('clients').value;
-      if (!clients) {
-        document.getElementById('clientsError').style.display = 'block';
-        isValid = false;
-      }
-      
-      // Validate country
+      if (!clients) { setErr('clientsError', true); isValid = false; }
+
       const country = document.getElementById('country').value;
-      if (!country) {
-        document.getElementById('countryError').style.display = 'block';
-        isValid = false;
-      }
-      
-      // Validate district
-      const district = document.getElementById('district').value;
-      if (!district) {
-        document.getElementById('districtError').style.display = 'block';
-        isValid = false;
-      }
-      
+      if (!country) { setErr('countryError', true); isValid = false; }
+
+      const district = document.getElementById('district').value.trim();
+      if (!district) { setErr('districtError', true); isValid = false; }
+
       return isValid;
     }
 
-    // Validate phone number format
     function isValidPhone(phone) {
-      // Simple validation for East African phone numbers
       const phoneRegex = /^(\+?25)?(0|7)[2-8][0-9]{8}$/;
       return phoneRegex.test(phone.replace(/\s/g, ''));
     }
 
-    // Reset signup form
     function resetSignupForm() {
-      document.getElementById('signupForm').reset();
-      document.querySelectorAll('.error').forEach(el => {
+      signupForm.reset();
+      document.querySelectorAll('#signupForm .error').forEach((el) => {
         el.style.display = 'none';
       });
-      loadingEl.style.display = 'none';
-    }
-
-    // Show popup notification
-    function showPopup(message, type = 'info') {
-      const popup = document.getElementById('popup');
-      popup.textContent = message;
-      popup.className = 'popup ' + type;
-      popup.style.display = 'block';
-      
-      // Hide after 3 seconds
-      setTimeout(() => {
-        popup.style.display = 'none';
-      }, 3000);
-    }
-  </script>
-  <script>
-    if ("serviceWorker" in navigator) {
-      window.addEventListener("load", () => {
-        navigator.serviceWorker
-          .register("/service-worker.js")
-          .then((reg) => console.log("✅ Service Worker registered:", reg.scope))
-          .catch((err) => console.log("❌ Service Worker failed:", err));
-      });
+      hideLoading();
+      signupForm.dataset.submitting = 'false';
+      signupSubmitBtn.disabled = false;
+      signupSubmitBtn.textContent = 'Create Account';
     }
   </script>
 </body>
+
 </html>

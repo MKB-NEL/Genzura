@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GENZURA · Dashboard</title>
+    <link rel="icon" type="image/png" href="https://i.ibb.co/mFqfcpPj/cropped-circle-image.png">
+    <!-- CSS loaded synchronously in head to prevent FOUC -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="dashboard/dashboard.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" defer></script>
+</head>
+
+<body class="is-loading">
+
+    <div id="boot" class="boot">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- MAIN CONTENT WRAPPER (This shrinks when calc opens) -->
+    <div class="main-content" id="mainContent">
+        <div class="app">
+
+            <!-- ================= HEADER ================= -->
+            <header class="app-header">
+                <div class="brand">
+                    <a href="home.html" class="icon-btn" title="Back to home" aria-label="Back">
+                        <i class="fas fa-arrow-left"></i>
+                    </a>
+                    <div class="brand-logo" title="Genzura">
+                        <i class="fas fa-store"></i>
+                    </div>
+                    <div class="brand-text">
+                        <h1 id="brandName">Loading…</h1>
+                        <p id="brandSub">Dashboard</p>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-ghost" id="calcToggleBtn" title="Toggle Calculator">
+                        <i class="fas fa-calculator"></i> <span>CALCULATOR</span>
+                    </button>
+                    <button class="icon-btn" id="refreshBtn" title="Refresh" aria-label="Refresh">
+                        <i class="fas fa-rotate"></i>
+                    </button>
+                    <button class="icon-btn" id="homeTabBtn" title="Go to Home tab" aria-label="Home">
+                        <i class="fas fa-house"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- ================= TABS ================= -->
+            <nav class="tabs" role="tablist">
+                <button class="tab is-active" data-panel="home" role="tab">
+                    <i class="fas fa-house"></i><span>Home</span>
+                </button>
+                <button class="tab" data-panel="overview" role="tab">
+                    <i class="fas fa-chart-pie"></i><span>Overview</span>
+                </button>
+                <button class="tab" data-panel="stock" role="tab">
+                    <i class="fas fa-boxes-stacked"></i><span>Stock</span>
+                </button>
+                <button class="tab" data-panel="transactions" role="tab">
+                    <i class="fas fa-receipt"></i><span>Transactions</span>
+                </button>
+            </nav>
+
+            <main class="panels">
+                <!-- ================= HOME ================= -->
+                <section class="panel is-active" data-panel="home">
+                    <div class="home-wrap">
+                        <div class="home-header">
+                            <div class="user-info">
+                                <div class="user-details">
+                                    <h1 class="user-name" id="userName">Loading...</h1>
+                                    <p class="business-name" id="businessName">Loading business...</p>
+                                    <p class="items-count">Items in stock: <span id="itemsCount">0</span></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="video-container">
+                            <video id="introVideo" autoplay muted playsinline loop>
+                                <source src="video.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                        </div>
+                        <div class="ad-container">
+                            <div class="advertisement" id="adContent">
+                                <i class="fas fa-headset"
+                                    style="font-size:22px;color:var(--primary);margin-bottom:8px;"></i>
+                                <p class="ad-text">Contact Support</p>
+                                <p style="font-size:13px;color:var(--muted);">Tap to see who to reach</p>
+                            </div>
+                        </div>
+                        <div class="grid-menu">
+                            <div class="grid-item stock" data-goto="stock">Stock</div>
+                            <div class="grid-item overview" data-goto="overview">Overview</div>
+                            <div class="grid-item notes" onclick="window.location.href='notes.html'">Notes</div>
+                            <div class="grid-item transactions" data-goto="transactions">Transactions</div>
+                        </div>
+                        <div class="home-footer">
+                            <a href="notifications.html" class="notifications-btn">Notifications</a>
+                            <button type="button" class="signout-btn" id="signOut">Sign out</button>
+                            <p class="copyright">
+                                Genzura v1 © 2026 <a href="https://pireactive.vercel.app/" target="_blank"
+                                    rel="noopener">PIReactive</a> -
+                                <a href="terms.html">Terms</a>
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ================= OVERVIEW ================= -->
+                <section class="panel" data-panel="overview">
+                    <div class="panel-toolbar">
+                        <div class="range-switch" id="rangeSwitch">
+                            <button class="range-btn" data-range="7">7d</button>
+                            <button class="range-btn is-active" data-range="30">30d</button>
+                            <button class="range-btn" data-range="90">90d</button>
+                            <button class="range-btn" data-range="365">1y</button>
+                        </div>
+                        <button class="btn btn-ghost" id="exportOverviewBtn">
+                            <i class="fas fa-download"></i><span>Export</span>
+                        </button>
+                    </div>
+                    <div class="kpi-grid">
+                        <div class="kpi"><span class="kpi-label">Revenue</span><span class="kpi-value"
+                                id="kpiRevenue">RWF 0</span><span class="kpi-delta" id="kpiRevenueDelta">—</span></div>
+                        <div class="kpi"><span class="kpi-label">Profit</span><span class="kpi-value" id="kpiProfit">RWF
+                                0</span><span class="kpi-delta" id="kpiProfitDelta">—</span></div>
+                        <div class="kpi"><span class="kpi-label">Units sold</span><span class="kpi-value"
+                                id="kpiUnits">0</span><span class="kpi-delta" id="kpiUnitsDelta">—</span></div>
+                        <div class="kpi"><span class="kpi-label">Active loans</span><span class="kpi-value"
+                                id="kpiLoans">0</span><span class="kpi-delta" id="kpiLoansDelta">—</span></div>
+                    </div>
+                    <div class="card">
+                        <div class="card-head">
+                            <h3>Revenue vs Cost</h3><span class="muted" id="chartRangeLabel"></span>
+                        </div>
+                        <div class="chart-wrap"><canvas id="revenueChart"></canvas></div>
+                    </div>
+                    <div class="card">
+                        <div class="card-head">
+                            <h3>Top products</h3>
+                        </div>
+                        <div class="table-wrap">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>Units</th>
+                                        <th>Revenue</th>
+                                        <th>Profit</th>
+                                        <th>Margin</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="topProductsBody">
+                                    <tr>
+                                        <td colspan="5" class="empty">No sales in this period</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-head">
+                            <h3><i class="fas fa-lightbulb"></i> Insights</h3>
+                        </div>
+                        <div id="insights" class="insight-list"></div>
+                    </div>
+                </section>
+
+                <!-- ================= STOCK ================= -->
+                <section class="panel" data-panel="stock">
+                    <div class="panel-toolbar">
+                        <div class="search"><i class="fas fa-search"></i><input type="search" id="stockSearch"
+                                placeholder="Search products…"></div>
+                        <button class="btn btn-primary" id="addProductBtn"><i class="fas fa-plus"></i><span>Add
+                                product</span></button>
+                    </div>
+                    <div class="stat-row">
+                        <div class="stat"><span class="stat-label">Products</span><span class="stat-value"
+                                id="statProducts">0</span></div>
+                        <div class="stat"><span class="stat-label">Units</span><span class="stat-value"
+                                id="statUnits">0</span></div>
+                        <div class="stat"><span class="stat-label">Stock value</span><span class="stat-value"
+                                id="statValue">RWF 0</span></div>
+                    </div>
+                    <div class="product-list" id="stockList">
+                        <div class="empty-state"><i class="fas fa-box-open"></i>
+                            <p>No products yet. Add your first product to start tracking stock.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ================= TRANSACTIONS ================= -->
+                <section class="panel" data-panel="transactions">
+                    <div class="sub-tabs" id="txSubTabs">
+                        <button class="sub-tab is-active" data-sub="sold">Sales</button>
+                        <button class="sub-tab" data-sub="loans">Loans</button>
+                        <button class="sub-tab" data-sub="suppliers">Suppliers</button>
+                    </div>
+                    <div class="sub-panel is-active" data-sub="sold">
+                        <div class="panel-toolbar">
+                            <div class="search"><i class="fas fa-search"></i><input type="search" id="soldSearch"
+                                    placeholder="Search sales…"></div>
+                            <button class="btn btn-primary" id="recordSaleBtn"><i
+                                    class="fas fa-cash-register"></i><span>Record sale</span></button>
+                        </div>
+                        <div class="row-list" id="soldList">
+                            <div class="empty-state"><i class="fas fa-receipt"></i>
+                                <p>No sales recorded yet.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sub-panel" data-sub="loans">
+                        <div class="panel-toolbar">
+                            <div class="range-switch" id="loanFilter">
+                                <button class="range-btn is-active" data-filter="all">All</button>
+                                <button class="range-btn" data-filter="pending">Pending</button>
+                                <button class="range-btn" data-filter="paid">Paid</button>
+                            </div>
+                            <button class="btn btn-primary" id="addLoanBtn"><i class="fas fa-plus"></i><span>Add
+                                    loan</span></button>
+                        </div>
+                        <div class="row-list" id="loanList">
+                            <div class="empty-state"><i class="fas fa-hand-holding-dollar"></i>
+                                <p>No loans yet.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sub-panel" data-sub="suppliers">
+                        <div class="panel-toolbar">
+                            <div class="search"><i class="fas fa-search"></i><input type="search" id="supplierSearch"
+                                    placeholder="Search suppliers…"></div>
+                            <button class="btn btn-primary" id="addSupplierBtn"><i class="fas fa-plus"></i><span>Add
+                                    supplier</span></button>
+                        </div>
+                        <div class="row-list" id="supplierList">
+                            <div class="empty-state"><i class="fas fa-truck"></i>
+                                <p>No suppliers yet.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <!-- ================= CALCULATOR (Fixed Panel) ================= -->
+    <aside class="calc-sidebar open" id="calcSidebar">
+        <div class="calc-header">
+            <h4>Calculator</h4>
+            <button class="icon-btn" id="calcClose" aria-label="Close calculator">
+                <i class="fas fa-xmark"></i>
+            </button>
+        </div>
+        <div class="calc-display-wrap">
+            <div class="calc-history" id="calcHistory"></div>
+            <div class="calc-display" id="calcDisplay">0</div>
+        </div>
+        <div class="calc-keys" id="calcKeys">
+            <button class="calc-key clear" data-k="C">C</button>
+            <button class="calc-key op" data-k="/">÷</button>
+            <button class="calc-key op" data-k="*">×</button>
+
+            <button class="calc-key" data-k="7">7</button>
+            <button class="calc-key" data-k="8">8</button>
+            <button class="calc-key" data-k="9">9</button>
+
+            <button class="calc-key" data-k="4">4</button>
+            <button class="calc-key" data-k="5">5</button>
+            <button class="calc-key" data-k="6">6</button>
+
+            <button class="calc-key" data-k="1">1</button>
+            <button class="calc-key" data-k="2">2</button>
+            <button class="calc-key" data-k="3">3</button>
+
+            <button class="calc-key wide" data-k="0">0</button>
+            <button class="calc-key" data-k=".">.</button>
+            <button class="calc-key tall eq" data-k="=">=</button>
+
+            <button class="calc-key op" data-k="-">−</button>
+            <button class="calc-key op" data-k="+">+</button>
+            <button class="calc-key op" data-k="%">%</button>
+        </div>
+    </aside>
+
+    <!-- ================= ALL MODALS ================= -->
+    <!-- Product Form -->
+    <div class="modal" id="productModal">
+        <div class="modal-card">
+            <div class="modal-head">
+                <h3 id="productModalTitle">Add product</h3><button class="icon-btn" data-close><i
+                        class="fas fa-xmark"></i></button>
+            </div>
+            <form id="productForm" class="modal-body">
+                <input type="hidden" id="productId">
+                <label class="field"><span>Product name *</span><input type="text" id="productName" required
+                        maxlength="80"></label>
+                <div class="field-row">
+                    <label class="field"><span>Total cost (RWF) *</span><input type="number" id="productCost" min="0"
+                            step="1" required></label>
+                    <label class="field"><span>Quantity (units) *</span><input type="number" id="productQuantity"
+                            min="0" step="1" required></label>
+                </div>
+                <p class="hint" id="productUnitHint"></p>
+                <div class="field-row">
+                    <label class="field"><span>Weight (KG, optional)</span><input type="number" id="productWeight"
+                            min="0" step="0.01"></label>
+                    <label class="field"><span>Sell-by date (optional)</span><input type="date"
+                            id="productSellBy"></label>
+                </div>
+                <div class="modal-foot"><button type="button" class="btn btn-ghost" data-close>Cancel</button><button
+                        type="submit" class="btn btn-primary">Save product</button></div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Product View -->
+    <div class="modal" id="productViewModal">
+        <div class="modal-card">
+            <div class="modal-head">
+                <h3 id="productViewTitle">Product</h3><button class="icon-btn" data-close><i
+                        class="fas fa-xmark"></i></button>
+            </div>
+            <div class="modal-body" id="productViewBody"></div>
+            <div class="modal-foot">
+                <button type="button" class="btn btn-danger-ghost" id="productViewDelete"><i class="fas fa-trash"></i>
+                    Delete</button>
+                <button type="button" class="btn btn-primary" id="productViewEdit"><i class="fas fa-pen"></i>
+                    Edit</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Record Sale -->
+    <div class="modal" id="saleModal">
+        <div class="modal-card">
+            <div class="modal-head">
+                <h3>Record sale</h3><button class="icon-btn" data-close><i class="fas fa-xmark"></i></button>
+            </div>
+            <form id="saleForm" class="modal-body">
+                <label class="field"><span>Product *</span><select id="saleProduct" required></select></label>
+                <p class="hint" id="saleHint"></p>
+                <div class="field-row">
+                    <label class="field"><span>Quantity sold *</span><input type="number" id="saleQty" min="1" step="1"
+                            required></label>
+                    <label class="field"><span>Selling price / unit (RWF) *</span><input type="number" id="salePrice"
+                            min="1" step="1" required></label>
+                </div>
+                <label class="field"><span>Sale date</span><input type="date" id="saleDate"></label>
+                <div class="modal-foot"><button type="button" class="btn btn-ghost" data-close>Cancel</button><button
+                        type="submit" class="btn btn-primary" id="saleSubmit">Record sale</button></div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Loan Form -->
+    <div class="modal" id="loanModal">
+        <div class="modal-card">
+            <div class="modal-head">
+                <h3 id="loanModalTitle">Add loan</h3><button class="icon-btn" data-close><i
+                        class="fas fa-xmark"></i></button>
+            </div>
+            <form id="loanForm" class="modal-body">
+                <input type="hidden" id="loanId">
+                <label class="field"><span>Borrower name *</span><input type="text" id="loanName" required
+                        maxlength="80"></label>
+                <label class="field"><span>Product / service *</span><input type="text" id="loanProduct" required
+                        maxlength="80"></label>
+                <div class="field-row">
+                    <label class="field"><span>Amount (RWF) *</span><input type="number" id="loanAmount" min="1"
+                            step="1" required></label>
+                    <label class="field"><span>Loan date</span><input type="date" id="loanDate"></label>
+                </div>
+                <label class="field"><span>Due date *</span><input type="date" id="loanDue" required></label>
+                <div class="modal-foot"><button type="button" class="btn btn-ghost" data-close>Cancel</button><button
+                        type="submit" class="btn btn-primary">Save loan</button></div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Supplier Form -->
+    <div class="modal" id="supplierModal">
+        <div class="modal-card">
+            <div class="modal-head">
+                <h3 id="supplierModalTitle">Add supplier</h3><button class="icon-btn" data-close><i
+                        class="fas fa-xmark"></i></button>
+            </div>
+            <form id="supplierForm" class="modal-body">
+                <input type="hidden" id="supplierId">
+                <label class="field"><span>Supplier name *</span><input type="text" id="supplierName" required
+                        maxlength="80"></label>
+                <div class="field-row">
+                    <label class="field"><span>Phone *</span><input type="tel" id="supplierPhone" required
+                            maxlength="20"></label>
+                    <label class="field"><span>TIN (optional)</span><input type="text" id="supplierTin"
+                            maxlength="30"></label>
+                </div>
+                <label class="field"><span>Products / supplies *</span><textarea id="supplierProducts" rows="3" required
+                        maxlength="300"></textarea></label>
+                <div class="modal-foot"><button type="button" class="btn btn-ghost" data-close>Cancel</button><button
+                        type="submit" class="btn btn-primary">Save supplier</button></div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Support Modal -->
+    <div class="modal" id="supportModal">
+        <div class="modal-card modal-sm">
+            <div class="modal-head">
+                <h3><i class="fas fa-headset" style="color:var(--primary);margin-right:6px;"></i>Contact Support</h3>
+                <button class="icon-btn" data-close><i class="fas fa-xmark"></i></button>
+            </div>
+            <div class="modal-body" style="text-align:center;">
+                <p style="font-size:14px;color:var(--muted);margin-bottom:14px;">For help, questions or issues, please
+                    call:</p>
+                <a href="tel:+250795065789"
+                    style="font-size:22px;font-weight:700;color:var(--primary);text-decoration:none;display:inline-block;padding:10px 0;letter-spacing:.02em;">+250
+                    795 065 789</a>
+                <p style="font-size:12px;color:var(--muted);margin-top:14px;">Available during business hours</p>
+            </div>
+            <div class="modal-foot"><button type="button" class="btn btn-ghost" data-close>Close</button><a
+                    class="btn btn-primary" href="tel:+250795065789"><i class="fas fa-phone"></i> Call now</a></div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyD-8JzL7GPhGhjzQCrAZOJWmyb-hPuaA0U",
+            authDomain: "mypersonalai-22391.firebaseapp.com",
+            databaseURL: "https://mypersonalai-22391-default-rtdb.firebaseio.com",
+            projectId: "mypersonalai-22391",
+            storageBucket: "mypersonalai-22391.firebasestorage.app",
+            messagingSenderId: "527318613254",
+            appId: "1:527318613254:web:be2ede267103601f187287"
+        };
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+    </script>
+
+    <script src="ntfy.js"></script>
+    <script src="locker.js"></script>
+    <script>
+        (function () {
+            if (!window.Locker) return;
+            Locker.guard().then(function (res) {
+                if (!res.unlocked) return;
+                if (res.user && window.Ntfy) window.Ntfy.setUid(res.user.uid);
+            });
+        })();
+    </script>
+
+    <!-- CALCULATOR LOGIC -->
+    <script>
+        (function () {
+            var sidebar = document.getElementById('calcSidebar');
+            var toggleBtn = document.getElementById('calcToggleBtn');
+            var closeBtn = document.getElementById('calcClose');
+            var display = document.getElementById('calcDisplay');
+            var history = document.getElementById('calcHistory');
+            var keys = document.getElementById('calcKeys');
+            var mainContent = document.getElementById('mainContent');
+
+            var cur = '0';
+            var prev = null;
+            var op = null;
+            var fresh = false;
+
+            function isDesktop() { return window.matchMedia('(min-width: 1025px)').matches; }
+
+            function render() {
+                var txt = cur;
+                if (txt.length > 14) txt = parseFloat(txt).toExponential(6);
+                display.textContent = txt;
+            }
+
+            function inputDigit(d) {
+                if (fresh) { cur = '0'; fresh = false; }
+                if (cur === '0') cur = d; else cur += d;
+                render();
+            }
+
+            function inputDot() {
+                if (fresh) { cur = '0'; fresh = false; }
+                if (!cur.includes('.')) cur += '.';
+                render();
+            }
+
+            function clearAll() {
+                cur = '0'; prev = null; op = null; fresh = false;
+                history.textContent = '';
+                render();
+            }
+
+            function percent() {
+                cur = String(parseFloat(cur) / 100);
+                render();
+            }
+
+            function setOp(o) {
+                var v = parseFloat(cur);
+                if (prev !== null && op && !fresh) {
+                    cur = String(compute(prev, v, op));
+                    render();
+                }
+                prev = parseFloat(cur);
+                op = o;
+                fresh = true;
+                history.textContent = prev + ' ' + (o === '*' ? '×' : o === '/' ? '÷' : o);
+            }
+
+            function equals() {
+                if (prev === null || !op) return;
+                var v = parseFloat(cur);
+                var result = compute(prev, v, op);
+                history.textContent = prev + ' ' + (op === '*' ? '×' : op === '/' ? '÷' : op) + ' ' + v + ' =';
+                cur = String(result);
+                prev = null; op = null; fresh = true;
+                render();
+            }
+
+            function compute(a, b, o) {
+                switch (o) {
+                    case '+': return a + b;
+                    case '-': return a - b;
+                    case '*': return a * b;
+                    case '/': return b === 0 ? 0 : a / b;
+                }
+                return b;
+            }
+
+            keys.addEventListener('click', function (e) {
+                var btn = e.target.closest('[data-k]');
+                if (!btn) return;
+                var k = btn.dataset.k;
+                if (/^\d$/.test(k)) inputDigit(k);
+                else if (k === '.') inputDot();
+                else if (k === 'C') clearAll();
+                else if (k === '%') percent();
+                else if (k === '=') equals();
+                else if (['+', '-', '*', '/'].indexOf(k) !== -1) setOp(k);
+            });
+
+            function toggleCalc() {
+                if (!isDesktop()) return;
+                if (sidebar.classList.contains('open')) {
+                    sidebar.classList.remove('open');
+                    sidebar.classList.add('closed');
+                    mainContent.classList.remove('calc-open');
+                } else {
+                    sidebar.classList.add('open');
+                    sidebar.classList.remove('closed');
+                    mainContent.classList.add('calc-open');
+                }
+            }
+
+            toggleBtn.addEventListener('click', toggleCalc);
+            closeBtn.addEventListener('click', toggleCalc);
+
+            function syncVisibility() {
+                if (isDesktop()) {
+                    toggleBtn.style.display = 'inline-flex';
+                    if (!sidebar.classList.contains('closed')) {
+                        sidebar.classList.add('open');
+                        mainContent.classList.add('calc-open');
+                    }
+                } else {
+                    sidebar.classList.add('closed');
+                    sidebar.classList.remove('open');
+                    toggleBtn.style.display = 'none';
+                    mainContent.classList.remove('calc-open');
+                }
+            }
+            syncVisibility();
+            window.addEventListener('resize', syncVisibility);
+
+            // Fail-safe to remove loading state if JS hangs
+            setTimeout(function () {
+                var boot = document.getElementById('boot');
+                if (boot) boot.remove();
+                document.body.classList.remove('is-loading');
+            }, 3000);
+        })();
+    </script>
+
+    <!-- Main Boot Module -->
+    <script type="module">
+        import { initAuth, state, bus, toast } from './dashboard/shared.js';
+        import { initHome, refreshHome } from './dashboard/home.js';
+        import { initOverview, refreshOverview } from './dashboard/overview.js';
+        import { initStock, refreshStock } from './dashboard/stock.js';
+        import { initTransactions, refreshTransactions } from './dashboard/transactions.js';
+
+        const panels = {
+            home: { init: initHome, refresh: refreshHome, loaded: false },
+            overview: { init: initOverview, refresh: refreshOverview, loaded: false },
+            stock: { init: initStock, refresh: refreshStock, loaded: false },
+            transactions: { init: initTransactions, refresh: refreshTransactions, loaded: false },
+        };
+        const dirty = new Set();
+        let active = 'home';
+
+        const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+
+        function setActive(name) {
+            active = name;
+            $$('.tab').forEach(t => t.classList.toggle('is-active', t.dataset.panel === name));
+            $$('.panel').forEach(p => p.classList.toggle('is-active', p.dataset.panel === name));
+        }
+
+        async function activate(name) {
+            setActive(name);
+            const p = panels[name];
+            if (!p) return;
+            try {
+                if (!p.loaded) { await p.init(); p.loaded = true; dirty.delete(name); }
+                else if (dirty.has(name)) { await p.refresh(); dirty.delete(name); }
+            } catch (err) {
+                console.error(err);
+                toast('Failed to load ' + name, 'error');
+            }
+        }
+
+        document.addEventListener('click', (e) => {
+            const tab = e.target.closest('.tab');
+            if (tab && tab.dataset.panel !== active) { activate(tab.dataset.panel); return; }
+            const tile = e.target.closest('.grid-item[data-goto]');
+            if (tile) activate(tile.dataset.goto);
+        });
+
+        document.getElementById('homeTabBtn').addEventListener('click', () => activate('home'));
+
+        bus.addEventListener('data:changed', (e) => {
+            const source = e.detail?.source;
+            Object.keys(panels).forEach(name => { if (name !== source) dirty.add(name); });
+        });
+
+        document.getElementById('refreshBtn').addEventListener('click', async () => {
+            const p = panels[active];
+            if (!p.loaded) return;
+            try { await p.refresh(); toast('Refreshed', 'success'); } catch (err) { toast('Refresh failed', 'error'); }
+        });
+
+        (async () => {
+            await initAuth();
+            const profile = state.profile || {};
+            document.getElementById('brandName').textContent = profile.businessName || profile.fullName || 'My business';
+            document.getElementById('brandSub').textContent = profile.fullName ? profile.fullName : 'Dashboard';
+            if (window.Ntfy && state.uid) window.Ntfy.setUid(state.uid);
+
+            const bootEl = document.getElementById('boot');
+            if (bootEl) bootEl.remove();
+            document.body.classList.remove('is-loading');
+
+            await activate('home');
+        })();
+    </script>
+</body>
+
+</html>
