@@ -3,235 +3,66 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GENZURA · Admin Panel</title>
+  <title>GENZURA · Users Management</title>
   <link rel="icon" type="image/png" href="https://i.ibb.co/mFqfcpPj/cropped-circle-image.png">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <!-- Load Dashboard styles -->
-  <link rel="stylesheet" href="dashboard/dashboard.css">
   
-  <style>
-    /* Admin Panel Custom Styles */
-    .admin-container {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 20px;
-    }
-
-    .search-wrapper {
-      position: relative;
-      margin-bottom: 24px;
-    }
-    .search-wrapper i {
-      position: absolute;
-      left: 16px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: var(--muted);
-      font-size: 16px;
-    }
-    .search-wrapper input {
-      width: 100%;
-      padding: 16px 16px 16px 48px;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      font-size: 15px;
-      outline: none;
-      transition: border-color 0.2s;
-      background: #fff;
-    }
-    .search-wrapper input:focus {
-      border-color: var(--primary);
-    }
-
-    /* User List */
-    .user-list {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-
-    .user-card {
-      background: #fff;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-
-    @media (min-width: 768px) {
-      .user-card {
-        flex-direction: row;
-        align-items: center;
-        justify-content: space-between;
-      }
-    }
-
-    /* User Info */
-    .user-info {
-      flex: 1;
-      min-width: 0;
-    }
-    .user-name {
-      font-size: 18px;
-      font-weight: 700;
-      margin-bottom: 4px;
-      color: var(--text);
-    }
-    .user-contact {
-      font-size: 14px;
-      color: var(--muted);
-      margin-bottom: 12px;
-    }
-
-    /* Badges */
-    .badges {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-    .badge {
-      font-size: 11px;
-      font-weight: 700;
-      padding: 4px 10px;
-      border-radius: var(--radius-sm);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      border: 1px solid transparent;
-    }
-    .badge-admin { background: #eaf0f8; color: #1a5fb4; border-color: #c5d6ea; }
-    .badge-premium { background: #ebf5ed; color: #2d7a3e; border-color: #c2dcc9; }
-    .badge-expired { background: #fbeceb; color: #b3261e; border-color: #efc2bd; }
-    .badge-date { background: #f8f9fa; color: #666; border-color: #ddd; }
-
-    /* Actions Area */
-    .user-actions {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      border-top: 1px solid var(--border);
-      padding-top: 20px;
-    }
-
-    @media (min-width: 768px) {
-      .user-actions {
-        border-top: none;
-        border-left: 1px solid var(--border);
-        padding-top: 0;
-        padding-left: 24px;
-        flex-direction: row;
-        align-items: center;
-        min-width: 320px;
-      }
-    }
-
-    /* Input Group */
-    .input-group {
-      display: flex;
-      width: 100%;
-    }
-    .input-group input {
-      flex: 1;
-      min-width: 0;
-      padding: 12px;
-      border: 1px solid var(--border);
-      border-right: none;
-      border-radius: var(--radius-sm) 0 0 var(--radius-sm);
-      font-size: 14px;
-      font-weight: 600;
-      text-align: center;
-      outline: none;
-    }
-    .input-group input:focus {
-      border-color: var(--primary);
-    }
-    .input-group button {
-      padding: 12px 20px;
-      background: var(--primary);
-      color: #fff;
-      border: 1px solid var(--primary);
-      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-      font-weight: 700;
-      font-size: 13px;
-      cursor: pointer;
-      text-transform: uppercase;
-      transition: background 0.2s;
-    }
-    .input-group button:hover {
-      background: var(--primary-hover);
-    }
-
-    .btn-revoke {
-      padding: 12px 16px;
-      background: #fff;
-      color: var(--danger);
-      border: 1px solid var(--danger);
-      border-radius: var(--radius-sm);
-      font-weight: 700;
-      font-size: 13px;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-    .btn-revoke:hover {
-      background: #fbeceb;
-    }
-
-    /* Misc */
-    .empty-state {
-      text-align: center;
-      padding: 40px;
-      color: var(--muted);
-    }
-    .empty-state i {
-      font-size: 32px;
-      margin-bottom: 12px;
-      opacity: 0.5;
-    }
-  </style>
+  <!-- Load the dedicated users.css -->
+  <link rel="stylesheet" href="users.css">
 </head>
 <body>
 
-  <div class="admin-container">
+  <div class="container">
     
     <!-- Header -->
-    <header class="app-header" style="border-bottom: none; margin-bottom: 24px;">
-      <div class="brand">
-        <a href="dashboard.html" class="icon-btn" title="Back to dashboard">
+    <header class="header">
+      <div class="header-left">
+        <a href="dashboard.html" class="back-btn" title="Back to Dashboard">
           <i class="fas fa-arrow-left"></i>
         </a>
-        <div class="brand-logo" style="background: #eaf0f8; color: #1a5fb4; border-color: #1a5fb4;">
-          <i class="fas fa-shield-halved"></i>
-        </div>
-        <div class="brand-text">
-          <h1>Admin Panel</h1>
-          <p>Manage user access</p>
+        <div>
+          <h1>Users Management</h1>
+          <p>Grant or revoke premium access</p>
         </div>
       </div>
-      <div class="header-actions">
-        <button class="icon-btn" id="refreshBtn" title="Refresh List">
-          <i class="fas fa-rotate"></i>
-        </button>
-      </div>
+      <button class="back-btn" id="refreshBtn" title="Refresh Users">
+        <i class="fas fa-rotate"></i>
+      </button>
     </header>
 
+    <!-- Stats Row -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">Total Users</div>
+        <div class="stat-value" id="statTotal">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Premium Active</div>
+        <div class="stat-value" id="statPremium" style="color: var(--success);">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Expired</div>
+        <div class="stat-value" id="statExpired" style="color: var(--danger);">0</div>
+      </div>
+    </div>
+
     <!-- Search Bar -->
-    <div class="search-wrapper">
+    <div class="search-container">
       <i class="fas fa-search"></i>
-      <input type="search" id="adminSearch" placeholder="Search by name, phone or email...">
+      <input type="search" id="searchInput" placeholder="Search by name, phone, or email...">
     </div>
 
     <!-- Loading State -->
-    <div id="adminLoading" style="text-align:center; padding: 40px;">
-      <div class="spinner" style="margin: 0 auto 12px;"></div>
-      <p class="muted">Loading users...</p>
+    <div id="loadingState" style="text-align: center; padding: 40px;">
+      <div class="spinner"></div>
+      <p style="color: var(--muted); font-weight: 600;">Fetching users...</p>
     </div>
 
-    <!-- User List -->
-    <div id="adminContent" style="display:none;">
+    <!-- User List Container -->
+    <div id="userListContainer" style="display: none;">
       <div id="userList" class="user-list"></div>
       
-      <div id="emptySearch" class="empty-state" style="display:none;">
+      <div id="emptySearch" class="empty-state" style="display: none;">
         <i class="fas fa-search"></i>
         <p>No users found matching your search.</p>
       </div>
@@ -265,13 +96,16 @@
       var db = firebase.firestore();
       
       var els = {
-        loading: document.getElementById('adminLoading'),
-        content: document.getElementById('adminContent'),
-        search: document.getElementById('adminSearch'),
+        loading: document.getElementById('loadingState'),
+        container: document.getElementById('userListContainer'),
+        search: document.getElementById('searchInput'),
         list: document.getElementById('userList'),
         emptySearch: document.getElementById('emptySearch'),
         refreshBtn: document.getElementById('refreshBtn'),
-        toast: document.getElementById('toast')
+        toast: document.getElementById('toast'),
+        statTotal: document.getElementById('statTotal'),
+        statPremium: document.getElementById('statPremium'),
+        statExpired: document.getElementById('statExpired')
       };
 
       var usersData = [];
@@ -295,7 +129,7 @@
       // --- Fetch Users ---
       function loadUsers() {
         els.loading.style.display = 'block';
-        els.content.style.display = 'none';
+        els.container.style.display = 'none';
         
         db.collection('users').get().then(function(snapshot) {
           usersData = snapshot.docs.map(function(d) { 
@@ -303,12 +137,39 @@
           });
           
           els.loading.style.display = 'none';
-          els.content.style.display = 'block';
+          els.container.style.display = 'block';
+          calculateStats();
           renderUsers();
         }).catch(function(err) {
           showToast('Failed to load users: ' + err.message, 'error');
           els.loading.style.display = 'none';
         });
+      }
+
+      // --- Calculate Stats ---
+      function calculateStats() {
+        var total = usersData.length;
+        var premium = 0;
+        var expired = 0;
+
+        usersData.forEach(function(u) {
+          if (u.role === 'admin') {
+            premium++; // Admins count as premium
+            return;
+          }
+          var isPremium = false;
+          if (u.premiumUntil) {
+            var ms = u.premiumUntil.toMillis ? u.premiumUntil.toMillis() : u.premiumUntil.seconds * 1000;
+            if (ms > Date.now()) isPremium = true;
+          }
+          
+          if (isPremium) premium++;
+          else expired++;
+        });
+
+        els.statTotal.textContent = total;
+        els.statPremium.textContent = premium;
+        els.statExpired.textContent = expired;
       }
 
       // --- Format Date ---
@@ -348,31 +209,31 @@
             }
           }
 
-          // Build Badges
+          // Badges
           var badgeHtml = '';
           if (isAdmin) {
-            badgeHtml = '<span class="badge badge-admin">ADMIN</span>';
+            badgeHtml = '<span class="badge badge-admin"><i class="fas fa-shield-halved"></i> Admin</span>';
           } else if (isPremium) {
-            badgeHtml = '<span class="badge badge-premium">PREMIUM (' + daysLeft + 'd left)</span>';
+            badgeHtml = '<span class="badge badge-premium"><i class="fas fa-check-circle"></i> Premium (' + daysLeft + 'd left)</span>';
           } else {
-            badgeHtml = '<span class="badge badge-expired">EXPIRED</span>';
+            badgeHtml = '<span class="badge badge-expired"><i class="fas fa-times-circle"></i> Expired</span>';
           }
 
           if (expiryDate) {
-            badgeHtml += `<span class="badge badge-date">Ends: ${expiryDate}</span>`;
+            badgeHtml += '<span class="badge badge-date">Ends: ' + expiryDate + '</span>';
           }
 
-          // Build Actions
+          // Actions
           var actionsHtml = '';
           if (isAdmin) {
-            actionsHtml = '<span class="muted" style="font-size:13px; font-style:italic; width:100%; text-align:center;">Admin access cannot be modified</span>';
+            actionsHtml = '<span style="font-size:13px; font-style:italic; color:var(--muted); width:100%; text-align:center;">Admins cannot be modified</span>';
           } else {
             actionsHtml = `
               <div class="input-group">
-                <input type="number" id="input-${u.id}" placeholder="Days" min="1" required>
+                <input type="number" id="input-${u.id}" placeholder="Days" min="1">
                 <button onclick="applyDays('${u.id}')">APPLY</button>
               </div>
-              ${isPremium ? `<button class="btn-revoke" onclick="revoke('${u.id}')" title="Remove Premium"><i class="fas fa-trash"></i></button>` : ''}
+              ${isPremium ? `<button class="btn-revoke" onclick="revoke('${u.id}')" title="Remove Premium Access"><i class="fas fa-trash-alt"></i></button>` : ''}
             `;
           }
 
@@ -380,7 +241,10 @@
             <div class="user-card">
               <div class="user-info">
                 <div class="user-name">${u.fullName || 'Unknown User'}</div>
-                <div class="user-contact">${u.phone || u.email || u.id}</div>
+                <div class="user-contact">
+                  <i class="fas fa-phone"></i> ${u.phone || 'No phone'} 
+                  ${u.email ? '· <i class="fas fa-envelope"></i> ' + u.email : ''}
+                </div>
                 <div class="badges">
                   ${badgeHtml}
                 </div>
@@ -407,17 +271,17 @@
         var user = usersData.find(function(u) { return u.id === uid; });
         if (!user) return;
 
-        // Calculate new expiry
+        // Calculate new date
         var now = new Date();
         var currentExpiry = (user.premiumUntil && user.premiumUntil.seconds) 
           ? new Date(user.premiumUntil.seconds * 1000) 
           : now;
           
-        // If active, add to current. If expired, start from today.
+        // Start from today if expired, or add to existing date if active
         var baseDate = currentExpiry > now ? currentExpiry : now;
         baseDate.setDate(baseDate.getDate() + days);
 
-        // Disable button to prevent double-click
+        // UI Loading state
         var btn = input.nextElementSibling;
         var originalText = btn.textContent;
         btn.disabled = true;
@@ -427,7 +291,7 @@
           premiumUntil: firebase.firestore.Timestamp.fromDate(baseDate)
         }).then(function() {
           showToast(`Successfully added ${days} days to ${user.fullName || 'User'}.`, 'success');
-          loadUsers(); // Refresh list
+          loadUsers(); // Refresh the entire list & stats
         }).catch(function(err) {
           showToast('Error: ' + err.message, 'error');
           btn.disabled = false;
@@ -440,7 +304,7 @@
         var user = usersData.find(function(u) { return u.id === uid; });
         if (!user) return;
 
-        if (!confirm(`Are you sure you want to revoke premium access for ${user.fullName}?`)) {
+        if (!confirm(`Are you sure you want to remove premium access for ${user.fullName}?`)) {
           return;
         }
 
