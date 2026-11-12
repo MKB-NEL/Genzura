@@ -6,44 +6,196 @@
   <title>GENZURA · Admin Panel</title>
   <link rel="icon" type="image/png" href="https://i.ibb.co/mFqfcpPj/cropped-circle-image.png">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Load Dashboard styles -->
   <link rel="stylesheet" href="dashboard/dashboard.css">
   
   <style>
-    .user-list { display: flex; flex-direction: column; gap: 12px; margin-top: 20px; }
-    .user-card { background: #fff; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 20px; display: flex; flex-direction: column; gap: 16px; }
-    
-    @media (min-width: 768px) {
-      .user-card { flex-direction: row; align-items: center; justify-content: space-between; }
+    /* Admin Panel Custom Styles */
+    .admin-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 20px;
     }
 
-    .user-info { flex: 1; min-width: 0; }
-    .user-name { font-size: 16px; font-weight: 700; margin-bottom: 4px; color: var(--text); }
-    .user-contact { font-size: 13px; color: var(--muted); margin-bottom: 8px; }
-    
-    .badges { display: flex; gap: 8px; flex-wrap: wrap; }
-    .badge { font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: var(--radius-sm); text-transform: uppercase; letter-spacing: 0.05em; border: 1px solid transparent; }
+    .search-wrapper {
+      position: relative;
+      margin-bottom: 24px;
+    }
+    .search-wrapper i {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      font-size: 16px;
+    }
+    .search-wrapper input {
+      width: 100%;
+      padding: 16px 16px 16px 48px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 15px;
+      outline: none;
+      transition: border-color 0.2s;
+      background: #fff;
+    }
+    .search-wrapper input:focus {
+      border-color: var(--primary);
+    }
+
+    /* User List */
+    .user-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .user-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    @media (min-width: 768px) {
+      .user-card {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+      }
+    }
+
+    /* User Info */
+    .user-info {
+      flex: 1;
+      min-width: 0;
+    }
+    .user-name {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 4px;
+      color: var(--text);
+    }
+    .user-contact {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    /* Badges */
+    .badges {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .badge {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: var(--radius-sm);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border: 1px solid transparent;
+    }
     .badge-admin { background: #eaf0f8; color: #1a5fb4; border-color: #c5d6ea; }
     .badge-premium { background: #ebf5ed; color: #2d7a3e; border-color: #c2dcc9; }
     .badge-expired { background: #fbeceb; color: #b3261e; border-color: #efc2bd; }
+    .badge-date { background: #f8f9fa; color: #666; border-color: #ddd; }
 
-    .user-actions { display: flex; flex-direction: column; gap: 12px; border-top: 1px solid var(--border); padding-top: 16px; }
-    @media (min-width: 768px) {
-      .user-actions { border-top: none; border-left: 1px solid var(--border); padding-top: 0; padding-left: 20px; flex-direction: row; align-items: center; }
+    /* Actions Area */
+    .user-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      border-top: 1px solid var(--border);
+      padding-top: 20px;
     }
 
-    .quick-actions { display: flex; gap: 6px; flex-wrap: wrap; }
-    .custom-action { display: flex; gap: 6px; align-items: center; }
-    .custom-action input { width: 60px; padding: 8px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 14px; text-align: center; font-weight: 600; }
-    .btn-sm { padding: 8px 12px; font-size: 13px; }
-    .empty-search { text-align: center; padding: 40px; color: var(--muted); }
+    @media (min-width: 768px) {
+      .user-actions {
+        border-top: none;
+        border-left: 1px solid var(--border);
+        padding-top: 0;
+        padding-left: 24px;
+        flex-direction: row;
+        align-items: center;
+        min-width: 320px;
+      }
+    }
+
+    /* Input Group */
+    .input-group {
+      display: flex;
+      width: 100%;
+    }
+    .input-group input {
+      flex: 1;
+      min-width: 0;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-right: none;
+      border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+      font-size: 14px;
+      font-weight: 600;
+      text-align: center;
+      outline: none;
+    }
+    .input-group input:focus {
+      border-color: var(--primary);
+    }
+    .input-group button {
+      padding: 12px 20px;
+      background: var(--primary);
+      color: #fff;
+      border: 1px solid var(--primary);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      text-transform: uppercase;
+      transition: background 0.2s;
+    }
+    .input-group button:hover {
+      background: var(--primary-hover);
+    }
+
+    .btn-revoke {
+      padding: 12px 16px;
+      background: #fff;
+      color: var(--danger);
+      border: 1px solid var(--danger);
+      border-radius: var(--radius-sm);
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-revoke:hover {
+      background: #fbeceb;
+    }
+
+    /* Misc */
+    .empty-state {
+      text-align: center;
+      padding: 40px;
+      color: var(--muted);
+    }
+    .empty-state i {
+      font-size: 32px;
+      margin-bottom: 12px;
+      opacity: 0.5;
+    }
   </style>
 </head>
 <body>
 
-  <div class="app" style="max-width: 900px;">
+  <div class="admin-container">
     
     <!-- Header -->
-    <header class="app-header">
+    <header class="app-header" style="border-bottom: none; margin-bottom: 24px;">
       <div class="brand">
         <a href="dashboard.html" class="icon-btn" title="Back to dashboard">
           <i class="fas fa-arrow-left"></i>
@@ -63,8 +215,8 @@
       </div>
     </header>
 
-    <!-- Search -->
-    <div class="search" style="margin-bottom: 20px;">
+    <!-- Search Bar -->
+    <div class="search-wrapper">
       <i class="fas fa-search"></i>
       <input type="search" id="adminSearch" placeholder="Search by name, phone or email...">
     </div>
@@ -78,8 +230,9 @@
     <!-- User List -->
     <div id="adminContent" style="display:none;">
       <div id="userList" class="user-list"></div>
-      <div id="emptySearch" class="empty-search" style="display:none;">
-        <i class="fas fa-search" style="font-size: 24px; margin-bottom: 8px; opacity: 0.5;"></i>
+      
+      <div id="emptySearch" class="empty-state" style="display:none;">
+        <i class="fas fa-search"></i>
         <p>No users found matching your search.</p>
       </div>
     </div>
@@ -123,20 +276,19 @@
 
       var usersData = [];
 
+      // --- Toast Notifications ---
       function showToast(msg, type) {
         els.toast.textContent = msg;
         els.toast.className = 'toast show ' + (type || '');
         setTimeout(function() { els.toast.className = 'toast'; }, 3000);
       }
 
-      // --- AUTHENTICATION CHECK REMOVED HERE ---
+      // --- Auth Check (Bypassed) ---
       auth.onAuthStateChanged(function (user) {
         if (!user) { 
           window.location.replace('index.html'); 
           return; 
         }
-        
-        // Simply load users if logged in
         loadUsers();
       });
 
@@ -159,11 +311,13 @@
         });
       }
 
+      // --- Format Date ---
       function formatDate(ms) {
         var d = new Date(ms);
         return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
       }
 
+      // --- Render Users ---
       function renderUsers() {
         var q = els.search.value.toLowerCase();
         var filtered = usersData.filter(function(u) {
@@ -194,6 +348,7 @@
             }
           }
 
+          // Build Badges
           var badgeHtml = '';
           if (isAdmin) {
             badgeHtml = '<span class="badge badge-admin">ADMIN</span>';
@@ -203,21 +358,21 @@
             badgeHtml = '<span class="badge badge-expired">EXPIRED</span>';
           }
 
+          if (expiryDate) {
+            badgeHtml += `<span class="badge badge-date">Ends: ${expiryDate}</span>`;
+          }
+
+          // Build Actions
           var actionsHtml = '';
           if (isAdmin) {
-            actionsHtml = '<span class="muted" style="font-size:12px; font-style:italic;">Admin cannot be modified</span>';
+            actionsHtml = '<span class="muted" style="font-size:13px; font-style:italic; width:100%; text-align:center;">Admin access cannot be modified</span>';
           } else {
             actionsHtml = `
-              <div class="quick-actions">
-                <button class="btn btn-ghost btn-sm" onclick="grantDays('${u.id}', 7)">+7d</button>
-                <button class="btn btn-ghost btn-sm" onclick="grantDays('${u.id}', 14)">+14d</button>
-                <button class="btn btn-ghost btn-sm" onclick="grantDays('${u.id}', 30)">+30d</button>
+              <div class="input-group">
+                <input type="number" id="input-${u.id}" placeholder="Days" min="1" required>
+                <button onclick="applyDays('${u.id}')">APPLY</button>
               </div>
-              <div class="custom-action">
-                <input type="number" id="input-${u.id}" placeholder="Days" min="1">
-                <button class="btn btn-primary btn-sm" onclick="grantCustom('${u.id}')">Add</button>
-              </div>
-              ${isPremium ? `<button class="btn btn-danger-ghost btn-sm" onclick="revoke('${u.id}')">Revoke</button>` : ''}
+              ${isPremium ? `<button class="btn-revoke" onclick="revoke('${u.id}')" title="Remove Premium"><i class="fas fa-trash"></i></button>` : ''}
             `;
           }
 
@@ -228,7 +383,6 @@
                 <div class="user-contact">${u.phone || u.email || u.id}</div>
                 <div class="badges">
                   ${badgeHtml}
-                  ${expiryDate ? `<span class="badge" style="background:#f5f5f5; color:#666; border-color:#ddd;">Expires: ${expiryDate}</span>` : ''}
                 </div>
               </div>
               <div class="user-actions">
@@ -239,38 +393,49 @@
         }).join('');
       }
 
-      window.grantCustom = function(uid) {
+      // --- Apply Custom Days ---
+      window.applyDays = function(uid) {
         var input = document.getElementById('input-' + uid);
         var days = parseInt(input.value, 10);
+        
         if (!days || days < 1) {
           showToast('Please enter a valid number of days.', 'error');
+          input.focus();
           return;
         }
-        grantDays(uid, days);
-      };
 
-      window.grantDays = function(uid, days) {
         var user = usersData.find(function(u) { return u.id === uid; });
         if (!user) return;
 
+        // Calculate new expiry
         var now = new Date();
         var currentExpiry = (user.premiumUntil && user.premiumUntil.seconds) 
           ? new Date(user.premiumUntil.seconds * 1000) 
           : now;
           
+        // If active, add to current. If expired, start from today.
         var baseDate = currentExpiry > now ? currentExpiry : now;
         baseDate.setDate(baseDate.getDate() + days);
+
+        // Disable button to prevent double-click
+        var btn = input.nextElementSibling;
+        var originalText = btn.textContent;
+        btn.disabled = true;
+        btn.textContent = '...';
 
         db.collection('users').doc(uid).update({
           premiumUntil: firebase.firestore.Timestamp.fromDate(baseDate)
         }).then(function() {
-          showToast(`Granted ${days} days to ${user.fullName || 'User'}`, 'success');
-          loadUsers();
+          showToast(`Successfully added ${days} days to ${user.fullName || 'User'}.`, 'success');
+          loadUsers(); // Refresh list
         }).catch(function(err) {
           showToast('Error: ' + err.message, 'error');
+          btn.disabled = false;
+          btn.textContent = originalText;
         });
       };
 
+      // --- Revoke Premium ---
       window.revoke = function(uid) {
         var user = usersData.find(function(u) { return u.id === uid; });
         if (!user) return;
@@ -289,6 +454,7 @@
         });
       };
 
+      // --- Event Listeners ---
       els.search.addEventListener('input', renderUsers);
       els.refreshBtn.addEventListener('click', loadUsers);
 
