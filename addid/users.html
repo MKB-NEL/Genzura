@@ -1,256 +1,409 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GENZURA · Admin Panel</title>
-    <link rel="icon" type="image/png" href="https://i.ibb.co/mFqfcpPj/cropped-circle-image.png">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="dashboard/dashboard.css">
-    <style>
-        .admin-header {
-            margin-bottom: 24px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GENZURA · Admin Panel</title>
+  <link rel="icon" type="image/png" href="https://i.ibb.co/mFqfcpPj/cropped-circle-image.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Use the dashboard CSS for consistency -->
+  <link rel="stylesheet" href="dashboard/dashboard.css">
+  
+  <style>
+    /* Admin Specific Styles */
+    .user-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 20px;
+    }
+    
+    .user-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    
+    @media (min-width: 768px) {
+      .user-card {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+      }
+    }
 
-        .admin-header h1 {
-            font-size: 24px;
-            color: var(--primary);
-        }
+    .user-info {
+      flex: 1;
+      min-width: 0;
+    }
 
-        .user-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 14px;
-            background: #fff;
-            border: 1px solid var(--border);
-        }
+    .user-name {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 4px;
+      color: var(--text);
+    }
 
-        .user-table th,
-        .user-table td {
-            padding: 12px 16px;
-            text-align: left;
-            border-bottom: 1px solid var(--border);
-        }
+    .user-contact {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
 
-        .user-table th {
-            background: #fafafa;
-            font-weight: 700;
-            text-transform: uppercase;
-            font-size: 11px;
-            color: var(--muted);
-        }
+    .badges {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
 
-        .user-table tr:hover {
-            background: #fafafa;
-        }
+    .badge {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: var(--radius-sm);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border: 1px solid transparent;
+    }
 
-        .action-group {
-            display: flex;
-            gap: 4px;
-            flex-wrap: wrap;
-        }
+    .badge-admin { background: #eaf0f8; color: #1a5fb4; border-color: #c5d6ea; }
+    .badge-premium { background: #ebf5ed; color: #2d7a3e; border-color: #c2dcc9; }
+    .badge-expired { background: #fbeceb; color: #b3261e; border-color: #efc2bd; }
 
-        .badge-premium {
-            background: var(--success-soft);
-            color: var(--success);
-            padding: 2px 8px;
-            border-radius: var(--radius-sm);
-            font-weight: 700;
-            font-size: 11px;
-        }
+    /* Action Area */
+    .user-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      border-top: 1px solid var(--border);
+      padding-top: 16px;
+    }
+    
+    @media (min-width: 768px) {
+      .user-actions {
+        border-top: none;
+        border-left: 1px solid var(--border);
+        padding-top: 0;
+        padding-left: 20px;
+        flex-direction: row;
+        align-items: center;
+      }
+    }
 
-        .badge-expired {
-            background: var(--danger-soft);
-            color: var(--danger);
-            padding: 2px 8px;
-            border-radius: var(--radius-sm);
-            font-weight: 700;
-            font-size: 11px;
-        }
+    .quick-actions {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
 
-        .badge-admin {
-            background: var(--primary-soft);
-            color: var(--primary);
-            padding: 2px 8px;
-            border-radius: var(--radius-sm);
-            font-weight: 700;
-            font-size: 11px;
-        }
-    </style>
+    .custom-action {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .custom-action input {
+      width: 60px;
+      padding: 8px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    .btn-sm {
+      padding: 8px 12px;
+      font-size: 13px;
+    }
+
+    .empty-search {
+      text-align: center;
+      padding: 40px;
+      color: var(--muted);
+    }
+  </style>
 </head>
-
 <body>
 
-    <div class="app" style="max-width: 1000px;">
-        <header class="app-header">
-            <div class="brand">
-                <a href="dashboard.html" class="icon-btn"><i class="fas fa-arrow-left"></i></a>
-                <div class="brand-logo"><i class="fas fa-shield-halved"></i></div>
-                <div class="brand-text">
-                    <h1>Admin Panel</h1>
-                    <p>Manage user access</p>
-                </div>
-            </div>
-        </header>
-
-        <div class="admin-header">
-            <div class="search" style="max-width: 400px; width: 100%;">
-                <i class="fas fa-search"></i>
-                <input type="search" id="adminSearch" placeholder="Search by name, phone or email...">
-            </div>
+  <div class="app" style="max-width: 900px;">
+    
+    <!-- Header -->
+    <header class="app-header">
+      <div class="brand">
+        <a href="dashboard.html" class="icon-btn" title="Back to dashboard">
+          <i class="fas fa-arrow-left"></i>
+        </a>
+        <div class="brand-logo" style="background: #eaf0f8; color: #1a5fb4; border-color: #1a5fb4;">
+          <i class="fas fa-shield-halved"></i>
         </div>
-
-        <div id="adminLoading" style="text-align:center; padding: 40px;">
-            <div class="spinner" style="margin: 0 auto 12px;"></div>
-            <p>Verifying admin access...</p>
+        <div class="brand-text">
+          <h1>Admin Panel</h1>
+          <p>Manage user access</p>
         </div>
+      </div>
+      <div class="header-actions">
+        <button class="icon-btn" id="refreshBtn" title="Refresh List">
+          <i class="fas fa-rotate"></i>
+        </button>
+      </div>
+    </header>
 
-        <div id="adminContent" style="display:none;">
-            <table class="user-table">
-                <thead>
-                    <tr>
-                        <th>User Details</th>
-                        <th>Status</th>
-                        <th>Actions (Grant Days)</th>
-                    </tr>
-                </thead>
-                <tbody id="userList">
-                    <!-- Users populate here -->
-                </tbody>
-            </table>
-        </div>
+    <!-- Search -->
+    <div class="search" style="margin-bottom: 20px;">
+      <i class="fas fa-search"></i>
+      <input type="search" id="adminSearch" placeholder="Search by name, phone or email...">
     </div>
 
-    <div id="toast" class="toast"></div>
+    <!-- Loading State -->
+    <div id="adminLoading" style="text-align:center; padding: 40px;">
+      <div class="spinner" style="margin: 0 auto 12px;"></div>
+      <p class="muted">Verifying admin access...</p>
+    </div>
 
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-    <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyD-8JzL7GPhGhjzQCrAZOJWmyb-hPuaA0U",
-            authDomain: "mypersonalai-22391.firebaseapp.com",
-            databaseURL: "https://mypersonalai-22391-default-rtdb.firebaseio.com",
-            projectId: "mypersonalai-22391",
-            storageBucket: "mypersonalai-22391.firebasestorage.app",
-            messagingSenderId: "527318613254",
-            appId: "1:527318613254:web:be2ede267103601f187287"
-        };
-        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-    </script>
+    <!-- User List -->
+    <div id="adminContent" style="display:none;">
+      <div id="userList" class="user-list">
+        <!-- User cards inject here -->
+      </div>
+      <div id="emptySearch" class="empty-search" style="display:none;">
+        <i class="fas fa-search" style="font-size: 24px; margin-bottom: 8px; opacity: 0.5;"></i>
+        <p>No users found matching your search.</p>
+      </div>
+    </div>
 
-    <script>
-        (function () {
-            var auth = firebase.auth();
-            var db = firebase.firestore();
-            var els = {
-                loading: document.getElementById('adminLoading'),
-                content: document.getElementById('adminContent'),
-                search: document.getElementById('adminSearch'),
-                list: document.getElementById('userList'),
-                toast: document.getElementById('toast')
-            };
+  </div>
 
-            var usersData = [];
+  <div id="toast" class="toast"></div>
 
-            function showToast(msg, type) {
-                els.toast.textContent = msg;
-                els.toast.className = 'toast show ' + (type || '');
-                setTimeout(function () { els.toast.className = 'toast'; }, 3000);
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyD-8JzL7GPhGhjzQCrAZOJWmyb-hPuaA0U",
+      authDomain: "mypersonalai-22391.firebaseapp.com",
+      databaseURL: "https://mypersonalai-22391-default-rtdb.firebaseio.com",
+      projectId: "mypersonalai-22391",
+      storageBucket: "mypersonalai-22391.firebasestorage.app",
+      messagingSenderId: "527318613254",
+      appId: "1:527318613254:web:be2ede267103601f187287"
+    };
+    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+  </script>
+
+  <script>
+    (function () {
+      var auth = firebase.auth();
+      var db = firebase.firestore();
+      
+      var els = {
+        loading: document.getElementById('adminLoading'),
+        content: document.getElementById('adminContent'),
+        search: document.getElementById('adminSearch'),
+        list: document.getElementById('userList'),
+        emptySearch: document.getElementById('emptySearch'),
+        refreshBtn: document.getElementById('refreshBtn'),
+        toast: document.getElementById('toast')
+      };
+
+      var usersData = [];
+
+      // --- Helper: Toast Notifications ---
+      function showToast(msg, type) {
+        els.toast.textContent = msg;
+        els.toast.className = 'toast show ' + (type || '');
+        setTimeout(function() { els.toast.className = 'toast'; }, 3000);
+      }
+
+      // --- Security Check ---
+      auth.onAuthStateChanged(function (user) {
+        if (!user) { 
+          window.location.replace('index.html'); 
+          return; 
+        }
+
+        db.collection('users').doc(user.uid).get().then(function(doc) {
+          if (doc.exists && doc.data().role === 'admin') {
+            loadUsers();
+          } else {
+            alert('Access Denied: You do not have administrator privileges.');
+            window.location.replace('dashboard.html');
+          }
+        }).catch(function() {
+          window.location.replace('dashboard.html');
+        });
+      });
+
+      // --- Fetch Users ---
+      function loadUsers() {
+        els.loading.style.display = 'block';
+        els.content.style.display = 'none';
+        
+        db.collection('users').get().then(function(snapshot) {
+          usersData = snapshot.docs.map(function(d) { 
+            return Object.assign({ id: d.id }, d.data()); 
+          });
+          
+          els.loading.style.display = 'none';
+          els.content.style.display = 'block';
+          renderUsers();
+        }).catch(function(err) {
+          showToast('Failed to load users: ' + err.message, 'error');
+          els.loading.style.display = 'none';
+        });
+      }
+
+      // --- Format Date ---
+      function formatDate(ms) {
+        var d = new Date(ms);
+        return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+      }
+
+      // --- Render Users ---
+      function renderUsers() {
+        var q = els.search.value.toLowerCase();
+        var filtered = usersData.filter(function(u) {
+          var str = (u.fullName || '') + ' ' + (u.phone || '') + ' ' + (u.email || '');
+          return str.toLowerCase().includes(q);
+        });
+
+        if (filtered.length === 0) {
+          els.list.innerHTML = '';
+          els.emptySearch.style.display = 'block';
+          return;
+        }
+
+        els.emptySearch.style.display = 'none';
+
+        els.list.innerHTML = filtered.map(function(u) {
+          var isAdmin = u.role === 'admin';
+          var isPremium = false;
+          var daysLeft = 0;
+          var expiryDate = '';
+
+          if (u.premiumUntil) {
+            var ms = u.premiumUntil.toMillis ? u.premiumUntil.toMillis() : u.premiumUntil.seconds * 1000;
+            if (ms > Date.now()) {
+              isPremium = true;
+              daysLeft = Math.ceil((ms - Date.now()) / (1000 * 60 * 60 * 24));
+              expiryDate = formatDate(ms);
             }
+          }
 
-            auth.onAuthStateChanged(function (user) {
-                if (!user) { window.location.replace('index.html'); return; }
+          var badgeHtml = '';
+          if (isAdmin) {
+            badgeHtml = '<span class="badge badge-admin">ADMIN</span>';
+          } else if (isPremium) {
+            badgeHtml = '<span class="badge badge-premium">PREMIUM (' + daysLeft + 'd left)</span>';
+          } else {
+            badgeHtml = '<span class="badge badge-expired">EXPIRED</span>';
+          }
 
-                db.collection('users').doc(user.uid).get().then(function (doc) {
-                    if (doc.exists && doc.data().role === 'admin') {
-                        loadUsers();
-                    } else {
-                        alert('Access Denied: You are not an administrator.');
-                        window.location.replace('dashboard.html');
-                    }
-                });
-            });
+          // Action Buttons
+          var actionsHtml = '';
+          if (isAdmin) {
+            actionsHtml = '<span class="muted" style="font-size:12px; font-style:italic;">Admin cannot be modified</span>';
+          } else {
+            actionsHtml = `
+              <div class="quick-actions">
+                <button class="btn btn-ghost btn-sm" onclick="grantDays('${u.id}', 7)">+7d</button>
+                <button class="btn btn-ghost btn-sm" onclick="grantDays('${u.id}', 14)">+14d</button>
+                <button class="btn btn-ghost btn-sm" onclick="grantDays('${u.id}', 30)">+30d</button>
+              </div>
+              <div class="custom-action">
+                <input type="number" id="input-${u.id}" placeholder="Days" min="1">
+                <button class="btn btn-primary btn-sm" onclick="grantCustom('${u.id}')">Add</button>
+              </div>
+              ${isPremium ? `<button class="btn btn-danger-ghost btn-sm" onclick="revoke('${u.id}')">Revoke</button>` : ''}
+            `;
+          }
 
-            function loadUsers() {
-                db.collection('users').get().then(function (snapshot) {
-                    usersData = snapshot.docs.map(function (d) { return { id: d.id, ...d.data() }; });
-                    els.loading.style.display = 'none';
-                    els.content.style.display = 'block';
-                    renderUsers();
-                });
-            }
-
-            function renderUsers() {
-                var q = els.search.value.toLowerCase();
-                var filtered = usersData.filter(function (u) {
-                    var str = (u.fullName || '') + ' ' + (u.phone || '') + ' ' + (u.email || '');
-                    return str.toLowerCase().includes(q);
-                });
-
-                els.list.innerHTML = filtered.map(function (u) {
-                    var isAdmin = u.role === 'admin';
-                    var isPremium = Locker.isPremium(u) || isAdmin;
-
-                    var statusHtml = '';
-                    if (isAdmin) {
-                        statusHtml = '<span class="badge-admin">ADMIN</span>';
-                    } else if (isPremium) {
-                        var d = new Date(u.premiumUntil.seconds * 1000);
-                        statusHtml = '<span class="badge-premium">PREMIUM until ' + d.toLocaleDateString() + '</span>';
-                    } else {
-                        statusHtml = '<span class="badge-expired">EXPIRED</span>';
-                    }
-
-                    return `
-            <tr>
-              <td>
-                <div style="font-weight:600; font-size:15px;">${u.fullName || 'Unknown'}</div>
-                <div style="color:var(--muted); font-size:13px;">${u.phone || u.email || u.id}</div>
-              </td>
-              <td>${statusHtml}</td>
-              <td>
-                <div class="action-group">
-                  <button class="btn btn-ghost" onclick="grantDays('${u.id}', 3)">+3d</button>
-                  <button class="btn btn-ghost" onclick="grantDays('${u.id}', 7)">+7d</button>
-                  <button class="btn btn-ghost" onclick="grantDays('${u.id}', 12)">+12d</button>
-                  <button class="btn btn-ghost" onclick="grantDays('${u.id}', 30)">+30d</button>
+          return `
+            <div class="user-card">
+              <div class="user-info">
+                <div class="user-name">${u.fullName || 'Unknown User'}</div>
+                <div class="user-contact">${u.phone || u.email || u.id}</div>
+                <div class="badges">
+                  ${badgeHtml}
+                  ${expiryDate ? `<span class="badge" style="background:#f5f5f5; color:#666; border-color:#ddd;">Expires: ${expiryDate}</span>` : ''}
                 </div>
-              </td>
-            </tr>
+              </div>
+              <div class="user-actions">
+                ${actionsHtml}
+              </div>
+            </div>
           `;
-                }).join('');
-            }
+        }).join('');
+      }
 
-            window.grantDays = function (uid, days) {
-                var user = usersData.find(function (u) { return u.id === uid; });
-                if (!user) return;
+      // --- Grant Custom Days (from input) ---
+      window.grantCustom = function(uid) {
+        var input = document.getElementById('input-' + uid);
+        var days = parseInt(input.value, 10);
+        
+        if (!days || days < 1) {
+          showToast('Please enter a valid number of days.', 'error');
+          return;
+        }
+        grantDays(uid, days);
+      };
 
-                var now = new Date();
-                var currentExpiry = (user.premiumUntil && user.premiumUntil.seconds)
-                    ? new Date(user.premiumUntil.seconds * 1000)
-                    : now;
+      // --- Grant Days Core Logic ---
+      window.grantDays = function(uid, days) {
+        var user = usersData.find(function(u) { return u.id === uid; });
+        if (!user) return;
 
-                var baseDate = currentExpiry > now ? currentExpiry : now;
-                baseDate.setDate(baseDate.getDate() + days);
+        var now = new Date();
+        var currentExpiry = (user.premiumUntil && user.premiumUntil.seconds) 
+          ? new Date(user.premiumUntil.seconds * 1000) 
+          : now;
+          
+        // If already expired, start from today. If active, add to existing date.
+        var baseDate = currentExpiry > now ? currentExpiry : now;
+        baseDate.setDate(baseDate.getDate() + days);
 
-                db.collection('users').doc(uid).update({
-                    premiumUntil: firebase.firestore.Timestamp.fromDate(baseDate)
-                }).then(function () {
-                    showToast('Granted ' + days + ' days to ' + (user.fullName || 'User'), 'success');
-                    loadUsers(); // reload data
-                }).catch(function (err) {
-                    showToast('Error: ' + err.message, 'error');
-                });
-            };
+        // Update in Firestore
+        db.collection('users').doc(uid).update({
+          premiumUntil: firebase.firestore.Timestamp.fromDate(baseDate)
+        }).then(function() {
+          showToast(`Granted ${days} days to ${user.fullName || 'User'}`, 'success');
+          loadUsers(); // Reload data to refresh the UI
+        }).catch(function(err) {
+          showToast('Error: ' + err.message, 'error');
+        });
+      };
 
-            els.search.addEventListener('input', renderUsers);
-        })();
-    </script>
+      // --- Revoke Premium ---
+      window.revoke = function(uid) {
+        var user = usersData.find(function(u) { return u.id === uid; });
+        if (!user) return;
+
+        if (!confirm(`Are you sure you want to revoke premium access for ${user.fullName}?`)) {
+          return;
+        }
+
+        db.collection('users').doc(uid).update({
+          premiumUntil: null // Removes the timestamp
+        }).then(function() {
+          showToast('Premium access revoked.', 'info');
+          loadUsers();
+        }).catch(function(err) {
+          showToast('Error: ' + err.message, 'error');
+        });
+      };
+
+      // --- Event Listeners ---
+      els.search.addEventListener('input', renderUsers);
+      els.refreshBtn.addEventListener('click', loadUsers);
+
+    })();
+  </script>
 </body>
-
 </html>
